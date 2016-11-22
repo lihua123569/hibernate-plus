@@ -282,27 +282,27 @@ public abstract class DaoImpl<T> implements IDao<T> {
 	}
 
 	@Override
-	public long selectCount() {
+	public int selectCount() {
 		return selectCount(Collections.EMPTY_MAP);
 	}
 
 	@Override
-	public long selectCount(String property, Object... value) {
+	public int selectCount(String property, Object... value) {
 		return selectCount(new String[] { property }, value);
 	}
 
 	@Override
-	public long selectCount(String[] property, Object... value) {
+	public int selectCount(String[] property, Object... value) {
 		String countHql = HibernateUtils.getCountHql(clazz, property);
 		Query query = HibernateUtils.getHqlQuery(countHql, getSessionFactory());
 		for (int i = 0; i < value.length; i++) {
 			HibernateUtils.setParams(query, StringUtils.toString(i), value[i]);
 		}
-		return (Long) query.uniqueResult();
+		return (Integer) query.uniqueResult();
 	}
 
 	@Override
-	public long selectCount(Map<String, Object> params) {
+	public int selectCount(Map<String, Object> params) {
 		String hql = HibernateUtils.getCountHql(clazz, params);
 		Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
 		if (MapUtils.isNotEmpty(params)) {
@@ -311,12 +311,12 @@ public abstract class DaoImpl<T> implements IDao<T> {
 				HibernateUtils.setParams(query, key, obj);
 			}
 		}
-		return (Long) query.uniqueResult();
+		return (Integer) query.uniqueResult();
 
 	}
 
 	@Override
-	public Page<?> queryListWithSql(Wrapper wrapper, Page page) {
+	public Page<?> selectPage(Wrapper wrapper, Page page) {
 		try {
 			String sql = SqlUtils.sqlList(clazz, wrapper, page);
 			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
@@ -346,13 +346,13 @@ public abstract class DaoImpl<T> implements IDao<T> {
 	}
 
 	@Override
-	public long selectCount(Wrapper wrapper) {
-		long count = 0;
+	public int selectCount(Wrapper wrapper) {
+		int count = 0;
 		try {
 			String sql = SqlUtils.sqlCount(clazz, wrapper);
 			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
 			BigInteger bigInteger = (BigInteger) query.uniqueResult();
-			count = bigInteger.longValue();
+			count = bigInteger.intValue();
 		} catch (Exception e) {
 			logger.warning("Warn: Unexpected exception.  Cause:" + e);
 		}

@@ -238,7 +238,7 @@ public interface IService<V extends PrimaryKey> {
 	 *
 	 * @return
 	 */
-	public long selectCount();
+	public int selectCount();
 
 	/**
 	 * 查询数量
@@ -247,7 +247,7 @@ public interface IService<V extends PrimaryKey> {
 	 * @param value
 	 * @return
 	 */
-	public long selectCount(String property, Object... value);
+	public int selectCount(String property, Object... value);
 
 	/**
 	 * 查询数量
@@ -256,7 +256,7 @@ public interface IService<V extends PrimaryKey> {
 	 * @param value
 	 * @return
 	 */
-	public long selectCount(String[] property, Object... value);
+	public int selectCount(String[] property, Object... value);
 
 	/**
 	 * 查询数量
@@ -264,7 +264,7 @@ public interface IService<V extends PrimaryKey> {
 	 * @param map
 	 * @return
 	 */
-	public long selectCount(Map<String, Object> map);
+	public int selectCount(Map<String, Object> map);
 
 	/**
 	 * 删除
@@ -279,15 +279,7 @@ public interface IService<V extends PrimaryKey> {
 	 * @param page
 	 * @return
 	 */
-	public Page<V> findAllPage(Page<V> page);
-
-	/**
-	 * 查询分页
-	 *
-	 * @param page
-	 * @return
-	 */
-	public Page<V> findPage(Page<V> page);
+	public Page<V> selectPage(Page<V> page);
 
 	/**
 	 * 查询分页
@@ -297,7 +289,7 @@ public interface IService<V extends PrimaryKey> {
 	 * @param value
 	 * @return
 	 */
-	public Page<V> findPage(Page<V> page, String property, Object value);
+	public Page<V> selectPage(Page<V> page, String property, Object value);
 
 	/**
 	 * 查询分页
@@ -307,7 +299,7 @@ public interface IService<V extends PrimaryKey> {
 	 * @param value
 	 * @return
 	 */
-	public Page<V> findPage(Page<V> page, String[] property, Object... value);
+	public Page<V> selectPage(Page<V> page, String[] property, Object... value);
 
 	/**
 	 * 查询分页
@@ -316,12 +308,12 @@ public interface IService<V extends PrimaryKey> {
 	 * @param map
 	 * @return
 	 */
-	public Page<V> findPage(Page<V> page, Map<String, Object> map);
+	public Page<V> selectPage(Page<V> page, Map<String, Object> map);
 
-	public Page<?> queryListWithSql(Wrapper wrapper, Page page);
+	public Page<?> selectPage(Wrapper wrapper, Page page);
 
 	public List<?> queryListWithSql(Wrapper wrapper);
 
-	public long selectCount(Wrapper wrapper);
+	public int selectCount(Wrapper wrapper);
 
 }

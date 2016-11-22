@@ -146,22 +146,22 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	}
 
 	@Override
-	public long selectCount() {
+	public int selectCount() {
 		return baseDao.selectCount();
 	}
 
 	@Override
-	public long selectCount(String property, Object... value) {
+	public int selectCount(String property, Object... value) {
 		return baseDao.selectCount(property, value);
 	}
 
 	@Override
-	public long selectCount(String[] property, Object... value) {
+	public int selectCount(String[] property, Object... value) {
 		return baseDao.selectCount(property, value);
 	}
 
 	@Override
-	public long selectCount(Map<String, Object> map) {
+	public int selectCount(Map<String, Object> map) {
 		return baseDao.selectCount(map);
 	}
 
@@ -171,49 +171,46 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	}
 
 	@Override
-	public Page<V> findAllPage(Page<V> page) {
-		List<V> rows = BeanConverter.convert(vClass, baseDao.query());
-		page.setRecords(rows);
-		return page;
-	}
-
-	@Override
-	public Page<V> findPage(Page<V> page) {
+	public Page<V> selectPage(Page<V> page) {
 		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getCurrent(), page.getSize()));
+		page.setTotal(baseDao.selectCount());
 		page.setRecords(rows);
 		return page;
 	}
 
 	@Override
-	public Page<V> findPage(Page<V> page, String property, Object value) {
+	public Page<V> selectPage(Page<V> page, String property, Object value) {
 		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getCurrent(), page.getSize(), property, value));
+		page.setTotal(baseDao.selectCount(property,value));
 		page.setRecords(rows);
 		return page;
 	}
 
 	@Override
-	public Page<V> findPage(Page<V> page, String[] property, Object... value) {
+	public Page<V> selectPage(Page<V> page, String[] property, Object... value) {
 		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getCurrent(), page.getSize(), property, value));
+		page.setTotal(baseDao.selectCount(property,value));
 		page.setRecords(rows);
 		return page;
 	}
 
 	@Override
-	public Page<V> findPage(Page<V> page, Map<String, Object> map) {
+	public Page<V> selectPage(Page<V> page, Map<String, Object> map) {
 		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getCurrent(), page.getSize(), map));
+		page.setTotal(baseDao.selectCount(map));
 		page.setRecords(rows);
 		return page;
 	}
 
-	public Page<?> queryListWithSql(Wrapper wrapper, Page page) {
-		return baseDao.queryListWithSql(wrapper, page);
+	public Page<?> selectPage(Wrapper wrapper, Page page) {
+		return baseDao.selectPage(wrapper, page);
 	}
 
 	public List<?> queryListWithSql(Wrapper wrapper) {
 		return baseDao.queryListWithSql(wrapper);
 	}
 
-	public long selectCount(Wrapper wrapper) {
+	public int selectCount(Wrapper wrapper) {
 		return baseDao.selectCount(wrapper);
 	}
 
