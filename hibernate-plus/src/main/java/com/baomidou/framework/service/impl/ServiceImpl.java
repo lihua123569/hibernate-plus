@@ -146,23 +146,23 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	}
 
 	@Override
-	public long count() {
-		return baseDao.count();
+	public long selectCount() {
+		return baseDao.selectCount();
 	}
 
 	@Override
-	public long count(String property, Object... value) {
-		return baseDao.count(property, value);
+	public long selectCount(String property, Object... value) {
+		return baseDao.selectCount(property, value);
 	}
 
 	@Override
-	public long count(String[] property, Object... value) {
-		return baseDao.count(property, value);
+	public long selectCount(String[] property, Object... value) {
+		return baseDao.selectCount(property, value);
 	}
 
 	@Override
-	public long count(Map<String, Object> map) {
-		return baseDao.count(map);
+	public long selectCount(Map<String, Object> map) {
+		return baseDao.selectCount(map);
 	}
 
 	@Override
@@ -213,8 +213,8 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 		return baseDao.queryListWithSql(wrapper);
 	}
 
-	public long queryCountWithSql(Wrapper wrapper) {
-		return baseDao.queryCountWithSql(wrapper);
+	public long selectCount(Wrapper wrapper) {
+		return baseDao.selectCount(wrapper);
 	}
 
 	@Override

@@ -282,17 +282,17 @@ public abstract class DaoImpl<T> implements IDao<T> {
 	}
 
 	@Override
-	public long count() {
-		return count(Collections.EMPTY_MAP);
+	public long selectCount() {
+		return selectCount(Collections.EMPTY_MAP);
 	}
 
 	@Override
-	public long count(String property, Object... value) {
-		return count(new String[] { property }, value);
+	public long selectCount(String property, Object... value) {
+		return selectCount(new String[] { property }, value);
 	}
 
 	@Override
-	public long count(String[] property, Object... value) {
+	public long selectCount(String[] property, Object... value) {
 		String countHql = HibernateUtils.getCountHql(clazz, property);
 		Query query = HibernateUtils.getHqlQuery(countHql, getSessionFactory());
 		for (int i = 0; i < value.length; i++) {
@@ -302,7 +302,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 	}
 
 	@Override
-	public long count(Map<String, Object> params) {
+	public long selectCount(Map<String, Object> params) {
 		String hql = HibernateUtils.getCountHql(clazz, params);
 		Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
 		if (MapUtils.isNotEmpty(params)) {
@@ -346,7 +346,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 	}
 
 	@Override
-	public long queryCountWithSql(Wrapper wrapper) {
+	public long selectCount(Wrapper wrapper) {
 		long count = 0;
 		try {
 			String sql = SqlUtils.sqlCount(clazz, wrapper);

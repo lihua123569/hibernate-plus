@@ -148,7 +148,7 @@ public interface IDao<T> {
 	 *
 	 * @return long
 	 */
-	public long count();
+	public long selectCount();
 
 	/**
 	 * 根据class生成count语句执行
@@ -157,7 +157,7 @@ public interface IDao<T> {
 	 * @param value
 	 * @return long
 	 */
-	public long count(String property, Object... value);
+	public long selectCount(String property, Object... value);
 
 	/**
 	 * 根据class生成count语句执行
@@ -166,7 +166,7 @@ public interface IDao<T> {
 	 * @param value
 	 * @return long
 	 */
-	public long count(String[] property, Object... value);
+	public long selectCount(String[] property, Object... value);
 
 	/**
 	 * 根据class生成count语句执行
@@ -174,7 +174,7 @@ public interface IDao<T> {
 	 * @param map
 	 * @return long
 	 */
-	public long count(Map<String, Object> map);
+	public long selectCount(Map<String, Object> map);
 
 	/**
 	 * 查询结果集排序
@@ -255,7 +255,7 @@ public interface IDao<T> {
 
 	public List<?> queryListWithSql(Wrapper wrapper);
 
-	public long queryCountWithSql(Wrapper wrapper);
+	public long selectCount(Wrapper wrapper);
 
 	/**
 	 *

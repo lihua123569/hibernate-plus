@@ -53,7 +53,16 @@ public interface IService<V extends PrimaryKey> {
 	 * @return
 	 */
 	public V get(Serializable id);
-
+	/**
+	 *
+	 * 根据class生成Hql执行 (可强转为需要的对象)
+	 *
+	 * @param property
+	 * @param value
+	 * @return Object
+	 *
+	 */
+	public V get(String property, Object value);
 	/**
 	 * 查询
 	 *
@@ -229,7 +238,7 @@ public interface IService<V extends PrimaryKey> {
 	 *
 	 * @return
 	 */
-	public long count();
+	public long selectCount();
 
 	/**
 	 * 查询数量
@@ -238,7 +247,7 @@ public interface IService<V extends PrimaryKey> {
 	 * @param value
 	 * @return
 	 */
-	public long count(String property, Object... value);
+	public long selectCount(String property, Object... value);
 
 	/**
 	 * 查询数量
@@ -247,7 +256,7 @@ public interface IService<V extends PrimaryKey> {
 	 * @param value
 	 * @return
 	 */
-	public long count(String[] property, Object... value);
+	public long selectCount(String[] property, Object... value);
 
 	/**
 	 * 查询数量
@@ -255,7 +264,7 @@ public interface IService<V extends PrimaryKey> {
 	 * @param map
 	 * @return
 	 */
-	public long count(Map<String, Object> map);
+	public long selectCount(Map<String, Object> map);
 
 	/**
 	 * 删除
@@ -313,17 +322,6 @@ public interface IService<V extends PrimaryKey> {
 
 	public List<?> queryListWithSql(Wrapper wrapper);
 
-	public long queryCountWithSql(Wrapper wrapper);
-
-	/**
-	 *
-	 * 根据class生成Hql执行 (可强转为需要的对象)
-	 *
-	 * @param property
-	 * @param value
-	 * @return Object
-	 *
-	 */
-	public V get(String property, Object value);
+	public long selectCount(Wrapper wrapper);
 
 }
