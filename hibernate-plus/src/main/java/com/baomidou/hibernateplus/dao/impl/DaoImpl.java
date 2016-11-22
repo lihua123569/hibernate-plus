@@ -11,6 +11,7 @@ import com.baomidou.hibernateplus.utils.MapUtils;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
 import com.baomidou.hibernateplus.utils.SqlUtils;
 import com.baomidou.hibernateplus.utils.StringUtils;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -362,6 +363,315 @@ public abstract class DaoImpl<T> implements IDao<T> {
 			logger.warning("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return count;
+	}
+
+	@Override
+	public long queryCountWithHql(String hql) {
+		return queryCountWithHql(hql, Collections.EMPTY_MAP);
+	}
+
+	@Override
+	public long queryCountWithHql(String hql, Map<String, Object> params) {
+		if (StringUtils.isBlank(hql))
+			throw new HibernatePlusException("Query Count Fail! Param is Empty !");
+		Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
+		if (MapUtils.isNotEmpty(params)) {
+			for (String key : params.keySet()) {
+				Object obj = params.get(key);
+				HibernateUtils.setParams(query, key, obj);
+			}
+		}
+		return (Long) query.uniqueResult();
+	}
+
+	@Override
+	public int executeHql(String hql) {
+		return executeHql(hql, Collections.EMPTY_MAP);
+	}
+
+	@Override
+	public int executeHql(String hql, Map<String, Object> params) {
+		if (StringUtils.isBlank(hql))
+			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
+		if (MapUtils.isNotEmpty(params)) {
+			for (String key : params.keySet()) {
+				Object obj = params.get(key);
+				HibernateUtils.setParams(query, key, obj);
+			}
+		}
+		return query.executeUpdate();
+	}
+
+	@Override
+	public int executeSql(String sql) {
+		return executeSql(sql, Collections.EMPTY_MAP);
+	}
+
+	@Override
+	public int executeSql(String sql, Map<String, Object> params) {
+		if (StringUtils.isBlank(sql))
+			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
+		if (MapUtils.isNotEmpty(params)) {
+			for (String key : params.keySet()) {
+				Object obj = params.get(key);
+				HibernateUtils.setParams(query, key, obj);
+			}
+		}
+		return query.executeUpdate();
+	}
+
+	@Override
+	public long queryCountWithSql(String sql) {
+		return queryCountWithSql(sql, Collections.EMPTY_MAP);
+	}
+
+	@Override
+	public long queryCountWithSql(String sql, Map<String, Object> params) {
+		if (StringUtils.isBlank(sql))
+			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
+		if (MapUtils.isNotEmpty(params)) {
+			for (String key : params.keySet()) {
+				Object obj = params.get(key);
+				HibernateUtils.setParams(query, key, obj);
+			}
+		}
+		BigInteger count = (BigInteger) query.uniqueResult();
+		return count.longValue();
+	}
+
+	@Override
+	public Map<?, ?> queryMapWithSql(String sql, Map<String, Object> params) {
+		if (StringUtils.isBlank(sql))
+			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Map resultMap = Collections.EMPTY_MAP;
+		try {
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			if (MapUtils.isNotEmpty(params)) {
+				for (String key : params.keySet()) {
+					Object obj = params.get(key);
+					HibernateUtils.setParams(query, key, obj);
+				}
+			}
+			resultMap = (Map) query.uniqueResult();
+		} catch (Exception e) {
+			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+		}
+		return resultMap;
+	}
+
+	@Override
+	public Map<?, ?> queryMapWithSql(String sql) {
+		return queryMapWithSql(sql, Collections.EMPTY_MAP);
+	}
+
+	@Override
+	public List<?> queryListWithSql(String sql) {
+		return queryListWithSql(sql, Collections.EMPTY_MAP);
+	}
+
+	@Override
+	public List<?> queryListWithSql(String sql, int page, int rows) {
+		return queryListWithSql(sql, Collections.EMPTY_MAP, page, rows);
+	}
+
+	@Override
+	public List<?> queryListWithSql(String sql, Map<String, Object> params, int page, int rows) {
+		if (StringUtils.isBlank(sql))
+			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		List list = Collections.EMPTY_LIST;
+		try {
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			if (MapUtils.isNotEmpty(params)) {
+				for (String key : params.keySet()) {
+					Object obj = params.get(key);
+					HibernateUtils.setParams(query, key, obj);
+				}
+			}
+			HibernateUtils.setPage(page, rows, query);
+			list = query.list();
+		} catch (Exception e) {
+			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+		}
+		return list;
+	}
+
+	@Override
+	public List<?> queryListWithSql(String sql, Map<String, Object> params) {
+		return queryListWithSql(sql, params, 0, 0);
+	}
+
+	@Override
+	public int executeSqlUpdate(String sql) {
+		return executeSqlUpdate(sql, Collections.EMPTY_MAP);
+	}
+
+	@Override
+	public int executeSqlUpdate(String sql, Map<String, Object> params) {
+		if (StringUtils.isBlank(sql))
+			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		int resultCount = 0;
+		if (StringUtils.isNotBlank(sql)) {
+			try {
+				Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
+				if ((params != null) && !params.isEmpty()) {
+					for (String key : params.keySet()) {
+						Object obj = params.get(key);
+						HibernateUtils.setParams(query, key, obj);
+					}
+				}
+				resultCount = query.executeUpdate();
+			} catch (Exception e) {
+				logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			}
+		}
+		return resultCount;
+	}
+
+	@Override
+	public List<?> queryListWithSql(String sql, Object[] args) {
+		if (StringUtils.isBlank(sql))
+			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		List list = Collections.EMPTY_LIST;
+		try {
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			if (null != args) {
+				for (int i = 0; i < args.length; i++) {
+					HibernateUtils.setParams(query, StringUtils.toString(i), args[i]);
+				}
+			}
+			list = query.list();
+		} catch (Exception e) {
+			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+		}
+		return list;
+	}
+
+	@Override
+	public Map<?, ?> queryMapWithSql(String sql, Object[] args) {
+		if (StringUtils.isBlank(sql))
+			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Map resultMap = Collections.EMPTY_MAP;
+		try {
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
+			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			if (null != args) {
+				for (int i = 0; i < args.length; i++) {
+					HibernateUtils.setParams(query, StringUtils.toString(i), args[i]);
+				}
+			}
+			resultMap = (Map) query.uniqueResult();
+		} catch (Exception e) {
+			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+		}
+		return resultMap;
+	}
+
+	@Override
+	public int executeSqlUpdate(String sql, Object[] args) {
+		if (StringUtils.isBlank(sql))
+			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		int resultCount = 0;
+		try {
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
+			if (null != args) {
+				for (int i = 0; i < args.length; i++) {
+					HibernateUtils.setParams(query, StringUtils.toString(i), args[i]);
+				}
+			}
+			resultCount = query.executeUpdate();
+		} catch (Exception e) {
+			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+		}
+		return resultCount;
+	}
+
+	@Override
+	public List<?> queryListWithHql() {
+		return queryListWithHql(Collections.EMPTY_MAP);
+	}
+
+	@Override
+	public List<?> queryListWithHql(String property, Object value) {
+		return queryListWithHql(new String[] { property }, value);
+	}
+
+	@Override
+	public Object queryMapWithHql(String property, Object value) {
+		Object object = null;
+		try {
+			String hql = HibernateUtils.getListHql(clazz, property);
+			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
+			HibernateUtils.setParams(query, "0", value);
+			object = query.uniqueResult();
+		} catch (Exception e) {
+			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+		}
+		return object;
+	}
+
+	@Override
+	public List<?> queryListWithHql(String[] property, Object... value) {
+		List list = Collections.EMPTY_LIST;
+		try {
+			String hql = HibernateUtils.getListHql(clazz, property);
+			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
+			if (null != value) {
+				for (int i = 0; i < value.length; i++) {
+					HibernateUtils.setParams(query, StringUtils.toString(i), value);
+				}
+			}
+			list = query.list();
+
+		} catch (Exception e) {
+			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+		}
+		return list;
+
+	}
+
+	@Override
+	public List<?> queryListWithHql(Map<String, Object> map) {
+		List list = Collections.EMPTY_LIST;
+		try {
+			String hql = HibernateUtils.getListHql(clazz, map);
+			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
+			for (String key : map.keySet()) {
+				Object obj = map.get(key);
+				HibernateUtils.setParams(query, key, obj);
+			}
+			list = query.list();
+		} catch (Exception e) {
+			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+		}
+		return list;
+
+	}
+
+	@Override
+	public List<?> queryListWithHql(String hql) {
+		return queryListWithHql(hql, 0, 0);
+	}
+
+	@Override
+	public List<?> queryListWithHql(String hql, int page, int rows) {
+		if (StringUtils.isBlank(hql))
+			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		List list = Collections.EMPTY_LIST;
+		try {
+			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
+			HibernateUtils.setPage(page, rows, query);
+			list = query.list();
+
+		} catch (Exception e) {
+			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+		}
+		return list;
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.baomidou.framework.service.impl;
 
 import com.baomidou.framework.entity.PrimaryKey;
-import com.baomidou.framework.service.DaoService;
 import com.baomidou.framework.service.IService;
 import com.baomidou.hibernateplus.converter.BeanConverter;
 import com.baomidou.hibernateplus.dao.IDao;
@@ -30,8 +29,6 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	protected Class<V> vClass = ReflectionKit.getSuperClassGenricType(getClass(), 1);
 	@Autowired
 	protected IDao<T> baseDao;
-	@Autowired
-	protected DaoService daoService;
 
 	@Override
 	public V save(V vo) {
@@ -249,6 +246,140 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 
 	public long queryCountWithSql(Wrapper wrapper) {
 		return baseDao.queryCountWithSql(wrapper);
+	}
+
+	@Override
+	public long queryCountWithHql(String hql) {
+		return baseDao.queryCountWithHql(hql);
+	}
+
+	@Override
+	public long queryCountWithHql(String hql, Map<String, Object> params) {
+		return baseDao.queryCountWithHql(hql, params);
+	}
+
+	@Override
+	public int executeHql(String hql) {
+		return baseDao.executeHql(hql);
+	}
+
+	@Override
+	public int executeHql(String hql, Map<String, Object> params) {
+		return baseDao.executeHql(hql, params);
+
+	}
+
+	@Override
+	public int executeSql(String sql) {
+		return baseDao.executeSql(sql);
+	}
+
+	@Override
+	public int executeSql(String sql, Map<String, Object> params) {
+		return baseDao.executeSql(sql, params);
+
+	}
+
+	@Override
+	public long queryCountWithSql(String sql) {
+		return baseDao.queryCountWithSql(sql);
+	}
+
+	@Override
+	public long queryCountWithSql(String sql, Map<String, Object> params) {
+		return baseDao.queryCountWithSql(sql, params);
+	}
+
+	@Override
+	public Map<?, ?> queryMapWithSql(String sql, Map<String, Object> params) {
+		return baseDao.queryMapWithSql(sql, params);
+	}
+
+	@Override
+	public Map<?, ?> queryMapWithSql(String sql) {
+		return baseDao.queryMapWithSql(sql);
+	}
+
+	@Override
+	public List<?> queryListWithSql(String sql) {
+		return baseDao.queryListWithSql(sql);
+	}
+
+	@Override
+	public List<?> queryListWithSql(String sql, int page, int rows) {
+		return baseDao.queryListWithSql(sql, page, rows);
+	}
+
+	@Override
+	public List<?> queryListWithSql(String sql, Map<String, Object> params, int page, int rows) {
+		return baseDao.queryListWithSql(sql, params, page, rows);
+	}
+
+	@Override
+	public List<?> queryListWithSql(String sql, Map<String, Object> params) {
+		return baseDao.queryListWithSql(sql, params);
+	}
+
+	@Override
+	public int executeSqlUpdate(String sql) {
+		return baseDao.executeSqlUpdate(sql);
+	}
+
+	@Override
+	public int executeSqlUpdate(String sql, Map<String, Object> params) {
+		return baseDao.executeSqlUpdate(sql, params);
+	}
+
+	@Override
+	public List<?> queryListWithSql(String sql, Object[] args) {
+		return baseDao.queryListWithSql(sql, args);
+	}
+
+	@Override
+	public Map<?, ?> queryMapWithSql(String sql, Object[] args) {
+		return baseDao.queryMapWithSql(sql, args);
+	}
+
+	@Override
+	public int executeSqlUpdate(String sql, Object[] args) {
+		return baseDao.executeSqlUpdate(sql, args);
+	}
+
+	@Override
+	public List<?> queryListWithHql() {
+		return baseDao.queryListWithHql();
+	}
+
+	@Override
+	public List<?> queryListWithHql(String property, Object value) {
+		return baseDao.queryListWithHql(property, value);
+	}
+
+	@Override
+	public Object queryMapWithHql(String property, Object value) {
+		return baseDao.queryMapWithHql(property, value);
+	}
+
+	@Override
+	public List<?> queryListWithHql(String[] property, Object... value) {
+		return baseDao.queryListWithHql(property, value);
+
+	}
+
+	@Override
+	public List<?> queryListWithHql(Map<String, Object> map) {
+		return baseDao.queryListWithHql(map);
+
+	}
+
+	@Override
+	public List<?> queryListWithHql(String hql) {
+		return baseDao.queryListWithHql(hql);
+	}
+
+	@Override
+	public List<?> queryListWithHql(String hql, int page, int rows) {
+		return baseDao.queryListWithHql(hql, page, rows);
 	}
 
 }
