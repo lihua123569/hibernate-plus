@@ -15,7 +15,7 @@ import java.util.Map;
  * @author Caratacus
  * @date 2016-10-23
  */
-public interface IDao<T> {
+public interface IDao<T, V> {
 	/**
 	 * 保存方法
 	 *
@@ -251,7 +251,7 @@ public interface IDao<T> {
 	 */
 	public List<T> query(int page, int rows, Map<String, Object> map, String order);
 
-	public Page<?> selectPage(Wrapper wrapper, Page page);
+	public Page<V> selectPage(Wrapper wrapper, Page<V> page);
 
 	public List<?> queryListWithSql(Wrapper wrapper);
 
@@ -267,7 +267,5 @@ public interface IDao<T> {
 	 *
 	 */
 	public T get(String property, Object value);
-
-
 
 }

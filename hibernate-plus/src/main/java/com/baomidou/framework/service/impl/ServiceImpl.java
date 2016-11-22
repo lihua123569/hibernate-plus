@@ -5,6 +5,7 @@ import com.baomidou.framework.service.IService;
 import com.baomidou.hibernateplus.converter.BeanConverter;
 import com.baomidou.hibernateplus.dao.IDao;
 import com.baomidou.hibernateplus.page.Page;
+import com.baomidou.hibernateplus.query.Condition;
 import com.baomidou.hibernateplus.query.Wrapper;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	// 反射VO泛型
 	protected Class<V> vClass = ReflectionKit.getSuperClassGenricType(getClass(), 1);
 	@Autowired
-	protected IDao<T> baseDao;
+	protected IDao<T, V> baseDao;
 
 	@Override
 	public V save(V vo) {
@@ -172,37 +173,15 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 
 	@Override
 	public Page<V> selectPage(Page<V> page) {
-		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getCurrent(), page.getSize()));
-		page.setTotal(baseDao.selectCount());
-		page.setRecords(rows);
-		return page;
+		return baseDao.selectPage(Condition.instance(), page);
 	}
 
 	@Override
 	public Page<V> selectPage(Page<V> page, String property, Object value) {
-		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getCurrent(), page.getSize(), property, value));
-		page.setTotal(baseDao.selectCount(property,value));
-		page.setRecords(rows);
-		return page;
+		return selectPage(Condition.instance().where(String.format("%s = {0}", property), value), page);
 	}
 
-	@Override
-	public Page<V> selectPage(Page<V> page, String[] property, Object... value) {
-		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getCurrent(), page.getSize(), property, value));
-		page.setTotal(baseDao.selectCount(property,value));
-		page.setRecords(rows);
-		return page;
-	}
-
-	@Override
-	public Page<V> selectPage(Page<V> page, Map<String, Object> map) {
-		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getCurrent(), page.getSize(), map));
-		page.setTotal(baseDao.selectCount(map));
-		page.setRecords(rows);
-		return page;
-	}
-
-	public Page<?> selectPage(Wrapper wrapper, Page page) {
+	public Page<V> selectPage(Wrapper wrapper, Page<V> page) {
 		return baseDao.selectPage(wrapper, page);
 	}
 

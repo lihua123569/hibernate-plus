@@ -53,6 +53,7 @@ public interface IService<V extends PrimaryKey> {
 	 * @return
 	 */
 	public V get(Serializable id);
+
 	/**
 	 *
 	 * 根据class生成Hql执行 (可强转为需要的对象)
@@ -63,6 +64,7 @@ public interface IService<V extends PrimaryKey> {
 	 *
 	 */
 	public V get(String property, Object value);
+
 	/**
 	 * 查询
 	 *
@@ -291,26 +293,7 @@ public interface IService<V extends PrimaryKey> {
 	 */
 	public Page<V> selectPage(Page<V> page, String property, Object value);
 
-	/**
-	 * 查询分页
-	 *
-	 * @param page
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public Page<V> selectPage(Page<V> page, String[] property, Object... value);
-
-	/**
-	 * 查询分页
-	 *
-	 * @param page
-	 * @param map
-	 * @return
-	 */
-	public Page<V> selectPage(Page<V> page, Map<String, Object> map);
-
-	public Page<?> selectPage(Wrapper wrapper, Page page);
+	public Page<V> selectPage(Wrapper wrapper, Page<V> page);
 
 	public List<?> queryListWithSql(Wrapper wrapper);
 

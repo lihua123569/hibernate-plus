@@ -1,5 +1,6 @@
 package com.baomidou.hibernateplus.dao.impl;
 
+import com.baomidou.framework.entity.PrimaryKey;
 import com.baomidou.hibernateplus.dao.IDao;
 import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 import com.baomidou.hibernateplus.page.CountOptimize;
@@ -15,6 +16,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.transform.Transformers;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -31,11 +33,14 @@ import java.util.logging.Logger;
  * @author Caratacus
  * @date 2016-10-23
  */
-public abstract class DaoImpl<T> implements IDao<T> {
+public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implements IDao<T, V> {
 
 	protected static final Logger logger = Logger.getLogger("DaoImpl");
 
-	protected Class<T> clazz = ReflectionKit.getSuperClassGenricType(getClass(), 0);
+	// 反射TO泛型
+	protected Class<T> tClass = ReflectionKit.getSuperClassGenricType(getClass(), 0);
+	// 反射VO泛型
+	protected Class<V> vClass = ReflectionKit.getSuperClassGenricType(getClass(), 1);
 
 	public abstract SessionFactory getSessionFactory();
 
@@ -51,7 +56,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 	public T get(Serializable id) {
 		if (null == id)
 			throw new HibernatePlusException("execute Get Fail! Param is Empty !");
-		return (T) HibernateUtils.getCurrentSession(getSessionFactory()).get(clazz, id);
+		return (T) HibernateUtils.getCurrentSession(getSessionFactory()).get(tClass, id);
 	}
 
 	protected T get(String hql) {
@@ -194,7 +199,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 	public List<T> query(int page, int rows, String order, String[] property, Object... value) {
 		List<T> list = Collections.emptyList();
 		try {
-			String hql = HibernateUtils.getListHql(order, clazz, property);
+			String hql = HibernateUtils.getListHql(order, tClass, property);
 			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
 			if (null != value) {
 				for (int i = 0; i < value.length; i++) {
@@ -244,7 +249,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 	public List<T> query(int page, int rows, Map<String, Object> params, String order) {
 		List<T> list = Collections.emptyList();
 		try {
-			String hql = HibernateUtils.getListHql(order, clazz, params);
+			String hql = HibernateUtils.getListHql(order, tClass, params);
 			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
 			setParamMap(params, query);
 			HibernateUtils.setPage(page, rows, query);
@@ -293,7 +298,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 
 	@Override
 	public int selectCount(String[] property, Object... value) {
-		String countHql = HibernateUtils.getCountHql(clazz, property);
+		String countHql = HibernateUtils.getCountHql(tClass, property);
 		Query query = HibernateUtils.getHqlQuery(countHql, getSessionFactory());
 		for (int i = 0; i < value.length; i++) {
 			HibernateUtils.setParams(query, StringUtils.toString(i), value[i]);
@@ -303,7 +308,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 
 	@Override
 	public int selectCount(Map<String, Object> params) {
-		String hql = HibernateUtils.getCountHql(clazz, params);
+		String hql = HibernateUtils.getCountHql(tClass, params);
 		Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
 		if (MapUtils.isNotEmpty(params)) {
 			for (String key : params.keySet()) {
@@ -316,10 +321,10 @@ public abstract class DaoImpl<T> implements IDao<T> {
 	}
 
 	@Override
-	public Page<?> selectPage(Wrapper wrapper, Page page) {
+	public Page<V> selectPage(Wrapper wrapper, Page<V> page) {
 		try {
-			String sql = SqlUtils.sqlList(clazz, wrapper, page);
-			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
+			String sql = SqlUtils.sqlList(tClass, wrapper, page);
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(Transformers.aliasToBean(vClass));
 			HibernateUtils.setPage(page.getCurrent(), page.getSize(), query);
 			page.setRecords(query.list());
 			CountOptimize countOptimize = SqlUtils.getCountOptimize(sql, page.isOptimizeCount());
@@ -336,7 +341,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 	public List<?> queryListWithSql(Wrapper wrapper) {
 		List list = Collections.EMPTY_LIST;
 		try {
-			String sql = SqlUtils.sqlList(clazz, wrapper, null);
+			String sql = SqlUtils.sqlList(tClass, wrapper, null);
 			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
 			list = query.list();
 		} catch (Exception e) {
@@ -349,7 +354,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 	public int selectCount(Wrapper wrapper) {
 		int count = 0;
 		try {
-			String sql = SqlUtils.sqlCount(clazz, wrapper);
+			String sql = SqlUtils.sqlCount(tClass, wrapper);
 			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
 			BigInteger bigInteger = (BigInteger) query.uniqueResult();
 			count = bigInteger.intValue();
@@ -580,7 +585,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 	public T get(String property, Object value) {
 		T t = null;
 		try {
-			String hql = HibernateUtils.getListHql(clazz, property);
+			String hql = HibernateUtils.getListHql(tClass, property);
 			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
 			HibernateUtils.setParams(query, "0", value);
 			t = (T) query.uniqueResult();
@@ -594,7 +599,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 	public List<?> queryListWithHql(String[] property, Object... value) {
 		List list = Collections.EMPTY_LIST;
 		try {
-			String hql = HibernateUtils.getListHql(clazz, property);
+			String hql = HibernateUtils.getListHql(tClass, property);
 			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
 			if (null != value) {
 				for (int i = 0; i < value.length; i++) {
@@ -614,7 +619,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 	public List<?> queryListWithHql(Map<String, Object> map) {
 		List list = Collections.EMPTY_LIST;
 		try {
-			String hql = HibernateUtils.getListHql(clazz, map);
+			String hql = HibernateUtils.getListHql(tClass, map);
 			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
 			for (String key : map.keySet()) {
 				Object obj = map.get(key);
