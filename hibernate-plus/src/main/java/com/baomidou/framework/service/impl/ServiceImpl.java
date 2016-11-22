@@ -218,29 +218,8 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	}
 
 	@Override
-	public List<?> queryListWithHql() {
-		return baseDao.queryListWithHql();
-	}
-
-	@Override
-	public List<?> queryListWithHql(String property, Object value) {
-		return baseDao.queryListWithHql(property, value);
-	}
-
-	@Override
-	public Object queryMapWithHql(String property, Object value) {
-		return baseDao.queryMapWithHql(property, value);
-	}
-
-	@Override
-	public List<?> queryListWithHql(String[] property, Object... value) {
-		return baseDao.queryListWithHql(property, value);
-
-	}
-
-	@Override
-	public List<?> queryListWithHql(Map<String, Object> map) {
-		return baseDao.queryListWithHql(map);
+	public V get(String property, Object value) {
+		return baseDao.get(property, value) == null ? null : baseDao.get(property, value).convert(vClass);
 
 	}
 

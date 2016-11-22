@@ -567,65 +567,17 @@ public abstract class DaoImpl<T> implements IDao<T> {
 	}
 
 	@Override
-	public List<?> queryListWithHql() {
-		return queryListWithHql(Collections.EMPTY_MAP);
-	}
-
-	@Override
-	public List<?> queryListWithHql(String property, Object value) {
-		return queryListWithHql(new String[] { property }, value);
-	}
-
-	@Override
-	public Object queryMapWithHql(String property, Object value) {
-		Object object = null;
+	public T get(String property, Object value) {
+		T t = null;
 		try {
 			String hql = HibernateUtils.getListHql(clazz, property);
 			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
 			HibernateUtils.setParams(query, "0", value);
-			object = query.uniqueResult();
+			t = (T) query.uniqueResult();
 		} catch (Exception e) {
 			logger.warning("Warn: Unexpected exception.  Cause:" + e);
 		}
-		return object;
-	}
-
-	@Override
-	public List<?> queryListWithHql(String[] property, Object... value) {
-		List list = Collections.EMPTY_LIST;
-		try {
-			String hql = HibernateUtils.getListHql(clazz, property);
-			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
-			if (null != value) {
-				for (int i = 0; i < value.length; i++) {
-					HibernateUtils.setParams(query, StringUtils.toString(i), value);
-				}
-			}
-			list = query.list();
-
-		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
-		}
-		return list;
-
-	}
-
-	@Override
-	public List<?> queryListWithHql(Map<String, Object> map) {
-		List list = Collections.EMPTY_LIST;
-		try {
-			String hql = HibernateUtils.getListHql(clazz, map);
-			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
-			for (String key : map.keySet()) {
-				Object obj = map.get(key);
-				HibernateUtils.setParams(query, key, obj);
-			}
-			list = query.list();
-		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
-		}
-		return list;
-
+		return t;
 	}
 
 	protected List<?> queryListWithHql(String hql) {

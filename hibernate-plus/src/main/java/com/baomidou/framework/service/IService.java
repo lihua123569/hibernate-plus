@@ -317,26 +317,6 @@ public interface IService<V extends PrimaryKey> {
 
 	/**
 	 *
-	 * 根据class生成Hql 执行
-	 *
-	 * @return List<?>
-	 *
-	 */
-	public List<?> queryListWithHql();
-
-	/**
-	 *
-	 * 根据class生成Hql 执行
-	 *
-	 * @param property
-	 * @param value
-	 * @return List<?>
-	 *
-	 */
-	public List<?> queryListWithHql(String property, Object value);
-
-	/**
-	 *
 	 * 根据class生成Hql执行 (可强转为需要的对象)
 	 *
 	 * @param property
@@ -344,27 +324,6 @@ public interface IService<V extends PrimaryKey> {
 	 * @return Object
 	 *
 	 */
-	public Object queryMapWithHql(String property, Object value);
-
-	/**
-	 *
-	 * 根据class生成Hql执行
-	 *
-	 * @param property
-	 * @param value
-	 * @return List<?>
-	 *
-	 */
-	public List<?> queryListWithHql(String[] property, Object... value);
-
-	/**
-	 *
-	 * 根据class生成Hql执行
-	 *
-	 * @param map
-	 * @return List<?>
-	 *
-	 */
-	public List<?> queryListWithHql(Map<String, Object> map);
+	public V get(String property, Object value);
 
 }
