@@ -73,47 +73,6 @@ public interface IService<V extends PrimaryKey> {
 	public List<V> query();
 
 	/**
-	 * 查询(分页)
-	 *
-	 * @param page
-	 * @param rows
-	 * @return
-	 */
-	public List<V> query(int page, int rows);
-
-	/**
-	 * 查询(分页)
-	 *
-	 * @param page
-	 * @param rows
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public List<V> query(int page, int rows, String property, Object value);
-
-	/**
-	 * 查询(分页)
-	 *
-	 * @param page
-	 * @param rows
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public List<V> query(int page, int rows, String[] property, Object... value);
-
-	/**
-	 * 查询(分页)
-	 *
-	 * @param page
-	 * @param rows
-	 * @param map
-	 * @return
-	 */
-	public List<V> query(int page, int rows, Map<String, Object> map);
-
-	/**
 	 * 查询
 	 *
 	 * @param property
@@ -130,32 +89,6 @@ public interface IService<V extends PrimaryKey> {
 	 * @return
 	 */
 	public List<V> query(String[] property, Object... value);
-
-	/**
-	 * 查询
-	 *
-	 * @param map
-	 * @return
-	 */
-	public List<V> query(Map<String, Object> map);
-
-	/**
-	 * 查询排序
-	 *
-	 * @param order
-	 * @return
-	 */
-	public List<V> queryOrder(String order);
-
-	/**
-	 * 查询排序(分页)
-	 *
-	 * @param order
-	 * @param page
-	 * @param rows
-	 * @return
-	 */
-	public List<V> queryOrder(String order, int page, int rows);
 
 	/**
 	 * 查询排序
@@ -185,41 +118,6 @@ public interface IService<V extends PrimaryKey> {
 	 * @return
 	 */
 	public List<V> query(Map<String, Object> map, String order);
-
-	/**
-	 * 查询排序(分页)
-	 *
-	 * @param page
-	 * @param rows
-	 * @param order
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public List<V> query(int page, int rows, String order, String property, Object value);
-
-	/**
-	 * 查询排序(分页)
-	 *
-	 * @param page
-	 * @param rows
-	 * @param order
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public List<V> query(int page, int rows, String order, String[] property, Object... value);
-
-	/**
-	 * 查询排序(分页)
-	 *
-	 * @param page
-	 * @param rows
-	 * @param map
-	 * @param order
-	 * @return
-	 */
-	public List<V> query(int page, int rows, Map<String, Object> map, String order);
 
 	/**
 	 * 批量插入(不带事务 慎用)
@@ -273,7 +171,7 @@ public interface IService<V extends PrimaryKey> {
 	 *
 	 * @param id
 	 */
-	public void delete(Serializable id);
+	public void deleteById(Serializable id);
 
 	/**
 	 * 查询分页
@@ -295,7 +193,7 @@ public interface IService<V extends PrimaryKey> {
 
 	public Page<V> selectPage(Wrapper wrapper, Page<V> page);
 
-	public List<?> queryListWithSql(Wrapper wrapper);
+	public List<?> selectList(Wrapper wrapper);
 
 	public int selectCount(Wrapper wrapper);
 

@@ -61,26 +61,6 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	}
 
 	@Override
-	public List<V> query(int page, int rows) {
-		return BeanConverter.convert(vClass, baseDao.query(page, rows));
-	}
-
-	@Override
-	public List<V> query(int page, int rows, String property, Object value) {
-		return BeanConverter.convert(vClass, baseDao.query(page, rows, property, value));
-	}
-
-	@Override
-	public List<V> query(int page, int rows, String[] property, Object... value) {
-		return BeanConverter.convert(vClass, baseDao.query(page, rows, property, value));
-	}
-
-	@Override
-	public List<V> query(int page, int rows, Map<String, Object> map) {
-		return BeanConverter.convert(vClass, baseDao.query(page, rows, map));
-	}
-
-	@Override
 	public List<V> query(String property, Object value) {
 		return BeanConverter.convert(vClass, baseDao.query(property, value));
 	}
@@ -88,21 +68,6 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	@Override
 	public List<V> query(String[] property, Object... value) {
 		return BeanConverter.convert(vClass, baseDao.query(property, value));
-	}
-
-	@Override
-	public List<V> query(Map<String, Object> map) {
-		return BeanConverter.convert(vClass, baseDao.query(map));
-	}
-
-	@Override
-	public List<V> queryOrder(String order) {
-		return BeanConverter.convert(vClass, baseDao.queryOrder(order));
-	}
-
-	@Override
-	public List<V> queryOrder(String order, int page, int rows) {
-		return BeanConverter.convert(vClass, baseDao.queryOrder(order, page, rows));
 	}
 
 	@Override
@@ -118,22 +83,6 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	@Override
 	public List<V> query(Map<String, Object> map, String order) {
 		return BeanConverter.convert(vClass, baseDao.query(map, order));
-	}
-
-	@Override
-	public List<V> query(int page, int rows, String order, String property, Object value) {
-		return BeanConverter.convert(vClass, baseDao.query(page, rows, order, property, value));
-	}
-
-	@Override
-	public List<V> query(int page, int rows, String order, String[] property, Object... value) {
-		return BeanConverter.convert(vClass, baseDao.query(page, rows, order, property, value));
-
-	}
-
-	@Override
-	public List<V> query(int page, int rows, Map<String, Object> map, String order) {
-		return BeanConverter.convert(vClass, baseDao.query(page, rows, map, order));
 	}
 
 	@Override
@@ -167,8 +116,8 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	}
 
 	@Override
-	public void delete(Serializable id) {
-		baseDao.delete(baseDao.get(id));
+	public void deleteById(Serializable id) {
+		// TODO 添加 deleteById
 	}
 
 	@Override
@@ -185,8 +134,8 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 		return baseDao.selectPage(wrapper, page);
 	}
 
-	public List<?> queryListWithSql(Wrapper wrapper) {
-		return baseDao.queryListWithSql(wrapper);
+	public List<?> selectList(Wrapper wrapper) {
+		return baseDao.selectList(wrapper);
 	}
 
 	public int selectCount(Wrapper wrapper) {

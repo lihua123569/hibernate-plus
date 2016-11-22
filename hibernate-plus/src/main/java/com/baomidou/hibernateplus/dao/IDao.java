@@ -79,15 +79,6 @@ public interface IDao<T, V> {
 	/**
 	 * 查询结果集
 	 *
-	 * @param page
-	 * @param rows
-	 * @return List<T>
-	 */
-	public List<T> query(int page, int rows);
-
-	/**
-	 * 查询结果集
-	 *
 	 * @param property
 	 * @param value
 	 * @return List<T>
@@ -110,38 +101,6 @@ public interface IDao<T, V> {
 	 * @return List<T>
 	 */
 	public List<T> query(Map<String, Object> map);
-
-	/**
-	 * 查询结果集
-	 *
-	 * @param page
-	 * @param rows
-	 * @param property
-	 * @param value
-	 * @return List<T>
-	 */
-	public List<T> query(int page, int rows, String property, Object value);
-
-	/**
-	 * 查询结果集
-	 *
-	 * @param page
-	 * @param rows
-	 * @param property
-	 * @param value
-	 * @return List<T>
-	 */
-	public List<T> query(int page, int rows, String[] property, Object... value);
-
-	/**
-	 * 查询结果集
-	 *
-	 * @param page
-	 * @param rows
-	 * @param map
-	 * @return List<T>
-	 */
-	public List<T> query(int page, int rows, Map<String, Object> map);
 
 	/**
 	 * 根据class生成count语句执行
@@ -187,15 +146,6 @@ public interface IDao<T, V> {
 	/**
 	 * 查询结果集排序
 	 *
-	 * @param page
-	 * @param rows
-	 * @return List<T>
-	 */
-	public List<T> queryOrder(String order, int page, int rows);
-
-	/**
-	 * 查询结果集排序
-	 *
 	 * @param property
 	 * @param value
 	 * @return List<T>
@@ -219,41 +169,9 @@ public interface IDao<T, V> {
 	 */
 	public List<T> query(Map<String, Object> map, String order);
 
-	/**
-	 * 查询结果集排序
-	 *
-	 * @param page
-	 * @param rows
-	 * @param property
-	 * @param value
-	 * @return List<T>
-	 */
-	public List<T> query(int page, int rows, String order, String property, Object value);
-
-	/**
-	 * 查询结果集排序
-	 *
-	 * @param page
-	 * @param rows
-	 * @param property
-	 * @param value
-	 * @return List<T>
-	 */
-	public List<T> query(int page, int rows, String order, String[] property, Object... value);
-
-	/**
-	 * 查询结果集排序
-	 *
-	 * @param page
-	 * @param rows
-	 * @param map
-	 * @return List<T>
-	 */
-	public List<T> query(int page, int rows, Map<String, Object> map, String order);
-
 	public Page<V> selectPage(Wrapper wrapper, Page<V> page);
 
-	public List<?> queryListWithSql(Wrapper wrapper);
+	public List<?> selectList(Wrapper wrapper);
 
 	public int selectCount(Wrapper wrapper);
 

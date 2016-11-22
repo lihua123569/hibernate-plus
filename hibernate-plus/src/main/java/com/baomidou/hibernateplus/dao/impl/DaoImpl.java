@@ -170,12 +170,12 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 		return query(0, 0, property, value);
 	}
 
-	@Override
+	// TODO 保留方法 @Override
 	public List<T> query(int page, int rows, String property, Object value) {
 		return query(page, rows, StringUtils.EMPTY_STRING, property, value);
 	}
 
-	@Override
+	// TODO 保留方法 @Override
 	public List<T> query(int page, int rows, String[] property, Object... value) {
 		return query(0, 0, StringUtils.EMPTY_STRING, property, value);
 	}
@@ -190,12 +190,12 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 		return query(0, 0, order, property, value);
 	}
 
-	@Override
+	// TODO 保留方法 @Override
 	public List<T> query(int page, int rows, String order, String property, Object value) {
 		return query(page, rows, order, new String[] { property }, value);
 	}
 
-	@Override
+	// TODO 保留方法 @Override
 	public List<T> query(int page, int rows, String order, String[] property, Object... value) {
 		List<T> list = Collections.emptyList();
 		try {
@@ -219,7 +219,7 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 		return query(Collections.EMPTY_MAP, order);
 	}
 
-	@Override
+	// TODO 保留方法 @Override
 	public List<T> queryOrder(String order, int page, int rows) {
 		return query(page, rows, Collections.EMPTY_MAP, order);
 	}
@@ -229,7 +229,7 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 		return query(Collections.EMPTY_MAP);
 	}
 
-	@Override
+	// TODO 保留方法 @Override
 	public List<T> query(int page, int rows) {
 		return query(page, rows, Collections.EMPTY_MAP, null);
 	}
@@ -245,7 +245,7 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 		return query(0, 0, params, order);
 	}
 
-	@Override
+	// TODO 保留方法 @Override
 	public List<T> query(int page, int rows, Map<String, Object> params, String order) {
 		List<T> list = Collections.emptyList();
 		try {
@@ -261,7 +261,7 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 
 	}
 
-	@Override
+	// TODO 保留方法 @Override
 	public List<T> query(int page, int rows, Map<String, Object> map) {
 		return query(page, rows, map, StringUtils.EMPTY_STRING);
 	}
@@ -324,7 +324,8 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 	public Page<V> selectPage(Wrapper wrapper, Page<V> page) {
 		try {
 			String sql = SqlUtils.sqlList(tClass, wrapper, page);
-			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(Transformers.aliasToBean(vClass));
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
+					Transformers.aliasToBean(vClass));
 			HibernateUtils.setPage(page.getCurrent(), page.getSize(), query);
 			page.setRecords(query.list());
 			CountOptimize countOptimize = SqlUtils.getCountOptimize(sql, page.isOptimizeCount());
@@ -338,7 +339,7 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 	}
 
 	@Override
-	public List<?> queryListWithSql(Wrapper wrapper) {
+	public List<?> selectList(Wrapper wrapper) {
 		List list = Collections.EMPTY_LIST;
 		try {
 			String sql = SqlUtils.sqlList(tClass, wrapper, null);
