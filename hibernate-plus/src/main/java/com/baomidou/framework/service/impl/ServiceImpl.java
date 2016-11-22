@@ -56,36 +56,6 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	}
 
 	@Override
-	public V get(String hql) {
-		return baseDao.get(hql) == null ? null : baseDao.get(hql).convert(vClass);
-	}
-
-	@Override
-	public V get(String hql, Map<String, Object> params) {
-		return baseDao.get(hql, params) == null ? null : baseDao.get(hql, params).convert(vClass);
-	}
-
-	@Override
-	public List<V> query(String hql) {
-		return BeanConverter.convert(vClass, baseDao.query(hql));
-	}
-
-	@Override
-	public List<V> query(String hql, Map<String, Object> params) {
-		return BeanConverter.convert(vClass, baseDao.query(hql, params));
-	}
-
-	@Override
-	public List<V> query(String hql, int page, int rows) {
-		return BeanConverter.convert(vClass, baseDao.query(hql, page, rows));
-	}
-
-	@Override
-	public List<V> query(String hql, Map<String, Object> params, int page, int rows) {
-		return BeanConverter.convert(vClass, baseDao.query(hql, params, page, rows));
-	}
-
-	@Override
 	public List<V> query() {
 		return BeanConverter.convert(vClass, baseDao.query());
 	}
@@ -126,13 +96,13 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	}
 
 	@Override
-	public List<V> queryByOrder(String order) {
-		return BeanConverter.convert(vClass, baseDao.query(order));
+	public List<V> queryOrder(String order) {
+		return BeanConverter.convert(vClass, baseDao.queryOrder(order));
 	}
 
 	@Override
-	public List<V> queryByOrder(String order, int page, int rows) {
-		return BeanConverter.convert(vClass, baseDao.query(order, page, rows));
+	public List<V> queryOrder(String order, int page, int rows) {
+		return BeanConverter.convert(vClass, baseDao.queryOrder(order, page, rows));
 	}
 
 	@Override
@@ -249,103 +219,6 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	}
 
 	@Override
-	public long queryCountWithHql(String hql) {
-		return baseDao.queryCountWithHql(hql);
-	}
-
-	@Override
-	public long queryCountWithHql(String hql, Map<String, Object> params) {
-		return baseDao.queryCountWithHql(hql, params);
-	}
-
-	@Override
-	public int executeHql(String hql) {
-		return baseDao.executeHql(hql);
-	}
-
-	@Override
-	public int executeHql(String hql, Map<String, Object> params) {
-		return baseDao.executeHql(hql, params);
-
-	}
-
-	@Override
-	public int executeSql(String sql) {
-		return baseDao.executeSql(sql);
-	}
-
-	@Override
-	public int executeSql(String sql, Map<String, Object> params) {
-		return baseDao.executeSql(sql, params);
-
-	}
-
-	@Override
-	public long queryCountWithSql(String sql) {
-		return baseDao.queryCountWithSql(sql);
-	}
-
-	@Override
-	public long queryCountWithSql(String sql, Map<String, Object> params) {
-		return baseDao.queryCountWithSql(sql, params);
-	}
-
-	@Override
-	public Map<?, ?> queryMapWithSql(String sql, Map<String, Object> params) {
-		return baseDao.queryMapWithSql(sql, params);
-	}
-
-	@Override
-	public Map<?, ?> queryMapWithSql(String sql) {
-		return baseDao.queryMapWithSql(sql);
-	}
-
-	@Override
-	public List<?> queryListWithSql(String sql) {
-		return baseDao.queryListWithSql(sql);
-	}
-
-	@Override
-	public List<?> queryListWithSql(String sql, int page, int rows) {
-		return baseDao.queryListWithSql(sql, page, rows);
-	}
-
-	@Override
-	public List<?> queryListWithSql(String sql, Map<String, Object> params, int page, int rows) {
-		return baseDao.queryListWithSql(sql, params, page, rows);
-	}
-
-	@Override
-	public List<?> queryListWithSql(String sql, Map<String, Object> params) {
-		return baseDao.queryListWithSql(sql, params);
-	}
-
-	@Override
-	public int executeSqlUpdate(String sql) {
-		return baseDao.executeSqlUpdate(sql);
-	}
-
-	@Override
-	public int executeSqlUpdate(String sql, Map<String, Object> params) {
-		return baseDao.executeSqlUpdate(sql, params);
-	}
-
-	@Override
-	public List<?> queryListWithSql(String sql, Object[] args) {
-		return baseDao.queryListWithSql(sql, args);
-	}
-
-	@Override
-	public Map<?, ?> queryMapWithSql(String sql, Object[] args) {
-		return baseDao.queryMapWithSql(sql, args);
-	}
-
-	@Override
-	public int executeSqlUpdate(String sql, Object[] args) {
-		return baseDao.executeSqlUpdate(sql, args);
-	}
-
-	@Override
 	public List<?> queryListWithHql() {
 		return baseDao.queryListWithHql();
 	}
@@ -370,16 +243,6 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	public List<?> queryListWithHql(Map<String, Object> map) {
 		return baseDao.queryListWithHql(map);
 
-	}
-
-	@Override
-	public List<?> queryListWithHql(String hql) {
-		return baseDao.queryListWithHql(hql);
-	}
-
-	@Override
-	public List<?> queryListWithHql(String hql, int page, int rows) {
-		return baseDao.queryListWithHql(hql, page, rows);
 	}
 
 }

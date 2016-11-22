@@ -54,13 +54,11 @@ public abstract class DaoImpl<T> implements IDao<T> {
 		return (T) HibernateUtils.getCurrentSession(getSessionFactory()).get(clazz, id);
 	}
 
-	@Override
-	public T get(String hql) {
+	protected T get(String hql) {
 		return (T) get(hql, Collections.EMPTY_MAP);
 	}
 
-	@Override
-	public T get(String hql, Map<String, Object> params) {
+	protected T get(String hql, Map<String, Object> params) {
 		if (StringUtils.isBlank(hql))
 			throw new HibernatePlusException("execute Get Fail! Param is Empty !");
 		T t = null;
@@ -101,18 +99,15 @@ public abstract class DaoImpl<T> implements IDao<T> {
 		HibernateUtils.getCurrentSession(getSessionFactory()).saveOrUpdate(t);
 	}
 
-	@Override
-	public List<T> query(String hql) {
+	protected List<T> query(String hql) {
 		return query(hql, Collections.EMPTY_MAP);
 	}
 
-	@Override
-	public List<T> query(String hql, Map<String, Object> params) {
+	protected List<T> query(String hql, Map<String, Object> params) {
 		return query(hql, params, 0, 0);
 	}
 
-	@Override
-	public List<T> query(String hql, Map<String, Object> params, int page, int rows) {
+	protected List<T> query(String hql, Map<String, Object> params, int page, int rows) {
 		if (StringUtils.isBlank(hql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
 		List<T> list = Collections.emptyList();
@@ -128,8 +123,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 
 	}
 
-	@Override
-	public List<T> query(String hql, int page, int rows) {
+	protected List<T> query(String hql, int page, int rows) {
 		return query(hql, Collections.EMPTY_MAP, page, rows);
 	}
 
@@ -365,13 +359,11 @@ public abstract class DaoImpl<T> implements IDao<T> {
 		return count;
 	}
 
-	@Override
-	public long queryCountWithHql(String hql) {
+	protected long queryCountWithHql(String hql) {
 		return queryCountWithHql(hql, Collections.EMPTY_MAP);
 	}
 
-	@Override
-	public long queryCountWithHql(String hql, Map<String, Object> params) {
+	protected long queryCountWithHql(String hql, Map<String, Object> params) {
 		if (StringUtils.isBlank(hql))
 			throw new HibernatePlusException("Query Count Fail! Param is Empty !");
 		Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
@@ -384,13 +376,11 @@ public abstract class DaoImpl<T> implements IDao<T> {
 		return (Long) query.uniqueResult();
 	}
 
-	@Override
-	public int executeHql(String hql) {
+	protected int executeHql(String hql) {
 		return executeHql(hql, Collections.EMPTY_MAP);
 	}
 
-	@Override
-	public int executeHql(String hql, Map<String, Object> params) {
+	protected int executeHql(String hql, Map<String, Object> params) {
 		if (StringUtils.isBlank(hql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
 		Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
@@ -403,13 +393,11 @@ public abstract class DaoImpl<T> implements IDao<T> {
 		return query.executeUpdate();
 	}
 
-	@Override
-	public int executeSql(String sql) {
+	protected int executeSql(String sql) {
 		return executeSql(sql, Collections.EMPTY_MAP);
 	}
 
-	@Override
-	public int executeSql(String sql, Map<String, Object> params) {
+	protected int executeSql(String sql, Map<String, Object> params) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
 		Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
@@ -422,13 +410,11 @@ public abstract class DaoImpl<T> implements IDao<T> {
 		return query.executeUpdate();
 	}
 
-	@Override
-	public long queryCountWithSql(String sql) {
+	protected long queryCountWithSql(String sql) {
 		return queryCountWithSql(sql, Collections.EMPTY_MAP);
 	}
 
-	@Override
-	public long queryCountWithSql(String sql, Map<String, Object> params) {
+	protected long queryCountWithSql(String sql, Map<String, Object> params) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
 		Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
@@ -442,8 +428,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 		return count.longValue();
 	}
 
-	@Override
-	public Map<?, ?> queryMapWithSql(String sql, Map<String, Object> params) {
+	protected Map<?, ?> queryMapWithSql(String sql, Map<String, Object> params) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
 		Map resultMap = Collections.EMPTY_MAP;
@@ -463,23 +448,19 @@ public abstract class DaoImpl<T> implements IDao<T> {
 		return resultMap;
 	}
 
-	@Override
-	public Map<?, ?> queryMapWithSql(String sql) {
+	protected Map<?, ?> queryMapWithSql(String sql) {
 		return queryMapWithSql(sql, Collections.EMPTY_MAP);
 	}
 
-	@Override
-	public List<?> queryListWithSql(String sql) {
+	protected List<?> queryListWithSql(String sql) {
 		return queryListWithSql(sql, Collections.EMPTY_MAP);
 	}
 
-	@Override
-	public List<?> queryListWithSql(String sql, int page, int rows) {
+	protected List<?> queryListWithSql(String sql, int page, int rows) {
 		return queryListWithSql(sql, Collections.EMPTY_MAP, page, rows);
 	}
 
-	@Override
-	public List<?> queryListWithSql(String sql, Map<String, Object> params, int page, int rows) {
+	protected List<?> queryListWithSql(String sql, Map<String, Object> params, int page, int rows) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
 		List list = Collections.EMPTY_LIST;
@@ -500,18 +481,15 @@ public abstract class DaoImpl<T> implements IDao<T> {
 		return list;
 	}
 
-	@Override
-	public List<?> queryListWithSql(String sql, Map<String, Object> params) {
+	protected List<?> queryListWithSql(String sql, Map<String, Object> params) {
 		return queryListWithSql(sql, params, 0, 0);
 	}
 
-	@Override
-	public int executeSqlUpdate(String sql) {
+	protected int executeSqlUpdate(String sql) {
 		return executeSqlUpdate(sql, Collections.EMPTY_MAP);
 	}
 
-	@Override
-	public int executeSqlUpdate(String sql, Map<String, Object> params) {
+	protected int executeSqlUpdate(String sql, Map<String, Object> params) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
 		int resultCount = 0;
@@ -532,8 +510,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 		return resultCount;
 	}
 
-	@Override
-	public List<?> queryListWithSql(String sql, Object[] args) {
+	protected List<?> queryListWithSql(String sql, Object[] args) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
 		List list = Collections.EMPTY_LIST;
@@ -552,8 +529,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 		return list;
 	}
 
-	@Override
-	public Map<?, ?> queryMapWithSql(String sql, Object[] args) {
+	protected Map<?, ?> queryMapWithSql(String sql, Object[] args) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
 		Map resultMap = Collections.EMPTY_MAP;
@@ -572,8 +548,7 @@ public abstract class DaoImpl<T> implements IDao<T> {
 		return resultMap;
 	}
 
-	@Override
-	public int executeSqlUpdate(String sql, Object[] args) {
+	protected int executeSqlUpdate(String sql, Object[] args) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
 		int resultCount = 0;
@@ -653,13 +628,11 @@ public abstract class DaoImpl<T> implements IDao<T> {
 
 	}
 
-	@Override
-	public List<?> queryListWithHql(String hql) {
+	protected List<?> queryListWithHql(String hql) {
 		return queryListWithHql(hql, 0, 0);
 	}
 
-	@Override
-	public List<?> queryListWithHql(String hql, int page, int rows) {
+	protected List<?> queryListWithHql(String hql, int page, int rows) {
 		if (StringUtils.isBlank(hql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
 		List list = Collections.EMPTY_LIST;
