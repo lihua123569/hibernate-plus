@@ -55,6 +55,14 @@ public interface IService<V extends PrimaryKey> {
 	public V get(Serializable id);
 
 	/**
+	 * 获取单个对象
+	 *
+	 * @param wrapper
+	 * @return
+	 */
+	public V selectOne(Wrapper wrapper);
+
+	/**
 	 *
 	 * 根据class生成Hql执行 (可强转为需要的对象)
 	 *
@@ -70,14 +78,28 @@ public interface IService<V extends PrimaryKey> {
 	 *
 	 * @param list
 	 */
-	public void insertWithBatch(List<V> list);
+	public boolean insertBatch(List<V> list);
 
 	/**
 	 * 批量修改(不带事务 慎用)
 	 *
 	 * @param list
 	 */
-	public void updateWithBatch(List<V> list);
+	public boolean updateBatch(List<V> list);
+
+	/**
+	 * 批量插入(不带事务 慎用)
+	 *
+	 * @param list
+	 */
+	public boolean insertBatch(List<V> list, int size);
+
+	/**
+	 * 批量修改(不带事务 慎用)
+	 *
+	 * @param list
+	 */
+	public boolean updateBatch(List<V> list, int size);
 
 	/**
 	 * 查询数量
@@ -146,5 +168,29 @@ public interface IService<V extends PrimaryKey> {
 	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz);
 
 	public int selectCount(Wrapper wrapper);
+
+	/**
+	 * <p>
+	 * 根据 entity 条件，删除记录
+	 * </p>
+	 *
+	 * @param wrapper
+	 *            实体包装类 {@link Wrapper}
+	 * @return boolean
+	 */
+	boolean delete(Wrapper wrapper);
+
+	/**
+	 * <p>
+	 * 根据 whereEntity 条件，更新记录
+	 * </p>
+	 *
+	 * @param setMap
+	 *            实体对象
+	 * @param wrapper
+	 *            实体包装类 {@link Wrapper}
+	 * @return boolean
+	 */
+	boolean update(Map<String, Object> setMap, Wrapper wrapper);
 
 }

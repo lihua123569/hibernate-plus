@@ -32,11 +32,26 @@ public interface IDao<T, V> {
 	public void delete(T o);
 
 	/**
+	 * 删除方法
+	 *
+	 * @param wrapper
+	 */
+	public int delete(Wrapper wrapper);
+
+	/**
 	 * 修改方法
 	 *
 	 * @param o
 	 */
 	public void update(T o);
+
+	/**
+	 * 修改方法
+	 *
+	 * @param setMap
+	 * @param wrapper
+	 */
+	public int update(Map<String, Object> setMap, Wrapper wrapper);
 
 	/**
 	 * 保存/修改方法
@@ -59,7 +74,7 @@ public interface IDao<T, V> {
 	 * @param list
 	 * @return
 	 */
-	public void insertWithBatch(List<T> list);
+	public boolean insertBatch(List<T> list, int size);
 
 	/**
 	 * 批量修改
@@ -67,7 +82,7 @@ public interface IDao<T, V> {
 	 * @param list
 	 * @return
 	 */
-	public void updateWithBatch(List<T> list);
+	public boolean updateBatch(List<T> list, int size);
 
 	/**
 	 * 根据class生成count语句执行

@@ -90,10 +90,25 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 	}
 
 	@Override
+	public int delete(Wrapper wrapper) {
+		String sqlDelete = SqlUtils.sqlDelete(tClass, wrapper);
+		return executeSql(sqlDelete);
+
+	}
+
+	@Override
 	public void update(T t) {
 		if (null == t)
 			throw new HibernatePlusException("execute Update! Param is Empty !");
 		HibernateUtils.getCurrentSession(getSessionFactory()).merge(t);
+	}
+
+	@Override
+	public int update(Map<String, Object> setMap, Wrapper wrapper) {
+		if (MapUtils.isEmpty(setMap))
+			throw new HibernatePlusException("execute Update! Param is Empty !");
+		String sqlUpdate = SqlUtils.sqlUpdate(tClass, setMap, wrapper);
+		return executeSqlUpdate(sqlUpdate);
 	}
 
 	@Override
@@ -132,31 +147,44 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 	}
 
 	@Override
-	public void insertWithBatch(List<T> list) {
+	public boolean insertBatch(List<T> list, int size) {
 		if (CollectionUtils.isEmpty(list))
 			throw new HibernatePlusException("execute BatchInsert Fail! Param is Empty !");
-		Session session = HibernateUtils.getCurrentSession(getSessionFactory());
-		for (int i = 0; i < list.size(); i++) {
-			session.save(list.get(i));
-			if (i % 30 == 0) {
-				session.flush();
-				session.clear();
+		try {
+			Session session = HibernateUtils.getCurrentSession(getSessionFactory());
+			for (int i = 0; i < list.size(); i++) {
+				session.save(list.get(i));
+				if (i % 30 == 0) {
+					session.flush();
+					session.clear();
+				}
 			}
+		} catch (Exception e) {
+			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			return false;
 		}
+		return true;
 	}
 
 	@Override
-	public void updateWithBatch(List<T> list) {
+	public boolean updateBatch(List<T> list, int size) {
 		if (CollectionUtils.isEmpty(list))
 			throw new HibernatePlusException("execute BatchUpdate Fail! Param is Empty !");
-		Session session = HibernateUtils.getCurrentSession(getSessionFactory());
-		for (int i = 0; i < list.size(); i++) {
-			session.update(list.get(i));
-			if (i % 30 == 0) {
-				session.flush();
-				session.clear();
+		try {
+			Session session = HibernateUtils.getCurrentSession(getSessionFactory());
+			for (int i = 0; i < list.size(); i++) {
+				session.update(list.get(i));
+				if (i % 30 == 0) {
+					session.flush();
+					session.clear();
+				}
 			}
+		} catch (Exception e) {
+			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			return false;
 		}
+		return true;
+
 	}
 
 	// TODO 保留方法 @Override

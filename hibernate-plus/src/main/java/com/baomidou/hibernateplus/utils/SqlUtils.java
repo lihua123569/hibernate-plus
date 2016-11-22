@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2011-2020, hubin (jobob@qq.com).
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,13 +15,17 @@
  */
 package com.baomidou.hibernateplus.utils;
 
+import com.baomidou.framework.entity.EntityInfo;
+import com.baomidou.framework.entity.PrimaryKey;
+import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 import com.baomidou.hibernateplus.page.CountOptimize;
 import com.baomidou.hibernateplus.page.Page;
 import com.baomidou.hibernateplus.page.Pagination;
-import com.baomidou.framework.entity.EntityInfo;
 import com.baomidou.hibernateplus.query.Wrapper;
-import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
+
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * <p>
@@ -36,10 +40,12 @@ public class SqlUtils {
 	private final static BasicFormatterImpl sqlFormatter = new BasicFormatterImpl();
 	private static final String SQL_COUNT = "SELECT COUNT(0) FROM %s %s";
 	private static final String SQL_LIST = "SELECT %s FROM %s %s";
+	private static final String SQL_DELETE = "DELETE FROM %s %s";
+	private static final String SQL_UPDATE = "UPDATE %s SET %s %s";
 
 	/**
 	 * 获取CountOptimize
-	 * 
+	 *
 	 * @param originalSql
 	 *            需要计算Count SQL
 	 * @param isOptimizeCount
@@ -81,7 +87,7 @@ public class SqlUtils {
 
 	/**
 	 * 查询SQL拼接Order By
-	 * 
+	 *
 	 * @param originalSql
 	 *            需要拼接的SQL
 	 * @param page
@@ -102,7 +108,7 @@ public class SqlUtils {
 
 	/**
 	 * 格式sql
-	 * 
+	 *
 	 * @param boundSql
 	 * @param format
 	 * @return
@@ -150,4 +156,49 @@ public class SqlUtils {
 		return tableName;
 	}
 
+	/**
+	 * 获取删除sql
+	 *
+	 * @param clazz
+	 * @param wrapper
+	 * @param <T>
+	 * @return
+	 */
+	public static <T extends PrimaryKey> String sqlDelete(Class<T> clazz, Wrapper wrapper) {
+		String tableName = getTableName(clazz);
+		if (wrapper != null) {
+			return String.format(SqlUtils.SQL_DELETE, tableName, wrapper.getSqlSegment());
+		}
+		return String.format(SqlUtils.SQL_DELETE, tableName);
+	}
+
+	/**
+	 * 获取Update SQL
+	 * 
+	 * @param clazz
+	 * @param setMap
+	 * @param wrapper
+	 * @return
+	 */
+	public static String sqlUpdate(Class clazz, Map<String, Object> setMap, Wrapper wrapper) {
+		String tableName = getTableName(clazz);
+		Iterator iterator = setMap.entrySet().iterator();
+		int _size = setMap.size();
+		int i = 0;
+		StringBuilder builder = new StringBuilder();
+		while (iterator.hasNext()) {
+			Map.Entry<String, Object> entry = (Map.Entry<String, Object>) iterator.next();
+			String key = entry.getKey();
+			Object value = entry.getValue();
+			builder.append(String.format("%s = %s", key, value));
+			if (i + 1 != _size) {
+				builder.append(",");
+			}
+			i++;
+		}
+		if (wrapper != null) {
+			return String.format(SqlUtils.SQL_UPDATE, tableName, builder.toString(), wrapper.getSqlSegment());
+		}
+		return String.format(SqlUtils.SQL_UPDATE, tableName, builder.toString());
+	}
 }

@@ -7,12 +7,14 @@ import com.baomidou.hibernateplus.dao.IDao;
 import com.baomidou.hibernateplus.page.Page;
 import com.baomidou.hibernateplus.query.Condition;
 import com.baomidou.hibernateplus.query.Wrapper;
+import com.baomidou.hibernateplus.utils.CollectionUtils;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * <p>
@@ -23,6 +25,9 @@ import java.util.Map;
  * @date 2016-10-23
  */
 public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements IService<V> {
+
+	protected static final Logger logger = Logger.getLogger("ServiceImpl");
+
 	// 反射TO泛型
 	protected Class<T> tClass = ReflectionKit.getSuperClassGenricType(getClass(), 0);
 	// 反射VO泛型
@@ -56,13 +61,36 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	}
 
 	@Override
-	public void insertWithBatch(List<V> list) {
-		baseDao.insertWithBatch(BeanConverter.convert(tClass, list));
+	public V selectOne(Wrapper wrapper) {
+		List<V> list = selectList(wrapper);
+		if (CollectionUtils.isNotEmpty(list)) {
+			int size = list.size();
+			if (size > 1) {
+				logger.warning(String.format("Warn: selectOne Method There are  %s results.", size));
+			}
+			return list.get(0);
+		}
+		return null;
 	}
 
 	@Override
-	public void updateWithBatch(List<V> list) {
-		baseDao.updateWithBatch(BeanConverter.convert(tClass, list));
+	public boolean insertBatch(List<V> list) {
+		return baseDao.insertBatch(BeanConverter.convert(tClass, list), 30);
+	}
+
+	@Override
+	public boolean updateBatch(List<V> list) {
+		return baseDao.updateBatch(BeanConverter.convert(tClass, list), 30);
+	}
+
+	@Override
+	public boolean insertBatch(List<V> list, int size) {
+		return baseDao.insertBatch(BeanConverter.convert(tClass, list), size);
+	}
+
+	@Override
+	public boolean updateBatch(List<V> list, int size) {
+		return baseDao.updateBatch(BeanConverter.convert(tClass, list), size);
 	}
 
 	@Override
@@ -121,9 +149,30 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	}
 
 	@Override
+	public boolean delete(Wrapper wrapper) {
+		return retBool(baseDao.delete(wrapper));
+
+	}
+
+	@Override
+	public boolean update(Map<String, Object> setMap, Wrapper wrapper) {
+		return retBool(baseDao.update(setMap, wrapper));
+	}
+
+	@Override
 	public V get(String property, Object value) {
 		return baseDao.get(property, value) == null ? null : baseDao.get(property, value).convert(vClass);
 
 	}
 
+	/**
+	 * 判断数据库操作是否成功
+	 *
+	 * @param result
+	 *            数据库操作返回影响条数
+	 * @return boolean
+	 */
+	protected boolean retBool(int result) {
+		return result >= 1;
+	}
 }
