@@ -302,7 +302,7 @@ public class DaoImpl<T> implements IDao<T> {
 		for (int i = 0; i < value.length; i++) {
 			HibernateUtils.setParams(query, StringUtils.toString(i), value[i]);
 		}
-		return (long) query.uniqueResult();
+		return (Long) query.uniqueResult();
 	}
 
 	@Override
@@ -315,7 +315,7 @@ public class DaoImpl<T> implements IDao<T> {
 				HibernateUtils.setParams(query, key, obj);
 			}
 		}
-		return (long) query.uniqueResult();
+		return (Long) query.uniqueResult();
 
 	}
 

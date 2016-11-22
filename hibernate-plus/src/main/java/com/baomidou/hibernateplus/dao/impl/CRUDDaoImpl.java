@@ -51,7 +51,7 @@ public class CRUDDaoImpl implements CRUDDao {
 				HibernateUtils.setParams(query, key, obj);
 			}
 		}
-		return (long) query.uniqueResult();
+		return (Long) query.uniqueResult();
 	}
 
 	@Override

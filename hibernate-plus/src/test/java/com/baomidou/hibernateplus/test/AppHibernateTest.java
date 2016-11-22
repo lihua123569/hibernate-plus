@@ -33,11 +33,11 @@ public class AppHibernateTest {
 	public void test2() throws Exception {
 		String order = "c1,c2";
 		String[] arrays = new String[] { "c1", "c2" };
-		List list = new ArrayList<>();
+		List list = new ArrayList();
 		list.add("111");
 		list.add("222");
 		list.add("333");
-		Map map = new HashMap<>();
+		Map map = new HashMap();
 		map.put("key1", "key1");
 		map.put("key2", "key2");
 		map.put("key3", new String[] { "c1", "c2" });
