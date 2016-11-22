@@ -4,7 +4,6 @@ import com.baomidou.framework.entity.PrimaryKey;
 import com.baomidou.framework.service.IService;
 import com.baomidou.hibernateplus.converter.BeanConverter;
 import com.baomidou.hibernateplus.dao.IDao;
-import com.baomidou.hibernateplus.page.BasePage;
 import com.baomidou.hibernateplus.page.Page;
 import com.baomidou.hibernateplus.query.Wrapper;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
@@ -172,37 +171,37 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	}
 
 	@Override
-	public BasePage<V> findAllPage(BasePage<V> page) {
+	public Page<V> findAllPage(Page<V> page) {
 		List<V> rows = BeanConverter.convert(vClass, baseDao.query());
-		page.setRows(rows);
+		page.setRecords(rows);
 		return page;
 	}
 
 	@Override
-	public BasePage<V> findPage(BasePage<V> page) {
-		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getFirst(), page.getPageSize()));
-		page.setRows(rows);
+	public Page<V> findPage(Page<V> page) {
+		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getCurrent(), page.getSize()));
+		page.setRecords(rows);
 		return page;
 	}
 
 	@Override
-	public BasePage<V> findPage(BasePage<V> page, String property, Object value) {
-		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getFirst(), page.getPageSize(), property, value));
-		page.setRows(rows);
+	public Page<V> findPage(Page<V> page, String property, Object value) {
+		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getCurrent(), page.getSize(), property, value));
+		page.setRecords(rows);
 		return page;
 	}
 
 	@Override
-	public BasePage<V> findPage(BasePage<V> page, String[] property, Object... value) {
-		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getFirst(), page.getPageSize(), property, value));
-		page.setRows(rows);
+	public Page<V> findPage(Page<V> page, String[] property, Object... value) {
+		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getCurrent(), page.getSize(), property, value));
+		page.setRecords(rows);
 		return page;
 	}
 
 	@Override
-	public BasePage<V> findPage(BasePage<V> page, Map<String, Object> map) {
-		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getFirst(), page.getPageSize(), map));
-		page.setRows(rows);
+	public Page<V> findPage(Page<V> page, Map<String, Object> map) {
+		List<V> rows = BeanConverter.convert(vClass, baseDao.query(page.getCurrent(), page.getSize(), map));
+		page.setRecords(rows);
 		return page;
 	}
 

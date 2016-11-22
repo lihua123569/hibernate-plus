@@ -1,8 +1,7 @@
 package com.baomidou.framework.service;
 
-import com.baomidou.hibernateplus.page.BasePage;
-import com.baomidou.hibernateplus.page.Page;
 import com.baomidou.framework.entity.PrimaryKey;
+import com.baomidou.hibernateplus.page.Page;
 import com.baomidou.hibernateplus.query.Wrapper;
 
 import java.io.Serializable;
@@ -271,7 +270,7 @@ public interface IService<V extends PrimaryKey> {
 	 * @param page
 	 * @return
 	 */
-	public BasePage<V> findAllPage(BasePage<V> page);
+	public Page<V> findAllPage(Page<V> page);
 
 	/**
 	 * 查询分页
@@ -279,17 +278,7 @@ public interface IService<V extends PrimaryKey> {
 	 * @param page
 	 * @return
 	 */
-	public BasePage<V> findPage(BasePage<V> page);
-
-	/**
-	 * 查询分页
-	 *
-	 * @param page
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public BasePage<V> findPage(BasePage<V> page, String property, Object value);
+	public Page<V> findPage(Page<V> page);
 
 	/**
 	 * 查询分页
@@ -299,7 +288,17 @@ public interface IService<V extends PrimaryKey> {
 	 * @param value
 	 * @return
 	 */
-	public BasePage<V> findPage(BasePage<V> page, String[] property, Object... value);
+	public Page<V> findPage(Page<V> page, String property, Object value);
+
+	/**
+	 * 查询分页
+	 *
+	 * @param page
+	 * @param property
+	 * @param value
+	 * @return
+	 */
+	public Page<V> findPage(Page<V> page, String[] property, Object... value);
 
 	/**
 	 * 查询分页
@@ -308,7 +307,7 @@ public interface IService<V extends PrimaryKey> {
 	 * @param map
 	 * @return
 	 */
-	public BasePage<V> findPage(BasePage<V> page, Map<String, Object> map);
+	public Page<V> findPage(Page<V> page, Map<String, Object> map);
 
 	public Page<?> queryListWithSql(Wrapper wrapper, Page page);
 
