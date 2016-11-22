@@ -12,7 +12,6 @@ import com.baomidou.hibernateplus.utils.MapUtils;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
 import com.baomidou.hibernateplus.utils.SqlUtils;
 import com.baomidou.hibernateplus.utils.StringUtils;
-import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -321,7 +320,7 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 	}
 
 	@Override
-	public <W> Page<W> selectPage(Wrapper wrapper, Class<W> clazz, Page<W> page) {
+	public <E> Page<E> selectPage(Wrapper wrapper, Class<E> clazz, Page<E> page) {
 		try {
 			String sql = SqlUtils.sqlList(tClass, wrapper, page);
 			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
@@ -339,8 +338,8 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 	}
 
 	@Override
-	public <W> List<W> selectList(Wrapper wrapper, Class<W> clazz) {
-		List<W> list = Collections.emptyList();
+	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz) {
+		List<E> list = Collections.emptyList();
 		try {
 			String sql = SqlUtils.sqlList(tClass, wrapper, null);
 			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
@@ -366,11 +365,11 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 		return count;
 	}
 
-	protected long queryCountWithHql(String hql) {
+	protected int queryCountWithHql(String hql) {
 		return queryCountWithHql(hql, Collections.EMPTY_MAP);
 	}
 
-	protected long queryCountWithHql(String hql, Map<String, Object> params) {
+	protected int queryCountWithHql(String hql, Map<String, Object> params) {
 		if (StringUtils.isBlank(hql))
 			throw new HibernatePlusException("Query Count Fail! Param is Empty !");
 		Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
@@ -380,7 +379,8 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 				HibernateUtils.setParams(query, key, obj);
 			}
 		}
-		return (Long) query.uniqueResult();
+		BigInteger bigInteger = (BigInteger) query.uniqueResult();
+		return bigInteger.intValue();
 	}
 
 	protected int executeHql(String hql) {
@@ -417,11 +417,11 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 		return query.executeUpdate();
 	}
 
-	protected long queryCountWithSql(String sql) {
+	protected int queryCountWithSql(String sql) {
 		return queryCountWithSql(sql, Collections.EMPTY_MAP);
 	}
 
-	protected long queryCountWithSql(String sql, Map<String, Object> params) {
+	protected int queryCountWithSql(String sql, Map<String, Object> params) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
 		Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
@@ -432,48 +432,48 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 			}
 		}
 		BigInteger count = (BigInteger) query.uniqueResult();
-		return count.longValue();
+		return count.intValue();
 	}
 
-	protected Map<?, ?> queryMapWithSql(String sql, Map<String, Object> params) {
+	protected <E> E queryMapWithSql(Class<E> clazz, String sql, Map<String, Object> params) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
-		Map resultMap = Collections.EMPTY_MAP;
+		E entity = null;
 		try {
-			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
-			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
+					Transformers.aliasToBean(clazz));
 			if (MapUtils.isNotEmpty(params)) {
 				for (String key : params.keySet()) {
 					Object obj = params.get(key);
 					HibernateUtils.setParams(query, key, obj);
 				}
 			}
-			resultMap = (Map) query.uniqueResult();
+			entity = (E) query.uniqueResult();
 		} catch (Exception e) {
 			logger.warning("Warn: Unexpected exception.  Cause:" + e);
 		}
-		return resultMap;
+		return entity;
 	}
 
-	protected Map<?, ?> queryMapWithSql(String sql) {
-		return queryMapWithSql(sql, Collections.EMPTY_MAP);
+	protected <E> E queryMapWithSql(Class<E> clazz, String sql) {
+		return (E) this.<E> queryMapWithSql(clazz, sql, Collections.EMPTY_MAP);
 	}
 
-	protected List<?> queryListWithSql(String sql) {
-		return queryListWithSql(sql, Collections.EMPTY_MAP);
+	protected <E> List<E> queryListWithSql(Class<E> clazz, String sql) {
+		return this.<E> queryListWithSql(clazz, sql, Collections.EMPTY_MAP);
 	}
 
-	protected List<?> queryListWithSql(String sql, int page, int rows) {
-		return queryListWithSql(sql, Collections.EMPTY_MAP, page, rows);
+	protected <E> List<E> queryListWithSql(Class<E> clazz, String sql, int page, int rows) {
+		return this.<E> queryListWithSql(clazz, sql, Collections.EMPTY_MAP, page, rows);
 	}
 
-	protected List<?> queryListWithSql(String sql, Map<String, Object> params, int page, int rows) {
+	protected <E> List<E> queryListWithSql(Class<E> clazz, String sql, Map<String, Object> params, int page, int rows) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
-		List list = Collections.EMPTY_LIST;
+		List<E> list = Collections.emptyList();
 		try {
-			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
-			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
+					Transformers.aliasToBean(clazz));
 			if (MapUtils.isNotEmpty(params)) {
 				for (String key : params.keySet()) {
 					Object obj = params.get(key);
@@ -488,8 +488,8 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 		return list;
 	}
 
-	protected List<?> queryListWithSql(String sql, Map<String, Object> params) {
-		return queryListWithSql(sql, params, 0, 0);
+	protected <E> List<E> queryListWithSql(Class<E> clazz, String sql, Map<String, Object> params) {
+		return this.<E> queryListWithSql(clazz, sql, params, 0, 0);
 	}
 
 	protected int executeSqlUpdate(String sql) {
@@ -517,13 +517,13 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 		return resultCount;
 	}
 
-	protected List<?> queryListWithSql(String sql, Object[] args) {
+	protected <E> List<E> queryListWithSql(Class<E> clazz, String sql, Object[] args) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
 		List list = Collections.EMPTY_LIST;
 		try {
-			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
-			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
+					Transformers.aliasToBean(clazz));
 			if (null != args) {
 				for (int i = 0; i < args.length; i++) {
 					HibernateUtils.setParams(query, StringUtils.toString(i), args[i]);
@@ -536,23 +536,23 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 		return list;
 	}
 
-	protected Map<?, ?> queryMapWithSql(String sql, Object[] args) {
+	protected <E> E queryMapWithSql(Class<E> clazz, String sql, Object[] args) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
-		Map resultMap = Collections.EMPTY_MAP;
+		E entity = null;
 		try {
-			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
-			query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
+					Transformers.aliasToBean(clazz));
 			if (null != args) {
 				for (int i = 0; i < args.length; i++) {
 					HibernateUtils.setParams(query, StringUtils.toString(i), args[i]);
 				}
 			}
-			resultMap = (Map) query.uniqueResult();
+			entity = (E) query.uniqueResult();
 		} catch (Exception e) {
 			logger.warning("Warn: Unexpected exception.  Cause:" + e);
 		}
-		return resultMap;
+		return entity;
 	}
 
 	protected int executeSqlUpdate(String sql, Object[] args) {
@@ -574,13 +574,18 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 	}
 
 	// TODO 保留方法 @Override
-	public List<?> queryListWithHql() {
-		return queryListWithHql(Collections.EMPTY_MAP);
+	public <E> List<E> queryListWithHql(Class<E> clazz) {
+		return this.<E> queryListWithHql(clazz, Collections.EMPTY_MAP);
 	}
 
 	// TODO 保留方法 @Override
-	public List<?> queryListWithHql(String property, Object value) {
-		return queryListWithHql(new String[] { property }, value);
+	public <E> List<E> queryListWithHql() {
+		return queryListWithHql(tClass, Collections.EMPTY_MAP);
+	}
+
+	// TODO 保留方法 @Override
+	public <E> List<E> queryListWithHql(Class<E> clazz, String property, Object value) {
+		return this.<E> queryListWithHql(clazz, new String[] { property }, value);
 	}
 
 	@Override
@@ -588,7 +593,8 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 		T t = null;
 		try {
 			String hql = HibernateUtils.getListHql(tClass, property);
-			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
+			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory()).setResultTransformer(
+					Transformers.aliasToBean(tClass));
 			HibernateUtils.setParams(query, "0", value);
 			t = (T) query.uniqueResult();
 		} catch (Exception e) {
@@ -598,11 +604,12 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 	}
 
 	// TODO 保留方法 @Override
-	public List<?> queryListWithHql(String[] property, Object... value) {
-		List list = Collections.EMPTY_LIST;
+	public <E> List<E> queryListWithHql(Class<E> clazz, String[] property, Object... value) {
+		List<E> list = Collections.emptyList();
 		try {
 			String hql = HibernateUtils.getListHql(tClass, property);
-			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
+			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory()).setResultTransformer(
+					Transformers.aliasToBean(clazz));
 			if (null != value) {
 				for (int i = 0; i < value.length; i++) {
 					HibernateUtils.setParams(query, StringUtils.toString(i), value);
@@ -618,11 +625,12 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 	}
 
 	// TODO 保留方法 @Override
-	public List<?> queryListWithHql(Map<String, Object> map) {
-		List list = Collections.EMPTY_LIST;
+	public <E> List<E> queryListWithHql(Class<E> clazz, Map<String, Object> map) {
+		List<E> list = Collections.emptyList();
 		try {
 			String hql = HibernateUtils.getListHql(tClass, map);
-			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
+			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory()).setResultTransformer(
+					Transformers.aliasToBean(clazz));
 			for (String key : map.keySet()) {
 				Object obj = map.get(key);
 				HibernateUtils.setParams(query, key, obj);
@@ -635,16 +643,17 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 
 	}
 
-	protected List<?> queryListWithHql(String hql) {
-		return queryListWithHql(hql, 0, 0);
+	protected <E> List<E> queryListWithHql(Class<E> clazz, String hql) {
+		return this.<E> queryListWithHql(clazz, hql, 0, 0);
 	}
 
-	protected List<?> queryListWithHql(String hql, int page, int rows) {
+	protected <E> List<E> queryListWithHql(Class<E> clazz, String hql, int page, int rows) {
 		if (StringUtils.isBlank(hql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
-		List list = Collections.EMPTY_LIST;
+		List<E> list = Collections.emptyList();
 		try {
-			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
+			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory()).setResultTransformer(
+					Transformers.aliasToBean(clazz));
 			HibernateUtils.setPage(page, rows, query);
 			list = query.list();
 

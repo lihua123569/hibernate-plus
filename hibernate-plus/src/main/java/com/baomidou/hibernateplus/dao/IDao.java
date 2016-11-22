@@ -110,9 +110,9 @@ public interface IDao<T, V> {
 	 */
 	public List<T> queryOrder(String order);
 
-	public <W> Page<W> selectPage(Wrapper wrapper, Class<W> clazz, Page<W> page);
+	public <E> Page<E> selectPage(Wrapper wrapper, Class<E> clazz, Page<E> page);
 
-	public <W> List<W> selectList(Wrapper wrapper, Class<W> clazz);
+	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz);
 
 	public int selectCount(Wrapper wrapper);
 

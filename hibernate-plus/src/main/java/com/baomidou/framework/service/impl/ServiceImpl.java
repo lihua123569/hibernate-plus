@@ -104,16 +104,16 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 		return baseDao.selectPage(wrapper, vClass, page);
 	}
 
-	public <W> Page<W> selectPage(Wrapper wrapper, Class<W> clazz, Page<W> page) {
-		return baseDao.selectPage(wrapper, clazz, page);
+	public <E> Page<E> selectPage(Wrapper wrapper, Class<E> clazz, Page<E> page) {
+		return baseDao.<E> selectPage(wrapper, clazz, page);
 	}
 
 	public List<V> selectList(Wrapper wrapper) {
 		return baseDao.selectList(wrapper, vClass);
 	}
 
-	public <W> List<W> selectList(Wrapper wrapper, Class<W> clazz) {
-		return baseDao.selectList(wrapper, clazz);
+	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz) {
+		return baseDao.<E> selectList(wrapper, clazz);
 	}
 
 	public int selectCount(Wrapper wrapper) {
