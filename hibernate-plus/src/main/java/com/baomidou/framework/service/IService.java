@@ -66,60 +66,6 @@ public interface IService<V extends PrimaryKey> {
 	public V get(String property, Object value);
 
 	/**
-	 * 查询
-	 *
-	 * @return
-	 */
-	public List<V> query();
-
-	/**
-	 * 查询
-	 *
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public List<V> query(String property, Object value);
-
-	/**
-	 * 查询
-	 *
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public List<V> query(String[] property, Object... value);
-
-	/**
-	 * 查询排序
-	 *
-	 * @param order
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public List<V> query(String order, String property, Object value);
-
-	/**
-	 * 查询排序
-	 *
-	 * @param order
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public List<V> query(String order, String[] property, Object... value);
-
-	/**
-	 * 查询排序
-	 *
-	 * @param map
-	 * @param order
-	 * @return
-	 */
-	public List<V> query(Map<String, Object> map, String order);
-
-	/**
 	 * 批量插入(不带事务 慎用)
 	 *
 	 * @param list
@@ -193,7 +139,11 @@ public interface IService<V extends PrimaryKey> {
 
 	public Page<V> selectPage(Wrapper wrapper, Page<V> page);
 
-	public List<?> selectList(Wrapper wrapper);
+	public <W> Page<W> selectPage(Wrapper wrapper, Class<W> clazz, Page<W> page);
+
+	public List<V> selectList(Wrapper wrapper);
+
+	public <W> List<W> selectList(Wrapper wrapper, Class<W> clazz);
 
 	public int selectCount(Wrapper wrapper);
 

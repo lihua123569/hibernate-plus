@@ -70,39 +70,6 @@ public interface IDao<T, V> {
 	public void updateWithBatch(List<T> list);
 
 	/**
-	 * 查询结果集
-	 *
-	 * @return List<T>
-	 */
-	public List<T> query();
-
-	/**
-	 * 查询结果集
-	 *
-	 * @param property
-	 * @param value
-	 * @return List<T>
-	 */
-	public List<T> query(String property, Object value);
-
-	/**
-	 * 查询结果集
-	 *
-	 * @param property
-	 * @param value
-	 * @return List<T>
-	 */
-	public List<T> query(String[] property, Object... value);
-
-	/**
-	 * 查询结果集
-	 *
-	 * @param map
-	 * @return List<T>
-	 */
-	public List<T> query(Map<String, Object> map);
-
-	/**
 	 * 根据class生成count语句执行
 	 *
 	 * @return long
@@ -143,35 +110,9 @@ public interface IDao<T, V> {
 	 */
 	public List<T> queryOrder(String order);
 
-	/**
-	 * 查询结果集排序
-	 *
-	 * @param property
-	 * @param value
-	 * @return List<T>
-	 */
-	public List<T> query(String order, String property, Object value);
+	public <W> Page<W> selectPage(Wrapper wrapper, Class<W> clazz, Page<W> page);
 
-	/**
-	 * 查询结果集排序
-	 *
-	 * @param property
-	 * @param value
-	 * @return List<T>
-	 */
-	public List<T> query(String order, String[] property, Object... value);
-
-	/**
-	 * 查询结果集排序
-	 *
-	 * @param map
-	 * @return List<T>
-	 */
-	public List<T> query(Map<String, Object> map, String order);
-
-	public Page<V> selectPage(Wrapper wrapper, Page<V> page);
-
-	public List<?> selectList(Wrapper wrapper);
+	public <W> List<W> selectList(Wrapper wrapper, Class<W> clazz);
 
 	public int selectCount(Wrapper wrapper);
 

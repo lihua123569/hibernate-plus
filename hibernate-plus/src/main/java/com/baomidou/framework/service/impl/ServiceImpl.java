@@ -56,36 +56,6 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	}
 
 	@Override
-	public List<V> query() {
-		return BeanConverter.convert(vClass, baseDao.query());
-	}
-
-	@Override
-	public List<V> query(String property, Object value) {
-		return BeanConverter.convert(vClass, baseDao.query(property, value));
-	}
-
-	@Override
-	public List<V> query(String[] property, Object... value) {
-		return BeanConverter.convert(vClass, baseDao.query(property, value));
-	}
-
-	@Override
-	public List<V> query(String order, String property, Object value) {
-		return BeanConverter.convert(vClass, baseDao.query(order, property, value));
-	}
-
-	@Override
-	public List<V> query(String order, String[] property, Object... value) {
-		return BeanConverter.convert(vClass, baseDao.query(order, property, value));
-	}
-
-	@Override
-	public List<V> query(Map<String, Object> map, String order) {
-		return BeanConverter.convert(vClass, baseDao.query(map, order));
-	}
-
-	@Override
 	public void insertWithBatch(List<V> list) {
 		baseDao.insertWithBatch(BeanConverter.convert(tClass, list));
 	}
@@ -122,7 +92,7 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 
 	@Override
 	public Page<V> selectPage(Page<V> page) {
-		return baseDao.selectPage(Condition.instance(), page);
+		return baseDao.selectPage(Condition.instance(), vClass, page);
 	}
 
 	@Override
@@ -131,11 +101,19 @@ public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements 
 	}
 
 	public Page<V> selectPage(Wrapper wrapper, Page<V> page) {
-		return baseDao.selectPage(wrapper, page);
+		return baseDao.selectPage(wrapper, vClass, page);
 	}
 
-	public List<?> selectList(Wrapper wrapper) {
-		return baseDao.selectList(wrapper);
+	public <W> Page<W> selectPage(Wrapper wrapper, Class<W> clazz, Page<W> page) {
+		return baseDao.selectPage(wrapper, clazz, page);
+	}
+
+	public List<V> selectList(Wrapper wrapper) {
+		return baseDao.selectList(wrapper, vClass);
+	}
+
+	public <W> List<W> selectList(Wrapper wrapper, Class<W> clazz) {
+		return baseDao.selectList(wrapper, clazz);
 	}
 
 	public int selectCount(Wrapper wrapper) {

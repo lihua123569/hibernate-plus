@@ -160,12 +160,12 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 		}
 	}
 
-	@Override
+	// TODO 保留方法 @Override
 	public List<T> query(String property, Object value) {
 		return query(0, 0, property, value);
 	}
 
-	@Override
+	// TODO 保留方法 @Override
 	public List<T> query(String[] property, Object... value) {
 		return query(0, 0, property, value);
 	}
@@ -180,12 +180,12 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 		return query(0, 0, StringUtils.EMPTY_STRING, property, value);
 	}
 
-	@Override
+	// TODO 保留方法 @Override
 	public List<T> query(String order, String property, Object value) {
 		return query(0, 0, order, property, value);
 	}
 
-	@Override
+	// TODO 保留方法 @Override
 	public List<T> query(String order, String[] property, Object... value) {
 		return query(0, 0, order, property, value);
 	}
@@ -224,7 +224,7 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 		return query(page, rows, Collections.EMPTY_MAP, order);
 	}
 
-	@Override
+	// TODO 保留方法 @Override
 	public List<T> query() {
 		return query(Collections.EMPTY_MAP);
 	}
@@ -234,13 +234,13 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 		return query(page, rows, Collections.EMPTY_MAP, null);
 	}
 
-	@Override
+	// TODO 保留方法 @Override
 	public List<T> query(Map<String, Object> params) {
 		return query(params, StringUtils.EMPTY_STRING);
 
 	}
 
-	@Override
+	// TODO 保留方法 @Override
 	public List<T> query(Map<String, Object> params, String order) {
 		return query(0, 0, params, order);
 	}
@@ -321,11 +321,11 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 	}
 
 	@Override
-	public Page<V> selectPage(Wrapper wrapper, Page<V> page) {
+	public <W> Page<W> selectPage(Wrapper wrapper, Class<W> clazz, Page<W> page) {
 		try {
 			String sql = SqlUtils.sqlList(tClass, wrapper, page);
 			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
-					Transformers.aliasToBean(vClass));
+					Transformers.aliasToBean(clazz));
 			HibernateUtils.setPage(page.getCurrent(), page.getSize(), query);
 			page.setRecords(query.list());
 			CountOptimize countOptimize = SqlUtils.getCountOptimize(sql, page.isOptimizeCount());
@@ -339,11 +339,12 @@ public abstract class DaoImpl<T extends PrimaryKey, V extends PrimaryKey> implem
 	}
 
 	@Override
-	public List<?> selectList(Wrapper wrapper) {
-		List list = Collections.EMPTY_LIST;
+	public <W> List<W> selectList(Wrapper wrapper, Class<W> clazz) {
+		List<W> list = Collections.emptyList();
 		try {
 			String sql = SqlUtils.sqlList(tClass, wrapper, null);
-			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
+					Transformers.aliasToBean(clazz));
 			list = query.list();
 		} catch (Exception e) {
 			logger.warning("Warn: Unexpected exception.  Cause:" + e);
