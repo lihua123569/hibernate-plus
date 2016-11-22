@@ -3,19 +3,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.app.hibernate</groupId>
-    <artifactId>app-persist</artifactId>
-    <version>2.1.0.Final</version>
+    <groupId>com.baomidou</groupId>
+    <artifactId>hibernate-plus</artifactId>
+    <version>1.0.0.Final</version>
     <packaging>jar</packaging>
 
-    <name>app-persist</name>
+    <name>hibernate-plus</name>
     <description>Based on hibernate simple package.</description>
     <url>http://maven.apache.org</url>
 
     <licenses>
         <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <name>The MIT License (MIT)</name>
+            <url>http://git.oschina.net/baomidou/hibernate-plus/blob/master/LICENSE</url>
         </license>
     </licenses>
 
@@ -26,16 +26,16 @@
         </developer>
     </developers>
 
-    <!--<scm>
-       <connection>scm:git:git@git.oschina.net:cancerGit/app-persist.git</connection>
-       <developerConnection>scm:git:git@git.oschina.net:cancerGit/app-persist.git</developerConnection>
-       <url>git@git.oschina.net:cancerGit/app-persist.git</url>
-   </scm>-->
+    <scm>
+       <connection>scm:git:git@git.oschina.net:baomidou/hibernate-plus.git</connection>
+       <developerConnection>scm:git:git@git.oschina.net:baomidou/hibernate-plus.git</developerConnection>
+       <url>git@git.oschina.net:baomidou/hibernate-plus.git</url>
+   </scm>
 
     <properties>
         <!-- common -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.7</java.version>
+        <java.version>1.6</java.version>
         <!-- dependency -->
         <springframework.version>4.3.3.RELEASE</springframework.version>
         <hibernate.version>5.1.0.Final</hibernate.version>
@@ -56,6 +56,12 @@
             <version>${springframework.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>${springframework.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- freemarker -->
         <dependency>
             <groupId>org.freemarker</groupId>
@@ -68,12 +74,6 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.connector.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>${springframework.version}</version>
-            <scope>provided</scope>
         </dependency>
         <!--hibernate-->
         <dependency>
