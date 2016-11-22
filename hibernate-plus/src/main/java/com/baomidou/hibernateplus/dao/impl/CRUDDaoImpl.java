@@ -8,9 +8,6 @@ import com.baomidou.hibernateplus.utils.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
@@ -21,19 +18,15 @@ import java.util.logging.Logger;
  * <p>
  * CRUDDao接口实现
  * </p>
+ * 
  * @author Caratacus
  * @date 2016-10-14
  */
-@Repository
 public class CRUDDaoImpl implements CRUDDao {
 
 	protected static final Logger logger = Logger.getLogger("CRUDDaoImpl");
-	@Autowired
-	private SessionFactory sessionFactory;
 
-	public CRUDDaoImpl(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+	private SessionFactory sessionFactory;
 
 	@Override
 	public long queryCountWithHql(String hql) {
@@ -344,4 +337,7 @@ public class CRUDDaoImpl implements CRUDDao {
 		return list;
 	}
 
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 }

@@ -8,13 +8,12 @@ import com.baomidou.hibernateplus.query.Wrapper;
 import com.baomidou.hibernateplus.utils.CollectionUtils;
 import com.baomidou.hibernateplus.utils.HibernateUtils;
 import com.baomidou.hibernateplus.utils.MapUtils;
+import com.baomidou.hibernateplus.utils.ReflectionKit;
 import com.baomidou.hibernateplus.utils.SqlUtils;
 import com.baomidou.hibernateplus.utils.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -31,25 +30,27 @@ import java.util.logging.Logger;
  * @author Caratacus
  * @date 2016-10-23
  */
-@Repository
-public class DaoImpl<T> implements IDao<T> {
-	protected static final Logger logger = Logger.getLogger("DaoImpl");
-    @Autowired
-	private SessionFactory sessionFactory;
+public abstract class DaoImpl<T> implements IDao<T> {
 
-    @Override
+	protected static final Logger logger = Logger.getLogger("DaoImpl");
+
+	protected Class<T> clazz = ReflectionKit.getSuperClassGenricType(getClass(), 0);
+
+	public abstract SessionFactory getSessionFactory();
+
+	@Override
 	public T save(T t) {
 		if (null == t)
 			throw new HibernatePlusException("execute Save Fail! Param is Empty !");
-		HibernateUtils.getCurrentSession(sessionFactory).save(t);
+		HibernateUtils.getCurrentSession(getSessionFactory()).save(t);
 		return t;
 	}
 
 	@Override
-	public T get(Class<T> clazz, Serializable id) {
+	public T get(Serializable id) {
 		if (null == id)
 			throw new HibernatePlusException("execute Get Fail! Param is Empty !");
-		return (T) HibernateUtils.getCurrentSession(sessionFactory).get(clazz, id);
+		return (T) HibernateUtils.getCurrentSession(getSessionFactory()).get(clazz, id);
 	}
 
 	@Override
@@ -63,7 +64,7 @@ public class DaoImpl<T> implements IDao<T> {
 			throw new HibernatePlusException("execute Get Fail! Param is Empty !");
 		T t = null;
 		try {
-			Query query = HibernateUtils.getHqlQuery(hql, sessionFactory);
+			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
 			if (MapUtils.isNotEmpty(params)) {
 				for (String key : params.keySet()) {
 					Object obj = params.get(key);
@@ -82,21 +83,21 @@ public class DaoImpl<T> implements IDao<T> {
 	public void delete(T t) {
 		if (null == t)
 			throw new HibernatePlusException("execute Delete! Param is Empty !");
-		HibernateUtils.getCurrentSession(sessionFactory).delete(t);
+		HibernateUtils.getCurrentSession(getSessionFactory()).delete(t);
 	}
 
 	@Override
 	public void update(T t) {
 		if (null == t)
 			throw new HibernatePlusException("execute Update! Param is Empty !");
-		HibernateUtils.getCurrentSession(sessionFactory).merge(t);
+		HibernateUtils.getCurrentSession(getSessionFactory()).merge(t);
 	}
 
 	@Override
 	public void saveOrUpdate(T t) {
 		if (null == t)
 			throw new HibernatePlusException("execute SaveOrUpdate! Param is Empty !");
-		HibernateUtils.getCurrentSession(sessionFactory).saveOrUpdate(t);
+		HibernateUtils.getCurrentSession(getSessionFactory()).saveOrUpdate(t);
 	}
 
 	@Override
@@ -115,7 +116,7 @@ public class DaoImpl<T> implements IDao<T> {
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
 		List<T> list = Collections.emptyList();
 		try {
-			Query query = HibernateUtils.getHqlQuery(hql, sessionFactory);
+			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
 			setParamMap(params, query);
 			HibernateUtils.setPage(page, rows, query);
 			list = query.list();
@@ -135,7 +136,7 @@ public class DaoImpl<T> implements IDao<T> {
 	public void insertWithBatch(List<T> list) {
 		if (CollectionUtils.isEmpty(list))
 			throw new HibernatePlusException("execute BatchInsert Fail! Param is Empty !");
-		Session session = HibernateUtils.getCurrentSession(sessionFactory);
+		Session session = HibernateUtils.getCurrentSession(getSessionFactory());
 		for (int i = 0; i < list.size(); i++) {
 			session.save(list.get(i));
 			if (i % 30 == 0) {
@@ -149,7 +150,7 @@ public class DaoImpl<T> implements IDao<T> {
 	public void updateWithBatch(List<T> list) {
 		if (CollectionUtils.isEmpty(list))
 			throw new HibernatePlusException("execute BatchUpdate Fail! Param is Empty !");
-		Session session = HibernateUtils.getCurrentSession(sessionFactory);
+		Session session = HibernateUtils.getCurrentSession(getSessionFactory());
 		for (int i = 0; i < list.size(); i++) {
 			session.update(list.get(i));
 			if (i % 30 == 0) {
@@ -160,46 +161,46 @@ public class DaoImpl<T> implements IDao<T> {
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz, String property, Object value) {
-		return query(clazz, 0, 0, property, value);
+	public List<T> query(String property, Object value) {
+		return query(0, 0, property, value);
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz, String[] property, Object... value) {
-		return query(clazz, 0, 0, property, value);
+	public List<T> query(String[] property, Object... value) {
+		return query(0, 0, property, value);
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz, int page, int rows, String property, Object value) {
-		return query(clazz, page, rows, StringUtils.EMPTY_STRING, property, value);
+	public List<T> query(int page, int rows, String property, Object value) {
+		return query(page, rows, StringUtils.EMPTY_STRING, property, value);
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz, int page, int rows, String[] property, Object... value) {
-		return query(clazz, 0, 0, StringUtils.EMPTY_STRING, property, value);
+	public List<T> query(int page, int rows, String[] property, Object... value) {
+		return query(0, 0, StringUtils.EMPTY_STRING, property, value);
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz, String order, String property, Object value) {
-		return query(clazz, 0, 0, order, property, value);
+	public List<T> query(String order, String property, Object value) {
+		return query(0, 0, order, property, value);
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz, String order, String[] property, Object... value) {
-		return query(clazz, 0, 0, order, property, value);
+	public List<T> query(String order, String[] property, Object... value) {
+		return query(0, 0, order, property, value);
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz, int page, int rows, String order, String property, Object value) {
-		return query(clazz, page, rows, order, new String[] { property }, value);
+	public List<T> query(int page, int rows, String order, String property, Object value) {
+		return query(page, rows, order, new String[] { property }, value);
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz, int page, int rows, String order, String[] property, Object... value) {
+	public List<T> query(int page, int rows, String order, String[] property, Object... value) {
 		List<T> list = Collections.emptyList();
 		try {
 			String hql = HibernateUtils.getListHql(order, clazz, property);
-			Query query = HibernateUtils.getHqlQuery(hql, sessionFactory);
+			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
 			if (null != value) {
 				for (int i = 0; i < value.length; i++) {
 					HibernateUtils.setParams(query, StringUtils.toString(i), value[i]);
@@ -214,42 +215,42 @@ public class DaoImpl<T> implements IDao<T> {
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz, String order) {
-		return query(clazz, Collections.EMPTY_MAP, order);
+	public List<T> queryOrder(String order) {
+		return query(Collections.EMPTY_MAP, order);
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz, String order, int page, int rows) {
-		return query(clazz, page, rows, Collections.EMPTY_MAP, order);
+	public List<T> queryOrder(String order, int page, int rows) {
+		return query(page, rows, Collections.EMPTY_MAP, order);
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz) {
-		return query(clazz, Collections.EMPTY_MAP);
+	public List<T> query() {
+		return query(Collections.EMPTY_MAP);
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz, int page, int rows) {
-		return query(clazz, page, rows, Collections.EMPTY_MAP, null);
+	public List<T> query(int page, int rows) {
+		return query(page, rows, Collections.EMPTY_MAP, null);
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz, Map<String, Object> params) {
-		return query(clazz, params, StringUtils.EMPTY_STRING);
+	public List<T> query(Map<String, Object> params) {
+		return query(params, StringUtils.EMPTY_STRING);
 
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz, Map<String, Object> params, String order) {
-		return query(clazz, 0, 0, params, order);
+	public List<T> query(Map<String, Object> params, String order) {
+		return query(0, 0, params, order);
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz, int page, int rows, Map<String, Object> params, String order) {
+	public List<T> query(int page, int rows, Map<String, Object> params, String order) {
 		List<T> list = Collections.emptyList();
 		try {
 			String hql = HibernateUtils.getListHql(order, clazz, params);
-			Query query = HibernateUtils.getHqlQuery(hql, sessionFactory);
+			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
 			setParamMap(params, query);
 			HibernateUtils.setPage(page, rows, query);
 			list = query.list();
@@ -261,8 +262,8 @@ public class DaoImpl<T> implements IDao<T> {
 	}
 
 	@Override
-	public List<T> query(Class<T> clazz, int page, int rows, Map<String, Object> map) {
-		return query(clazz, page, rows, map, StringUtils.EMPTY_STRING);
+	public List<T> query(int page, int rows, Map<String, Object> map) {
+		return query(page, rows, map, StringUtils.EMPTY_STRING);
 	}
 
 	/**
@@ -286,19 +287,19 @@ public class DaoImpl<T> implements IDao<T> {
 	}
 
 	@Override
-	public long count(Class clazz) {
-		return count(clazz, Collections.EMPTY_MAP);
+	public long count() {
+		return count(Collections.EMPTY_MAP);
 	}
 
 	@Override
-	public long count(Class clazz, String property, Object... value) {
-		return count(clazz, new String[] { property }, value);
+	public long count(String property, Object... value) {
+		return count(new String[] { property }, value);
 	}
 
 	@Override
-	public long count(Class clazz, String[] property, Object... value) {
+	public long count(String[] property, Object... value) {
 		String countHql = HibernateUtils.getCountHql(clazz, property);
-		Query query = HibernateUtils.getHqlQuery(countHql, sessionFactory);
+		Query query = HibernateUtils.getHqlQuery(countHql, getSessionFactory());
 		for (int i = 0; i < value.length; i++) {
 			HibernateUtils.setParams(query, StringUtils.toString(i), value[i]);
 		}
@@ -306,9 +307,9 @@ public class DaoImpl<T> implements IDao<T> {
 	}
 
 	@Override
-	public long count(Class clazz, Map<String, Object> params) {
+	public long count(Map<String, Object> params) {
 		String hql = HibernateUtils.getCountHql(clazz, params);
-		Query query = HibernateUtils.getHqlQuery(hql, sessionFactory);
+		Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
 		if (MapUtils.isNotEmpty(params)) {
 			for (String key : params.keySet()) {
 				Object obj = params.get(key);
@@ -320,14 +321,14 @@ public class DaoImpl<T> implements IDao<T> {
 	}
 
 	@Override
-	public Page<?> queryListWithSql(Class clazz, Wrapper wrapper, Page page) {
+	public Page<?> queryListWithSql(Wrapper wrapper, Page page) {
 		try {
 			String sql = SqlUtils.sqlList(clazz, wrapper, page);
-			Query query = HibernateUtils.getSqlQuery(sql, sessionFactory);
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
 			HibernateUtils.setPage(page.getCurrent(), page.getSize(), query);
 			page.setRecords(query.list());
 			CountOptimize countOptimize = SqlUtils.getCountOptimize(sql, page.isOptimizeCount());
-			Query countQuery = HibernateUtils.getSqlQuery(countOptimize.getCountSQL(), sessionFactory);
+			Query countQuery = HibernateUtils.getSqlQuery(countOptimize.getCountSQL(), getSessionFactory());
 			BigInteger bigInteger = (BigInteger) countQuery.uniqueResult();
 			page.setTotal(bigInteger.intValue());
 		} catch (Exception e) {
@@ -337,11 +338,11 @@ public class DaoImpl<T> implements IDao<T> {
 	}
 
 	@Override
-	public List<?> queryListWithSql(Class clazz, Wrapper wrapper) {
+	public List<?> queryListWithSql(Wrapper wrapper) {
 		List list = Collections.EMPTY_LIST;
 		try {
 			String sql = SqlUtils.sqlList(clazz, wrapper, null);
-			Query query = HibernateUtils.getSqlQuery(sql, sessionFactory);
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
 			list = query.list();
 		} catch (Exception e) {
 			logger.warning("Warn: Unexpected exception.  Cause:" + e);
@@ -350,11 +351,11 @@ public class DaoImpl<T> implements IDao<T> {
 	}
 
 	@Override
-	public long queryCountWithSql(Class clazz, Wrapper wrapper) {
+	public long queryCountWithSql(Wrapper wrapper) {
 		long count = 0;
 		try {
 			String sql = SqlUtils.sqlCount(clazz, wrapper);
-			Query query = HibernateUtils.getSqlQuery(sql, sessionFactory);
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory());
 			BigInteger bigInteger = (BigInteger) query.uniqueResult();
 			count = bigInteger.longValue();
 		} catch (Exception e) {
