@@ -566,6 +566,16 @@ public abstract class DaoImpl<T> implements IDao<T> {
 		return resultCount;
 	}
 
+	// TODO 保留方法 @Override
+	public List<?> queryListWithHql() {
+		return queryListWithHql(Collections.EMPTY_MAP);
+	}
+
+	// TODO 保留方法 @Override
+	public List<?> queryListWithHql(String property, Object value) {
+		return queryListWithHql(new String[] { property }, value);
+	}
+
 	@Override
 	public T get(String property, Object value) {
 		T t = null;
@@ -578,6 +588,44 @@ public abstract class DaoImpl<T> implements IDao<T> {
 			logger.warning("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return t;
+	}
+
+	// TODO 保留方法 @Override
+	public List<?> queryListWithHql(String[] property, Object... value) {
+		List list = Collections.EMPTY_LIST;
+		try {
+			String hql = HibernateUtils.getListHql(clazz, property);
+			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
+			if (null != value) {
+				for (int i = 0; i < value.length; i++) {
+					HibernateUtils.setParams(query, StringUtils.toString(i), value);
+				}
+			}
+			list = query.list();
+
+		} catch (Exception e) {
+			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+		}
+		return list;
+
+	}
+
+	// TODO 保留方法 @Override
+	public List<?> queryListWithHql(Map<String, Object> map) {
+		List list = Collections.EMPTY_LIST;
+		try {
+			String hql = HibernateUtils.getListHql(clazz, map);
+			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
+			for (String key : map.keySet()) {
+				Object obj = map.get(key);
+				HibernateUtils.setParams(query, key, obj);
+			}
+			list = query.list();
+		} catch (Exception e) {
+			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+		}
+		return list;
+
 	}
 
 	protected List<?> queryListWithHql(String hql) {
