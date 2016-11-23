@@ -206,7 +206,7 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
      */
     protected Class<T> toClass() {
         if (toCls == null)
-            toCls = ReflectionKit.getSuperClassGenricType(getClass(), 1);
+            toCls = ReflectionKit.getSuperClassGenricType(getClass(), 0);
         return toCls;
     }
 
