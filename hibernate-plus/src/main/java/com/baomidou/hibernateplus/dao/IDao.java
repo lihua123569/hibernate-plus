@@ -144,14 +144,6 @@ public interface IDao<T, V> {
 	public int selectCount(Map<String, Object> map);
 
 	/**
-	 * 查询列表
-	 *
-	 * @param order
-	 * @return
-	 */
-	public List<T> queryOrder(String order);
-
-	/**
 	 * 查询分页
 	 * 
 	 * @param wrapper
@@ -171,10 +163,18 @@ public interface IDao<T, V> {
 	 * @return
 	 */
 	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz);
+	/**
+	 * 查询列表
+	 *
+	 * @param wrapper
+	 * @param <T>
+	 * @return
+	 */
+	public <T> List<T> selectList(Wrapper wrapper);
 
 	/**
 	 * 查询数量
-	 * 
+	 *
 	 * @param wrapper
 	 * @return
 	 */
