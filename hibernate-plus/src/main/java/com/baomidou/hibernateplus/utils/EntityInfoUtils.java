@@ -23,6 +23,7 @@
 package com.baomidou.hibernateplus.utils;
 
 import com.baomidou.framework.entity.EntityInfo;
+import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 
 import javax.persistence.Table;
 import java.lang.reflect.Field;
@@ -77,9 +78,12 @@ public class EntityInfoUtils {
 
 		/* 表名 */
 		Table table = clazz.getAnnotation(Table.class);
-		String tableName = clazz.getSimpleName();
+		String tableName = null;
 		if (table != null && StringUtils.isNotBlank(table.name())) {
 			tableName = table.name();
+		}
+		if (tableName == null){
+			throw new HibernatePlusException("Error: Entity @Table Not Found!");
 		}
 		entityInfo.setTableName(tableName);
 		/* 实体字段 */

@@ -1144,7 +1144,7 @@ public abstract class DaoImpl<T extends Convert, V extends Convert> implements I
 	 */
 	protected Class<T> toClass() {
 		if (toCls == null)
-			toCls = ReflectionKit.getSuperClassGenricType(getClass(), 1);
+			toCls = ReflectionKit.getSuperClassGenricType(getClass(), 0);
 		return toCls;
 	}
 

@@ -139,9 +139,9 @@ public class SqlUtils {
 					wrapper.getSqlSegment());
 		}
 		if (page != null) {
-			return concatOrderBy(String.format(SqlUtils.SQL_LIST, "*", tableName), page, true);
+			return concatOrderBy(String.format(SqlUtils.SQL_LIST, "*", tableName, StringUtils.EMPTY_STRING), page, true);
 		}
-		return String.format(SqlUtils.SQL_LIST, "*", tableName);
+		return String.format(SqlUtils.SQL_LIST, "*", tableName, StringUtils.EMPTY_STRING);
 
 	}
 
@@ -151,14 +151,14 @@ public class SqlUtils {
 			return String.format(SqlUtils.SQL_COUNT, tableName, wrapper.getSqlSegment());
 
 		}
-		return String.format(SqlUtils.SQL_COUNT, tableName);
+		return String.format(SqlUtils.SQL_COUNT, tableName, StringUtils.EMPTY_STRING);
 	}
 
 	public static String getTableName(Class clazz) {
 		EntityInfo entityInfo = EntityInfoUtils.getEntityInfo(clazz);
 		String tableName = entityInfo.getTableName();
 		if (StringUtils.isBlank(tableName)) {
-			throw new HibernatePlusException("tableName not found!");
+			throw new HibernatePlusException("Error: Entity @Table Not Found!");
 		}
 		return tableName;
 	}
@@ -176,7 +176,7 @@ public class SqlUtils {
 		if (wrapper != null) {
 			return String.format(SqlUtils.SQL_DELETE, tableName, wrapper.getSqlSegment());
 		}
-		return String.format(SqlUtils.SQL_DELETE, tableName);
+		return String.format(SqlUtils.SQL_DELETE, tableName, StringUtils.EMPTY_STRING);
 	}
 
 	/**
@@ -206,6 +206,6 @@ public class SqlUtils {
 		if (wrapper != null) {
 			return String.format(SqlUtils.SQL_UPDATE, tableName, builder.toString(), wrapper.getSqlSegment());
 		}
-		return String.format(SqlUtils.SQL_UPDATE, tableName, builder.toString());
+		return String.format(SqlUtils.SQL_UPDATE, tableName, builder.toString(), StringUtils.EMPTY_STRING);
 	}
 }

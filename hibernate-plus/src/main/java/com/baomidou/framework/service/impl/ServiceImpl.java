@@ -159,7 +159,7 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 
     @Override
     public List<V> selectList(Wrapper wrapper) {
-        return baseDao.selectList(wrapper, voClass());
+        return baseDao.selectList(wrapper);
     }
 
     @Override
