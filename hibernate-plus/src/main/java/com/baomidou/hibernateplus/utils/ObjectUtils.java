@@ -25,17 +25,13 @@ package com.baomidou.hibernateplus.utils;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-
 /**
  * 转换类型工具类
  *
  * @author Caratacus
  * @date 2016/6/24 0024
  */
-public class Logis {
-	public static final Object[] EMPTY_ARRAY = new Object[0];
-	public static final String[] EMPTY_STRING_ARRAY = new String[0];
-	public static final Object NULL = null;
+public class ObjectUtils {
 	public static final String TRUE = "true";
 	public static final String FALSE = "false";
 
@@ -43,7 +39,7 @@ public class Logis {
 	 * 转换对象为Long
 	 *
 	 * @param obj
-	 * @return Long
+	 * @return
 	 */
 	public static Long getLong(Object obj) {
 		return getLong(obj, null);
@@ -54,7 +50,7 @@ public class Logis {
 	 *
 	 * @param obj
 	 * @param defaults
-	 * @return Long
+	 * @return
 	 */
 	public static Long getLong(Object obj, Long defaults) {
 		if (obj == null) {
@@ -78,7 +74,7 @@ public class Logis {
 	 * 转换对象为long
 	 *
 	 * @param obj
-	 * @return long
+	 * @return
 	 */
 	public static long getlong(Object obj) {
 		return getLong(obj, 0L);
@@ -88,7 +84,7 @@ public class Logis {
 	 * 转换对象为Double
 	 *
 	 * @param obj
-	 * @return Double
+	 * @return
 	 */
 	public static Double getDouble(Object obj) {
 		return getDouble(obj, null);
@@ -99,7 +95,7 @@ public class Logis {
 	 *
 	 * @param obj
 	 * @param defaults
-	 * @return Double
+	 * @return
 	 */
 	public static Double getDouble(Object obj, Double defaults) {
 		return obj == null ? defaults : Double.parseDouble(obj.toString());
@@ -109,7 +105,7 @@ public class Logis {
 	 * 转换对象为double
 	 *
 	 * @param obj
-	 * @return double
+	 * @return
 	 */
 	public static double getdouble(Object obj) {
 		return getDouble(obj, 0.0);
@@ -119,7 +115,7 @@ public class Logis {
 	 * 转换对象为BigDecimal
 	 *
 	 * @param obj
-	 * @return BigDecimal
+	 * @return
 	 */
 	public static BigDecimal getBigDecimal(Object obj) {
 		return getBigDecimal(obj, BigDecimal.ZERO);
@@ -130,7 +126,7 @@ public class Logis {
 	 *
 	 * @param obj
 	 * @param defaults
-	 * @return BigDecimal
+	 * @return
 	 */
 	public static BigDecimal getBigDecimal(Object obj, BigDecimal defaults) {
 		return StringUtils.EMPTY_STRING.equals(StringUtils.toString(obj)) ? defaults : new BigDecimal(obj.toString());
@@ -140,7 +136,7 @@ public class Logis {
 	 * 转换对象为int
 	 *
 	 * @param obj
-	 * @return int
+	 * @return
 	 */
 	public static int getInt(Object obj) {
 		return getInteger(obj, 0);
@@ -150,7 +146,7 @@ public class Logis {
 	 * 转换对象为Integer
 	 *
 	 * @param obj
-	 * @return Integer
+	 * @return
 	 */
 	public static Integer getInteger(Object obj) {
 		return getInteger(obj, null);
@@ -161,7 +157,7 @@ public class Logis {
 	 *
 	 * @param obj
 	 * @param defaults
-	 * @return Integer
+	 * @return
 	 */
 	public static Integer getInteger(Object obj, Integer defaults) {
 		if (obj == null) {
@@ -186,7 +182,7 @@ public class Logis {
 	 * 获取布尔字符串
 	 *
 	 * @param bo
-	 * @return String
+	 * @return
 	 */
 	public static String getBoolean(boolean bo) {
 		return bo ? TRUE : FALSE;
@@ -196,18 +192,29 @@ public class Logis {
 	 * 获取布尔值
 	 *
 	 * @param bo
-	 * @return boolean
+	 * @return
 	 */
 	public static boolean getBoolean(String bo) {
 		return TRUE.equals(bo) ? true : false;
 	}
 
 	/**
-	 * 获取当前线程执行的方法
-	 * 
-	 * @return
+	 * 获取对象字符串
+	 *
+	 * @param obj
+	 * @return String
 	 */
-	public static String fail() {
-		return Thread.currentThread().getStackTrace()[2].getMethodName();
+	public static String toString(Object obj) {
+		return toString(obj, StringUtils.EMPTY_STRING);
+	}
+
+	/**
+	 * 获取对象字符串
+	 *
+	 * @param obj
+	 * @return String
+	 */
+	public static String toString(Object obj, String defaults) {
+		return StringUtils.toString(obj, defaults);
 	}
 }

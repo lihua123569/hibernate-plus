@@ -30,18 +30,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * <p>
- * HibernateUtil
+ * Hibernate帮助类
  * </p>
  *
  * @author Caratacus
  * @date 2016-10-14
  */
 public class HibernateUtils {
-	protected static final Logger logger = Logger.getLogger("HibernateUtil");
 	private static final String BASE_COUNT = "SELECT COUNT(0) FROM ";
 	private static final String BASE_LIST = " FROM ";
 
@@ -49,7 +47,7 @@ public class HibernateUtils {
 	 * 生成当前对象的HQL
 	 *
 	 * @param clazz
-	 * @return String
+	 * @return
 	 */
 	public static String getListHql(Class clazz) {
 		return getListHql(clazz, Collections.EMPTY_MAP);
@@ -59,7 +57,7 @@ public class HibernateUtils {
 	 * BASE LIST HQL
 	 *
 	 * @param clazz
-	 * @return StringBuilder
+	 * @return
 	 */
 	private static StringBuilder getBaseListHql(Class clazz) {
 		return getBaseHql(clazz, BASE_LIST);
@@ -69,7 +67,7 @@ public class HibernateUtils {
 	 * 基本的hql
 	 *
 	 * @param clazz
-	 * @return StringBuilder
+	 * @return
 	 */
 	private static StringBuilder getBaseHql(Class clazz, String baseHql) {
 		StringBuilder builder = new StringBuilder(baseHql);
@@ -82,7 +80,7 @@ public class HibernateUtils {
 	 *
 	 * @param order
 	 * @param clazz
-	 * @return String
+	 * @return
 	 */
 	public static String getListHql(String order, Class clazz) {
 		return getListHql(order, clazz, Collections.EMPTY_MAP);
@@ -93,7 +91,7 @@ public class HibernateUtils {
 	 *
 	 * @param clazz
 	 * @param property
-	 * @return String
+	 * @return
 	 */
 	public static String getListHql(Class clazz, String... property) {
 		return getListHql(StringUtils.EMPTY_STRING, clazz, property);
@@ -104,7 +102,7 @@ public class HibernateUtils {
 	 *
 	 * @param clazz
 	 * @param params
-	 * @return String
+	 * @return
 	 */
 	public static String getListHql(Class clazz, Map<String, Object> params) {
 		return getListHql(StringUtils.EMPTY_STRING, clazz, params);
@@ -116,7 +114,7 @@ public class HibernateUtils {
 	 * @param order
 	 * @param clazz
 	 * @param property
-	 * @return String
+	 * @return
 	 */
 	public static String getListHql(String order, Class clazz, String... property) {
 		StringBuilder builder = getBaseListHql(clazz);
@@ -152,7 +150,7 @@ public class HibernateUtils {
 	 * @param order
 	 * @param clazz
 	 * @param params
-	 * @return String
+	 * @return
 	 */
 	public static String getListHql(String order, Class clazz, Map<String, Object> params) {
 		StringBuilder builder = getBaseListHql(clazz);
@@ -179,7 +177,7 @@ public class HibernateUtils {
 	 * 生成当前对象的HQL
 	 *
 	 * @param clazz
-	 * @return String
+	 * @return
 	 */
 	public static String getCountHql(Class clazz) {
 		return getCountHql(clazz, Collections.EMPTY_MAP);
@@ -189,7 +187,7 @@ public class HibernateUtils {
 	 * 简单的count hql
 	 *
 	 * @param clazz
-	 * @return StringBuilder
+	 * @return
 	 */
 	private static StringBuilder getBaseCountHql(Class clazz) {
 		return getBaseHql(clazz, BASE_COUNT);
@@ -200,7 +198,7 @@ public class HibernateUtils {
 	 *
 	 * @param clazz
 	 * @param property
-	 * @return String
+	 * @return
 	 */
 	public static String getCountHql(Class clazz, String... property) {
 		StringBuilder builder = getBaseCountHql(clazz);
@@ -213,7 +211,7 @@ public class HibernateUtils {
 	 *
 	 * @param clazz
 	 * @param params
-	 * @return String
+	 * @return
 	 */
 	public static String getCountHql(Class clazz, Map<String, Object> params) {
 		StringBuilder builder = getBaseCountHql(clazz);
@@ -334,7 +332,7 @@ public class HibernateUtils {
 	public static void setPage(int page, int rows, Query query) {
 		if (0 != rows) {
 			// 只判断row , 如果page异常 初始化为1
-			page = Logis.getInteger(page, 1);
+			page = ObjectUtils.getInteger(page, 1);
 			query.setFirstResult((page - 1) * rows).setMaxResults(rows);
 		}
 	}
@@ -344,7 +342,7 @@ public class HibernateUtils {
 	 *
 	 * @param sql
 	 * @param factory
-	 * @return Query
+	 * @return
 	 */
 	public static Query getSqlQuery(String sql, SessionFactory factory) {
 		System.err.println("Execute SQL：" + SqlUtils.sqlFormat(sql, true));
@@ -356,7 +354,7 @@ public class HibernateUtils {
 	 *
 	 * @param hql
 	 * @param factory
-	 * @return Query
+	 * @return
 	 */
 	public static Query getHqlQuery(String hql, SessionFactory factory) {
 		System.err.println("Execute HQL：" + SqlUtils.sqlFormat(hql, true));
@@ -367,7 +365,7 @@ public class HibernateUtils {
 	 * 获得当前事务的session
 	 *
 	 * @param factory
-	 * @return Session
+	 * @return
 	 */
 	public static Session getCurrentSession(SessionFactory factory) {
 		return factory.getCurrentSession();

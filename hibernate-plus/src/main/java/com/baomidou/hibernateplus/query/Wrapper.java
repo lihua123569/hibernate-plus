@@ -42,7 +42,7 @@ import java.util.Map;
  * @Date 2016-11-7
  */
 @SuppressWarnings("serial")
-public abstract class Wrapper<T> implements Serializable {
+public abstract class Wrapper implements Serializable {
 
     /**
      * SQL 查询字段内容，例如：id,name,age
@@ -54,15 +54,6 @@ public abstract class Wrapper<T> implements Serializable {
      */
     protected SqlPlus sql = new SqlPlus();
 
-    /**
-     * 兼容EntityWrapper
-     *
-     * @return
-     */
-    public T getEntity() {
-        return null;
-    }
-
     public String getSqlSelect() {
         if (StringUtils.isBlank(sqlSelect)) {
             return null;
@@ -70,7 +61,7 @@ public abstract class Wrapper<T> implements Serializable {
         return stripSqlInjection(sqlSelect);
     }
 
-    public Wrapper<T> setSqlSelect(String sqlSelect) {
+    public Wrapper setSqlSelect(String sqlSelect) {
         if (StringUtils.isNotBlank(sqlSelect)) {
             this.sqlSelect = sqlSelect;
         }
@@ -102,7 +93,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            参数集
      * @return this
      */
-    public Wrapper<T> where(String sqlWhere, Object... params) {
+    public Wrapper where(String sqlWhere, Object... params) {
         sql.WHERE(formatSql(sqlWhere, params));
         return this;
     }
@@ -116,7 +107,7 @@ public abstract class Wrapper<T> implements Serializable {
      * @param params
      * @return
      */
-    public Wrapper<T> eq(String column, Object params) {
+    public Wrapper eq(String column, Object params) {
         sql.WHERE(formatSql(String.format("%s = {0}", column), params));
         return this;
     }
@@ -130,7 +121,7 @@ public abstract class Wrapper<T> implements Serializable {
      * @return
      */
 
-    public Wrapper<T> allEq(Map<String, Object> params) {
+    public Wrapper allEq(Map<String, Object> params) {
         if (MapUtils.isNotEmpty(params)) {
             Iterator iterator = params.entrySet().iterator();
             while (iterator.hasNext()) {
@@ -155,7 +146,7 @@ public abstract class Wrapper<T> implements Serializable {
      * @param params
      * @return
      */
-    public Wrapper<T> gt(String column, Object params) {
+    public Wrapper gt(String column, Object params) {
         sql.WHERE(formatSql(String.format("%s > {0}", column), params));
         return this;
     }
@@ -169,7 +160,7 @@ public abstract class Wrapper<T> implements Serializable {
      * @param params
      * @return
      */
-    public Wrapper<T> ge(String column, Object params) {
+    public Wrapper ge(String column, Object params) {
         sql.WHERE(formatSql(String.format("%s >= {0}", column), params));
         return this;
     }
@@ -183,7 +174,7 @@ public abstract class Wrapper<T> implements Serializable {
      * @param params
      * @return
      */
-    public Wrapper<T> lt(String column, Object params) {
+    public Wrapper lt(String column, Object params) {
         sql.WHERE(formatSql(String.format("%s < {0}", column), params));
         return this;
     }
@@ -197,7 +188,7 @@ public abstract class Wrapper<T> implements Serializable {
      * @param params
      * @return
      */
-    public Wrapper<T> le(String column, Object params) {
+    public Wrapper le(String column, Object params) {
         sql.WHERE(formatSql(String.format("%s <= {0}", column), params));
         return this;
     }
@@ -213,7 +204,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            参数集
      * @return this
      */
-    public Wrapper<T> and(String sqlAnd, Object... params) {
+    public Wrapper and(String sqlAnd, Object... params) {
         sql.AND().WHERE(formatSql(sqlAnd, params));
         return this;
     }
@@ -233,7 +224,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            参数值
      * @return this
      */
-    public Wrapper<T> andNew(String sqlAnd, Object... params) {
+    public Wrapper andNew(String sqlAnd, Object... params) {
         sql.AND_NEW().WHERE(formatSql(sqlAnd, params));
         return this;
     }
@@ -249,7 +240,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            参数集
      * @return this
      */
-    public Wrapper<T> or(String sqlOr, Object... params) {
+    public Wrapper or(String sqlOr, Object... params) {
         sql.OR().WHERE(formatSql(sqlOr, params));
         return this;
     }
@@ -269,7 +260,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            参数值
      * @return this
      */
-    public Wrapper<T> orNew(String sqlOr, Object... params) {
+    public Wrapper orNew(String sqlOr, Object... params) {
         sql.OR_NEW().WHERE(formatSql(sqlOr, params));
         return this;
     }
@@ -286,7 +277,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            SQL 中的 Group by 语句，无需输入 Group By 关键字
      * @return this
      */
-    public Wrapper<T> groupBy(String columns) {
+    public Wrapper groupBy(String columns) {
         sql.GROUP_BY(columns);
         return this;
     }
@@ -303,9 +294,9 @@ public abstract class Wrapper<T> implements Serializable {
      *            having关键字后面跟随的语句
      * @param params
      *            参数集
-     * @return EntityWrapper<T>
+     * @return EntityWrapper
      */
-    public Wrapper<T> having(String sqlHaving, Object... params) {
+    public Wrapper having(String sqlHaving, Object... params) {
         sql.HAVING(formatSql(sqlHaving, params));
         return this;
     }
@@ -323,7 +314,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            SQL 中的 order by 语句，无需输入 Order By 关键字
      * @return this
      */
-    public Wrapper<T> orderBy(String columns) {
+    public Wrapper orderBy(String columns) {
         sql.ORDER_BY(columns);
         return this;
     }
@@ -339,7 +330,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            是否为升序
      * @return this
      */
-    public Wrapper<T> orderBy(String columns, boolean isAsc) {
+    public Wrapper orderBy(String columns, boolean isAsc) {
         if (StringUtils.isNotBlank(columns)) {
             sql.ORDER_BY(columns + (isAsc ? " ASC" : " DESC"));
         }
@@ -355,7 +346,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            匹配值
      * @return this
      */
-    public Wrapper<T> like(String column, String value) {
+    public Wrapper like(String column, String value) {
         sql.LIKE(column, value);
         return this;
     }
@@ -369,7 +360,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            匹配值
      * @return this
      */
-    public Wrapper<T> notLike(String column, String value) {
+    public Wrapper notLike(String column, String value) {
         sql.NOT_LIKE(column, value);
         return this;
     }
@@ -381,7 +372,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            字段名称。多个字段以逗号分隔。
      * @return this
      */
-    public Wrapper<T> isNotNull(String columns) {
+    public Wrapper isNotNull(String columns) {
         sql.IS_NOT_NULL(columns);
         return this;
     }
@@ -393,7 +384,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            字段名称。多个字段以逗号分隔。
      * @return this
      */
-    public Wrapper<T> isNull(String columns) {
+    public Wrapper isNull(String columns) {
         sql.IS_NULL(columns);
         return this;
     }
@@ -405,7 +396,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            匹配值
      * @return this
      */
-    public Wrapper<T> exists(String value) {
+    public Wrapper exists(String value) {
         sql.EXISTS(value);
         return this;
     }
@@ -417,7 +408,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            匹配值
      * @return this
      */
-    public Wrapper<T> notExists(String value) {
+    public Wrapper notExists(String value) {
         sql.NOT_EXISTS(value);
         return this;
     }
@@ -431,7 +422,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            逗号拼接的字符串
      * @return this
      */
-    public Wrapper<T> in(String column, String value) {
+    public Wrapper in(String column, String value) {
         sql.IN(column, value);
         return this;
     }
@@ -445,7 +436,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            逗号拼接的字符串
      * @return this
      */
-    public Wrapper<T> notIn(String column, String value) {
+    public Wrapper notIn(String column, String value) {
         sql.NOT_IN(column, value);
         return this;
     }
@@ -459,7 +450,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            匹配值 List集合
      * @return this
      */
-    public Wrapper<T> in(String column, Collection<?> value) {
+    public Wrapper in(String column, Collection<?> value) {
         sql.IN(column, value);
         return this;
     }
@@ -473,7 +464,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            匹配值 List集合
      * @return this
      */
-    public Wrapper<T> notIn(String column, Collection<?> value) {
+    public Wrapper notIn(String column, Collection<?> value) {
         sql.NOT_IN(column, value);
         return this;
     }
@@ -487,7 +478,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            匹配值 object数组
      * @return this
      */
-    public Wrapper<T> in(String column, Object[] value) {
+    public Wrapper in(String column, Object[] value) {
         sql.IN(column, Arrays.asList(value));
         return this;
     }
@@ -501,7 +492,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            匹配值 object数组
      * @return this
      */
-    public Wrapper<T> notIn(String column, Object... value) {
+    public Wrapper notIn(String column, Object... value) {
         sql.NOT_IN(column, Arrays.asList(value));
         return this;
     }
@@ -515,7 +506,7 @@ public abstract class Wrapper<T> implements Serializable {
      * @param val2
      * @return this
      */
-    public Wrapper<T> between(String column, String val1, String val2) {
+    public Wrapper between(String column, String val1, String val2) {
         sql.BETWEEN_AND(column, val1, val2);
         return this;
     }
@@ -529,7 +520,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            参数集
      * @return this
      */
-    public Wrapper<T> addFilter(String sqlWhere, Object... params) {
+    public Wrapper addFilter(String sqlWhere, Object... params) {
         return and(sqlWhere, params);
     }
 
@@ -552,7 +543,7 @@ public abstract class Wrapper<T> implements Serializable {
      *            参数集
      * @return this
      */
-    public Wrapper<T> addFilterIfNeed(boolean need, String sqlWhere, Object... params) {
+    public Wrapper addFilterIfNeed(boolean need, String sqlWhere, Object... params) {
         return need ? where(sqlWhere, params) : this;
     }
 

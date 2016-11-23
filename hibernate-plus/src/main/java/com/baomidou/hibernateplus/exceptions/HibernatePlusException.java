@@ -24,11 +24,11 @@ package com.baomidou.hibernateplus.exceptions;
 
 /**
  * <p>
- * AppHibernateException 异常类
+ * HibernatePlus 异常类
  * </p>
  *
  * @author Caratacus
- * @date 2016-10-14
+ * @date 2016-11-23
  */
 public class HibernatePlusException extends RuntimeException {
 

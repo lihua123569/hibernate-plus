@@ -22,7 +22,7 @@
  */
 package com.baomidou.framework.service.impl;
 
-import com.baomidou.framework.entity.PrimaryKey;
+import com.baomidou.framework.entity.Convert;
 import com.baomidou.framework.service.IService;
 import com.baomidou.hibernateplus.converter.BeanConverter;
 import com.baomidou.hibernateplus.dao.IDao;
@@ -44,157 +44,182 @@ import java.util.logging.Logger;
  * </p>
  *
  * @author Caratacus
- * @date 2016-10-23
+ * @date 2016-11-23
  */
-public class ServiceImpl<T extends PrimaryKey, V extends PrimaryKey> implements IService<V> {
+public class ServiceImpl<T extends Convert, V extends Convert> implements IService<V> {
 
-	protected static final Logger logger = Logger.getLogger("ServiceImpl");
+    protected static final Logger logger = Logger.getLogger("ServiceImpl");
 
-	// 反射TO泛型
-	protected Class<T> tClass = ReflectionKit.getSuperClassGenricType(getClass(), 0);
-	// 反射VO泛型
-	protected Class<V> vClass = ReflectionKit.getSuperClassGenricType(getClass(), 1);
-	@Autowired
-	protected IDao<T, V> baseDao;
+    /*反射TO泛型*/
+    protected Class<T> toCls = null;
 
-	@Override
-	public V save(V vo) {
-		return baseDao.save(vo.convert(tClass)).convert(vClass);
-	}
+    /*反射VO泛型*/
+    protected Class<V> voCls = null;
 
-	@Override
-	public void delete(V vo) {
-		baseDao.delete(vo.convert(tClass));
-	}
+    @Autowired
+    protected IDao<T, V> baseDao;
 
-	@Override
-	public void update(V vo) {
-		baseDao.update(vo.convert(tClass));
-	}
+    @Override
+    public V save(V vo) {
+        return baseDao.save(vo.convert(toClass())).convert(voClass());
+    }
 
-	@Override
-	public void saveOrUpdate(V vo) {
-		baseDao.saveOrUpdate(vo.convert(tClass));
-	}
+    @Override
+    public void delete(V vo) {
+        baseDao.delete(vo.convert(toClass()));
+    }
 
-	@Override
-	public V get(Serializable id) {
-		return baseDao.get(id) == null ? null : baseDao.get(id).convert(vClass);
-	}
+    @Override
+    public void update(V vo) {
+        baseDao.update(vo.convert(toClass()));
+    }
 
-	@Override
-	public V selectOne(Wrapper wrapper) {
-		List<V> list = selectList(wrapper);
-		if (CollectionUtils.isNotEmpty(list)) {
-			int size = list.size();
-			if (size > 1) {
-				logger.warning(String.format("Warn: selectOne Method There are  %s results.", size));
-			}
-			return list.get(0);
-		}
-		return null;
-	}
+    @Override
+    public void saveOrUpdate(V vo) {
+        baseDao.saveOrUpdate(vo.convert(toClass()));
+    }
 
-	@Override
-	public boolean insertBatch(List<V> list) {
-		return baseDao.insertBatch(BeanConverter.convert(tClass, list), 30);
-	}
+    @Override
+    public V get(Serializable id) {
+        return baseDao.get(id) == null ? null : baseDao.get(id).convert(voClass());
+    }
 
-	@Override
-	public boolean updateBatch(List<V> list) {
-		return baseDao.updateBatch(BeanConverter.convert(tClass, list), 30);
-	}
+    @Override
+    public V selectOne(Wrapper wrapper) {
+        List<V> list = selectList(wrapper);
+        if (CollectionUtils.isNotEmpty(list)) {
+            int size = list.size();
+            if (size > 1) {
+                logger.warning(String.format("Warn: selectOne Method There are  %s results.", size));
+            }
+            return list.get(0);
+        }
+        return null;
+    }
 
-	@Override
-	public boolean insertBatch(List<V> list, int size) {
-		return baseDao.insertBatch(BeanConverter.convert(tClass, list), size);
-	}
+    @Override
+    public boolean insertBatch(List<V> list) {
+        return baseDao.insertBatch(BeanConverter.convert(toClass(), list), 30);
+    }
 
-	@Override
-	public boolean updateBatch(List<V> list, int size) {
-		return baseDao.updateBatch(BeanConverter.convert(tClass, list), size);
-	}
+    @Override
+    public boolean updateBatch(List<V> list) {
+        return baseDao.updateBatch(BeanConverter.convert(toClass(), list), 30);
+    }
 
-	@Override
-	public int selectCount() {
-		return baseDao.selectCount();
-	}
+    @Override
+    public boolean insertBatch(List<V> list, int size) {
+        return baseDao.insertBatch(BeanConverter.convert(toClass(), list), size);
+    }
 
-	@Override
-	public int selectCount(String property, Object... value) {
-		return baseDao.selectCount(property, value);
-	}
+    @Override
+    public boolean updateBatch(List<V> list, int size) {
+        return baseDao.updateBatch(BeanConverter.convert(toClass(), list), size);
+    }
 
-	@Override
-	public int selectCount(String[] property, Object... value) {
-		return baseDao.selectCount(property, value);
-	}
+    @Override
+    public int selectCount() {
+        return baseDao.selectCount();
+    }
 
-	@Override
-	public int selectCount(Map<String, Object> map) {
-		return baseDao.selectCount(map);
-	}
+    @Override
+    public int selectCount(String property, Object... value) {
+        return baseDao.selectCount(property, value);
+    }
 
-	@Override
-	public void deleteById(Serializable id) {
-		// TODO 添加 deleteById
-	}
+    @Override
+    public int selectCount(String[] property, Object... value) {
+        return baseDao.selectCount(property, value);
+    }
 
-	@Override
-	public Page<V> selectPage(Page<V> page) {
-		return baseDao.selectPage(Condition.instance(), vClass, page);
-	}
+    @Override
+    public int selectCount(Map<String, Object> map) {
+        return baseDao.selectCount(map);
+    }
 
-	@Override
-	public Page<V> selectPage(Page<V> page, String property, Object value) {
-		return selectPage(Condition.instance().where(String.format("%s = {0}", property), value), page);
-	}
+    @Override
+    public Page<V> selectPage(Page<V> page) {
+        return baseDao.selectPage(Condition.instance(), voClass(), page);
+    }
 
-	public Page<V> selectPage(Wrapper wrapper, Page<V> page) {
-		return baseDao.selectPage(wrapper, vClass, page);
-	}
+    @Override
+    public Page<V> selectPage(Page<V> page, String property, Object value) {
+        return selectPage(Condition.instance().where(String.format("%s = {0}", property), value), page);
+    }
 
-	public <E> Page<E> selectPage(Wrapper wrapper, Class<E> clazz, Page<E> page) {
-		return baseDao.<E> selectPage(wrapper, clazz, page);
-	}
+    @Override
+    public Page<V> selectPage(Wrapper wrapper, Page<V> page) {
+        return baseDao.selectPage(wrapper, voClass(), page);
+    }
 
-	public List<V> selectList(Wrapper wrapper) {
-		return baseDao.selectList(wrapper, vClass);
-	}
+    @Override
+    public <E> Page<E> selectPage(Wrapper wrapper, Class<E> clazz, Page<E> page) {
+        return baseDao.<E>selectPage(wrapper, clazz, page);
+    }
 
-	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz) {
-		return baseDao.<E> selectList(wrapper, clazz);
-	}
+    @Override
+    public List<V> selectList(Wrapper wrapper) {
+        return baseDao.selectList(wrapper, voClass());
+    }
 
-	public int selectCount(Wrapper wrapper) {
-		return baseDao.selectCount(wrapper);
-	}
+    @Override
+    public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz) {
+        return baseDao.<E>selectList(wrapper, clazz);
+    }
 
-	@Override
-	public boolean delete(Wrapper wrapper) {
-		return retBool(baseDao.delete(wrapper));
+    @Override
+    public int selectCount(Wrapper wrapper) {
+        return baseDao.selectCount(wrapper);
+    }
 
-	}
+    @Override
+    public boolean delete(Wrapper wrapper) {
+        return retBool(baseDao.delete(wrapper));
 
-	@Override
-	public boolean update(Map<String, Object> setMap, Wrapper wrapper) {
-		return retBool(baseDao.update(setMap, wrapper));
-	}
+    }
 
-	@Override
-	public V get(String property, Object value) {
-		return baseDao.get(property, value) == null ? null : baseDao.get(property, value).convert(vClass);
+    @Override
+    public boolean update(Map<String, Object> setMap, Wrapper wrapper) {
+        return retBool(baseDao.update(setMap, wrapper));
+    }
 
-	}
+    @Override
+    public V get(String property, Object value) {
+        return baseDao.get(property, value) == null ? null : baseDao.get(property, value).convert(voClass());
 
-	/**
-	 * 判断数据库操作是否成功
-	 *
-	 * @param result
-	 *            数据库操作返回影响条数
-	 * @return boolean
-	 */
-	protected boolean retBool(int result) {
-		return result >= 1;
-	}
+    }
+
+    /**
+     * 判断数据库操作是否成功
+     *
+     * @param result 数据库操作返回影响条数
+     * @return boolean
+     */
+    protected boolean retBool(int result) {
+        return result >= 1;
+    }
+
+    /**
+     * 获取toClass
+     *
+     * @return
+     */
+    protected Class<T> toClass() {
+        if (toCls == null)
+            toCls = ReflectionKit.getSuperClassGenricType(getClass(), 1);
+        return toCls;
+    }
+
+    /**
+     * 获取voClass
+     *
+     * @return
+     */
+    protected Class<V> voClass() {
+        if (voCls == null) {
+            voCls = ReflectionKit.getSuperClassGenricType(getClass(), 1);
+        }
+        return voCls;
+    }
+
 }

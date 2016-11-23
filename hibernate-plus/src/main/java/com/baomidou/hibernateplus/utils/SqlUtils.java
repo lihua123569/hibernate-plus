@@ -23,7 +23,7 @@
 package com.baomidou.hibernateplus.utils;
 
 import com.baomidou.framework.entity.EntityInfo;
-import com.baomidou.framework.entity.PrimaryKey;
+import com.baomidou.framework.entity.Convert;
 import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 import com.baomidou.hibernateplus.page.CountOptimize;
 import com.baomidou.hibernateplus.page.Page;
@@ -171,7 +171,7 @@ public class SqlUtils {
 	 * @param <T>
 	 * @return
 	 */
-	public static <T extends PrimaryKey> String sqlDelete(Class<T> clazz, Wrapper wrapper) {
+	public static <T extends Convert> String sqlDelete(Class<T> clazz, Wrapper wrapper) {
 		String tableName = getTableName(clazz);
 		if (wrapper != null) {
 			return String.format(SqlUtils.SQL_DELETE, tableName, wrapper.getSqlSegment());

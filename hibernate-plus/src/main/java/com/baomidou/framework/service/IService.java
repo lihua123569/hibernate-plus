@@ -22,7 +22,7 @@
  */
 package com.baomidou.framework.service;
 
-import com.baomidou.framework.entity.PrimaryKey;
+import com.baomidou.framework.entity.Convert;
 import com.baomidou.hibernateplus.page.Page;
 import com.baomidou.hibernateplus.query.Wrapper;
 
@@ -32,13 +32,13 @@ import java.util.Map;
 
 /**
  * <p>
- * IService
+ * IService接口类
  * </p>
  *
  * @author Caratacus
- * @date 2016-10-23
+ * @date 2016-11-23
  */
-public interface IService<V extends PrimaryKey> {
+public interface IService<V extends Convert> {
 	/**
 	 * 保存
 	 *
@@ -86,45 +86,51 @@ public interface IService<V extends PrimaryKey> {
 
 	/**
 	 *
-	 * 根据class生成Hql执行 (可强转为需要的对象)
+	 * 获取单个对象
 	 *
 	 * @param property
 	 * @param value
-	 * @return Object
+	 * @return
 	 *
 	 */
 	public V get(String property, Object value);
 
 	/**
-	 * 批量插入(不带事务 慎用)
-	 *
+	 * 批量插入
+	 * 
 	 * @param list
+	 * @return
 	 */
 	public boolean insertBatch(List<V> list);
 
 	/**
-	 * 批量修改(不带事务 慎用)
-	 *
+	 * 批量修改
+	 * 
 	 * @param list
+	 * @return
 	 */
 	public boolean updateBatch(List<V> list);
 
 	/**
-	 * 批量插入(不带事务 慎用)
+	 * 批量插入
 	 *
 	 * @param list
+	 * @param size
+	 * @return
 	 */
 	public boolean insertBatch(List<V> list, int size);
 
 	/**
-	 * 批量修改(不带事务 慎用)
+	 * 批量修改
 	 *
 	 * @param list
+	 * @param size
+	 * @return
 	 */
 	public boolean updateBatch(List<V> list, int size);
 
 	/**
-	 * 查询数量
+	 * 查询全表数量
 	 *
 	 * @return
 	 */
@@ -157,13 +163,6 @@ public interface IService<V extends PrimaryKey> {
 	public int selectCount(Map<String, Object> map);
 
 	/**
-	 * 删除
-	 *
-	 * @param id
-	 */
-	public void deleteById(Serializable id);
-
-	/**
 	 * 查询分页
 	 *
 	 * @param page
@@ -181,37 +180,65 @@ public interface IService<V extends PrimaryKey> {
 	 */
 	public Page<V> selectPage(Page<V> page, String property, Object value);
 
+	/**
+	 * 查询分页
+	 * 
+	 * @param wrapper
+	 * @param page
+	 * @return
+	 */
 	public Page<V> selectPage(Wrapper wrapper, Page<V> page);
 
+	/**
+	 * 查询分页
+	 * 
+	 * @param wrapper
+	 * @param clazz
+	 * @param page
+	 * @param <E>
+	 * @return
+	 */
 	public <E> Page<E> selectPage(Wrapper wrapper, Class<E> clazz, Page<E> page);
 
+	/**
+	 * 查询列表
+	 * 
+	 * @param wrapper
+	 * @return
+	 */
 	public List<V> selectList(Wrapper wrapper);
 
+	/**
+	 * 查询列表
+	 * 
+	 * @param wrapper
+	 * @param clazz
+	 * @param <E>
+	 * @return
+	 */
 	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz);
 
+	/**
+	 * 查询数量
+	 * 
+	 * @param wrapper
+	 * @return
+	 */
 	public int selectCount(Wrapper wrapper);
 
 	/**
-	 * <p>
-	 * 根据 entity 条件，删除记录
-	 * </p>
-	 *
+	 * 根据Wrapper删除
+	 * 
 	 * @param wrapper
-	 *            实体包装类 {@link Wrapper}
-	 * @return boolean
+	 * @return
 	 */
 	boolean delete(Wrapper wrapper);
 
 	/**
-	 * <p>
-	 * 根据 whereEntity 条件，更新记录
-	 * </p>
+	 * 根据Wrapper修改
 	 *
-	 * @param setMap
-	 *            实体对象
 	 * @param wrapper
-	 *            实体包装类 {@link Wrapper}
-	 * @return boolean
+	 * @return
 	 */
 	boolean update(Map<String, Object> setMap, Wrapper wrapper);
 

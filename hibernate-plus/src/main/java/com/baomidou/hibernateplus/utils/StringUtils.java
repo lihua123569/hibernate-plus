@@ -27,14 +27,13 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
  * <p>
  * String 工具类
  * </p>
  *
- * @author D.Yang
- * @Date 2016-08-18
+ * @author Caratacus
+ * @Date 2016-11-23
  */
 public class StringUtils {
 
@@ -91,7 +90,7 @@ public class StringUtils {
 		if (ArrayUtils.isEmpty(css)) {
 			return true;
 		}
-		for (final CharSequence cs : css){
+		for (final CharSequence cs : css) {
 			if (isBlank(cs)) {
 				return true;
 			}
@@ -334,6 +333,7 @@ public class StringUtils {
 		}
 		return object == null ? false : true;
 	}
+
 	/**
 	 * <p>
 	 * 判断对象是否为空
@@ -363,7 +363,8 @@ public class StringUtils {
 	 * @return String
 	 */
 	public static String toString(Object obj, String defaults) {
-		return obj == null ? defaults : ((StringUtils.EMPTY_STRING.equals(obj.toString().trim())) ? defaults : obj.toString().trim());
+		return obj == null ? defaults : ((StringUtils.EMPTY_STRING.equals(obj.toString().trim())) ? defaults : obj.toString()
+				.trim());
 	}
 
 }

@@ -22,7 +22,6 @@
  */
 package com.baomidou.hibernateplus.query;
 
-
 import com.baomidou.hibernateplus.utils.StringUtils;
 
 /**
@@ -35,6 +34,8 @@ import com.baomidou.hibernateplus.utils.StringUtils;
  */
 @SuppressWarnings({ "rawtypes", "serial" })
 public class Condition extends Wrapper {
+
+	public static final Condition DEFAULT = Condition.instance();
 
 	/**
 	 * 获取实例

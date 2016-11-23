@@ -35,14 +35,14 @@ import java.util.Map;
  * </p>
  *
  * @author Caratacus
- * @date 2016-10-23
+ * @date 2016-11-23
  */
 public interface IDao<T, V> {
 	/**
 	 * 保存方法
 	 *
 	 * @param o
-	 * @return T
+	 * @return
 	 */
 	public T save(T o);
 
@@ -55,8 +55,9 @@ public interface IDao<T, V> {
 
 	/**
 	 * 删除方法
-	 *
+	 * 
 	 * @param wrapper
+	 * @return
 	 */
 	public int delete(Wrapper wrapper);
 
@@ -69,9 +70,10 @@ public interface IDao<T, V> {
 
 	/**
 	 * 修改方法
-	 *
+	 * 
 	 * @param setMap
 	 * @param wrapper
+	 * @return
 	 */
 	public int update(Map<String, Object> setMap, Wrapper wrapper);
 
@@ -86,7 +88,7 @@ public interface IDao<T, V> {
 	 * 根据id获取对象
 	 *
 	 * @param id
-	 * @return T
+	 * @return
 	 */
 	public T get(Serializable id);
 
@@ -94,6 +96,7 @@ public interface IDao<T, V> {
 	 * 批量添加
 	 *
 	 * @param list
+	 * @param size
 	 * @return
 	 */
 	public boolean insertBatch(List<T> list, int size);
@@ -102,64 +105,88 @@ public interface IDao<T, V> {
 	 * 批量修改
 	 *
 	 * @param list
+	 * @param size
 	 * @return
 	 */
 	public boolean updateBatch(List<T> list, int size);
 
 	/**
-	 * 根据class生成count语句执行
+	 * 查询数量
 	 *
-	 * @return long
+	 * @return
 	 */
 	public int selectCount();
 
 	/**
-	 * 根据class生成count语句执行
+	 * 查询数量
 	 *
 	 * @param property
 	 * @param value
-	 * @return long
+	 * @return
 	 */
 	public int selectCount(String property, Object... value);
 
 	/**
-	 * 根据class生成count语句执行
+	 * 查询数量
 	 *
 	 * @param property
 	 * @param value
-	 * @return long
+	 * @return
 	 */
 	public int selectCount(String[] property, Object... value);
 
 	/**
-	 * 根据class生成count语句执行
+	 * 查询数量
 	 *
 	 * @param map
-	 * @return long
+	 * @return
 	 */
 	public int selectCount(Map<String, Object> map);
 
 	/**
-	 * 查询结果集排序
+	 * 查询列表
 	 *
 	 * @param order
-	 * @return List<T>
+	 * @return
 	 */
 	public List<T> queryOrder(String order);
 
+	/**
+	 * 查询分页
+	 * 
+	 * @param wrapper
+	 * @param clazz
+	 * @param page
+	 * @param <E>
+	 * @return
+	 */
 	public <E> Page<E> selectPage(Wrapper wrapper, Class<E> clazz, Page<E> page);
 
+	/**
+	 * 查询列表
+	 * 
+	 * @param wrapper
+	 * @param clazz
+	 * @param <E>
+	 * @return
+	 */
 	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz);
 
+	/**
+	 * 查询数量
+	 * 
+	 * @param wrapper
+	 * @return
+	 */
 	public int selectCount(Wrapper wrapper);
 
 	/**
 	 *
-	 * 根据class生成Hql执行 (可强转为需要的对象)
+	 * 获取单个对象
 	 *
 	 * @param property
 	 * @param value
-	 * @return Object
+	 * @return
 	 *
 	 */
 	public T get(String property, Object value);

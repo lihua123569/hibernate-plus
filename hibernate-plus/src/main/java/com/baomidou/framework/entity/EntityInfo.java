@@ -26,11 +26,11 @@ import java.lang.reflect.Field;
 
 /**
  * <p>
- * 数据库表反射信息
+ * 简单的反射信息
  * </p>
  * 
- * @author hubin
- * @Date 2016-01-23
+ * @author Caratacus
+ * @Date 2016-11-23
  */
 public class EntityInfo {
 
@@ -43,6 +43,7 @@ public class EntityInfo {
 	 * 表字段信息列表
 	 */
 	private Field[] fields;
+
 	public String getTableName() {
 		return tableName;
 	}

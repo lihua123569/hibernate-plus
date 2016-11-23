@@ -34,8 +34,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * 数据库表反射信息
  * </p>
  * 
- * @author hubin
- * @Date 2016-01-23
+ * @author Caratacus
+ * @Date 2016-11-23
  */
 public class EntityInfoUtils {
 	/*
