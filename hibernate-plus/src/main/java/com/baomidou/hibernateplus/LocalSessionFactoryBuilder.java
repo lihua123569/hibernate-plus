@@ -36,6 +36,7 @@ import javax.persistence.MappedSuperclass;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
+import com.baomidou.hibernateplus.utils.EntityInfoUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
 import org.hibernate.SessionFactory;
@@ -322,7 +323,8 @@ public class LocalSessionFactoryBuilder extends Configuration {
 			ClassLoader cl = this.resourcePatternResolver.getClassLoader();
 			for (String className : entityClassNames) {
                 Class<?> cls = cl.loadClass(className);
-                //TODO Caratacus 初始化 EntityInfo 相关实体
+                // TODO Caratacus 初始化 EntityInfo 相关实体
+                EntityInfoUtils.initEntityInfo(cls) ;
                 addAnnotatedClass(cls);
 			}
 			for (String className : converterClassNames) {

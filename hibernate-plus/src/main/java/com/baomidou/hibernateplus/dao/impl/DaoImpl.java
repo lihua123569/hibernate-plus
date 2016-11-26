@@ -29,6 +29,7 @@ import com.baomidou.hibernateplus.page.CountOptimize;
 import com.baomidou.hibernateplus.page.Page;
 import com.baomidou.hibernateplus.query.Wrapper;
 import com.baomidou.hibernateplus.utils.CollectionUtils;
+import com.baomidou.hibernateplus.utils.EntityInfoUtils;
 import com.baomidou.hibernateplus.utils.HibernateUtils;
 import com.baomidou.hibernateplus.utils.MapUtils;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
@@ -54,7 +55,7 @@ import java.util.logging.Logger;
  * @author Caratacus
  * @date 2016-11-23
  */
-public abstract class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V> {
+public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V> {
 
 	protected static final Logger logger = Logger.getLogger("DaoImpl");
 	/* 反射TO泛型 */
@@ -64,11 +65,13 @@ public abstract class DaoImpl<T extends Convert, V extends Convert> implements I
 	protected Class<V> voCls = null;
 
 	/**
-	 * 子类需重新覆盖方法
+	 * 获取SessionFactory 如果需要使用读写分离可以重写该方法
 	 *
 	 * @return
 	 */
-	public abstract SessionFactory getSessionFactory();
+	public SessionFactory getSessionFactory() {
+		return EntityInfoUtils.getEntityInfo(toClass()).getSessionFactory();
+	}
 
 	@Override
 	public T save(T t) {

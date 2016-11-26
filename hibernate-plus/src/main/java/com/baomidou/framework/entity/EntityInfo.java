@@ -23,6 +23,9 @@
 package com.baomidou.framework.entity;
 
 import java.lang.reflect.Field;
+import java.util.Set;
+
+import org.hibernate.SessionFactory;
 
 /**
  * <p>
@@ -43,6 +46,26 @@ public class EntityInfo {
 	 * 表字段信息列表
 	 */
 	private Field[] fields;
+	/**
+	 * 表主键ID 属性名
+	 */
+	private String keyProperty;
+
+	/**
+	 * 表主键ID 字段名
+	 */
+	private String keyColumn;
+
+	/**
+	 * 实体字段
+	 */
+
+	private Set<EntityFieldInfo> fieldInfos;
+
+	/**
+	 * SessionFactory
+	 */
+	private SessionFactory sessionFactory;
 
 	public String getTableName() {
 		return tableName;
@@ -60,4 +83,35 @@ public class EntityInfo {
 		this.fields = fields;
 	}
 
+	public String getKeyProperty() {
+		return keyProperty;
+	}
+
+	public void setKeyProperty(String keyProperty) {
+		this.keyProperty = keyProperty;
+	}
+
+	public String getKeyColumn() {
+		return keyColumn;
+	}
+
+	public void setKeyColumn(String keyColumn) {
+		this.keyColumn = keyColumn;
+	}
+
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	public Set<EntityFieldInfo> getFieldInfos() {
+		return fieldInfos;
+	}
+
+	public void setFieldInfos(Set<EntityFieldInfo> fieldInfos) {
+		this.fieldInfos = fieldInfos;
+	}
 }

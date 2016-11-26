@@ -24,16 +24,22 @@ package com.baomidou.hibernateplus.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
+import java.lang.reflect.Modifier;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import org.hibernate.jpa.internal.EntityManagerFactoryImpl;
-
+import com.baomidou.framework.entity.EntityFieldInfo;
 import com.baomidou.framework.entity.EntityInfo;
 import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
+import org.hibernate.SessionFactory;
 
 /**
  * <p>
@@ -44,6 +50,11 @@ import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
  * @Date 2016-11-23
  */
 public class EntityInfoUtils {
+
+	/*
+	 * 默认表主键
+	 */
+	private static final String DEFAULT_ID_NAME = "id";
 	/*
 	 * 缓存实体信息
 	 */
@@ -59,10 +70,25 @@ public class EntityInfoUtils {
 	 * @return
 	 */
 	public static EntityInfo getEntityInfo(Class<?> clazz) {
-        if (null == modelCache.get(clazz.getName())) {
-            initEntityInfo(clazz);
-        }
 		return modelCache.get(clazz.getName());
+	}
+
+	/**
+	 * <p>
+	 * 初始化SessionFactory
+	 * <p>
+	 *
+	 * @param sessionFactory
+	 * @return
+	 */
+	public static void initSession(SessionFactory sessionFactory) {
+		Iterator<Map.Entry<String, EntityInfo>> iterator = modelCache.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Map.Entry<String, EntityInfo> entry = (Map.Entry<String, EntityInfo>) iterator.next();
+			EntityInfo entityInfo = entry.getValue();
+			if (entityInfo.getSessionFactory() == null)
+				entityInfo.setSessionFactory(sessionFactory);
+		}
 	}
 
 	/**
@@ -87,29 +113,18 @@ public class EntityInfoUtils {
 		if (table != null && StringUtils.isNotBlank(table.name())) {
 			tableName = table.name();
 		}
-		if (tableName == null){
+		if (tableName == null) {
 			throw new HibernatePlusException("Error: Entity @Table Not Found!");
 		}
-        /*.   .getIdentifier();*/
-		entityInfo.setTableName(tableName);
-        Method[] declaredMethods = clazz.getDeclaredMethods();
-        for (Method declaredMethod : declaredMethods) {
-            Type genericReturnType = declaredMethod.getGenericReturnType();
-            Class<? extends Type> aClass = genericReturnType.getClass();
-            System.out.println(aClass);
-            String name = declaredMethod.getName();
-        }
-        /* 实体字段 */
-		Field[] fields = clazz.getDeclaredFields();
-		entityInfo.setFields(fields);
-		for (Field field : fields) {
-            Class<?> type = field.getType();
-            System.out.println(field.getType());
-            String name = field.getName();
-            System.out.println(field.getName());
-            String methodCapitalize = ReflectionKit.getMethodCapitalize(name);
-            System.out.println(methodCapitalize);
-        }
+		// 实体字段
+		Set<EntityFieldInfo> fieldInfos = entityFieldInfos(clazz, entityInfo);
+		// 设置表字段
+		entityInfo.setFieldInfos(fieldInfos);
+		// 设置默认主键
+		if (StringUtils.isBlank(entityInfo.getKeyProperty())) {
+			entityInfo.setKeyProperty(DEFAULT_ID_NAME);
+			entityInfo.setKeyColumn(DEFAULT_ID_NAME);
+		}
 
 		/*
 		 * 注入
@@ -118,5 +133,81 @@ public class EntityInfoUtils {
 		return entityInfo;
 	}
 
+	/**
+	 * 获取实体类所有字段
+	 * 
+	 * @param clazz
+	 * @param entityInfo
+	 */
+	private static Set<EntityFieldInfo> entityFieldInfos(Class<?> clazz, EntityInfo entityInfo) {
+		Set<EntityFieldInfo> fieldInfos = new LinkedHashSet<EntityFieldInfo>();
+		Map<String, Method> methodMap = ReflectionKit.hasReturnMethod(clazz);
+		Set<Field> fields = getClassFields(clazz);
+		for (Field field : fields) {
+			Class<?> type = field.getType();
+			String fieldName = field.getName();
+			String methodName = ReflectionKit.getMethodCapitalize(fieldName);
+			Method method = methodMap.get(methodName);
+			if (method == null && Boolean.class.isAssignableFrom(type)) {
+				method = methodMap.get(StringUtils.concatCapitalize("is", fieldName));
+			}
+			if (method != null) {
+				if (ReflectionKit.hasAnnotation(method, Column.class)) {
+					Column column = method.getAnnotation(Column.class);
+					String name = column.name();
+					EntityFieldInfo entityFieldInfo = new EntityFieldInfo();
+					entityFieldInfo.setProperty(fieldName);
+					entityFieldInfo.setColumn(StringUtils.isBlank(name) ? fieldName : name);
+					fieldInfos.add(entityFieldInfo);
+				} else if (ReflectionKit.hasAnnotation(method, Id.class)) {
+					entityInfo.setKeyColumn(fieldName);
+					entityInfo.setKeyProperty(fieldName);
+				}
+			} else {
+				throw new HibernatePlusException(String.format("Error: Entity Field %s does has get Method!", fieldName));
+			}
+
+		}
+		return fieldInfos;
+	}
+
+	/**
+	 * 获取该类的所有属性列表
+	 *
+	 * @param clazz
+	 *            反射类
+	 * @return
+	 */
+	private static Set<Field> getClassFields(Class<?> clazz) {
+		Set<Field> result = new LinkedHashSet<Field>();
+		Field[] fields = clazz.getDeclaredFields();
+		for (Field field : fields) {
+
+			/* 过滤静态属性 */
+			if (Modifier.isStatic(field.getModifiers())) {
+				continue;
+			}
+
+			/* 过滤 transient关键字修饰的属性 */
+			if (Modifier.isTransient(field.getModifiers())) {
+				continue;
+			}
+
+			/* 过滤注解非表字段属性 */
+			Transient annotation = field.getAnnotation(Transient.class);
+			if (annotation != null) {
+				continue;
+			}
+			result.add(field);
+		}
+
+		/* 处理父类字段 */
+		Class<?> superClass = clazz.getSuperclass();
+		if (superClass.equals(Object.class)) {
+			return result;
+		}
+		result.addAll(getClassFields(superClass));
+		return result;
+	}
 
 }

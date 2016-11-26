@@ -22,14 +22,17 @@
  */
 package com.baomidou.hibernateplus.utils;
 
-import com.baomidou.framework.entity.EntityInfo;
-
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.Map;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.logging.Logger;
+
+import com.baomidou.framework.entity.EntityInfo;
 
 /**
  * <p>
@@ -156,4 +159,34 @@ public class ReflectionKit {
 
 		return (Class) params[index];
 	}
+
+	/**
+	 * 获取类中所有包含返回值的方法
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public static Map<String, Method> hasReturnMethod(Class<?> clazz) {
+		Method[] methods = clazz.getDeclaredMethods();
+		Map<String, Method> methodMap = new HashMap<String, Method>();
+		for (Method method : methods) {
+			Type genericReturnType = method.getGenericReturnType();
+			if (!Void.TYPE.equals(genericReturnType)) {
+				methodMap.put(method.getName(), method);
+			}
+		}
+		return methodMap;
+	}
+
+	/**
+	 * 获取方法是否包含该注解
+	 * 
+	 * @param method
+	 * @param annotationClass
+	 * @return
+	 */
+	public static <T extends Annotation> boolean hasAnnotation(Method method, Class<T> annotationClass) {
+		return (method.getAnnotation(annotationClass)) != null ? true : false;
+	}
+
 }
