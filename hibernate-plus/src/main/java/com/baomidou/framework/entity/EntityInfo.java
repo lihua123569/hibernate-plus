@@ -46,10 +46,6 @@ public class EntityInfo {
 	private String tableName;
 
 	/**
-	 * 表字段信息列表
-	 */
-	private Field[] fields;
-	/**
 	 * 表主键ID 属性名
 	 */
 	private String keyProperty;
@@ -77,14 +73,6 @@ public class EntityInfo {
 
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
-	}
-
-	public Field[] getFields() {
-		return fields;
-	}
-
-	public void setFields(Field[] fields) {
-		this.fields = fields;
 	}
 
 	public String getKeyProperty() {

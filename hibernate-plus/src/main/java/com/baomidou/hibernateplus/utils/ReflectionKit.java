@@ -30,8 +30,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.logging.Logger;
 
+import com.baomidou.framework.entity.EntityFieldInfo;
 import com.baomidou.framework.entity.EntityInfo;
 
 /**
@@ -114,8 +116,8 @@ public class ReflectionKit {
 		Class<?> cls = bean.getClass();
 		EntityInfo entityInfo = EntityInfoUtils.getEntityInfo(cls);
 		boolean result = false;
-		for (Field field : entityInfo.getFields()) {
-			String fieldName = field.getName();
+		for (EntityFieldInfo fieldInfo : entityInfo.getFieldInfos()) {
+			String fieldName = fieldInfo.getProperty();
 			Object val = getMethodValue(cls, bean, fieldName);
 			if (StringUtils.checkValNotNull(val)) {
 				result = true;
