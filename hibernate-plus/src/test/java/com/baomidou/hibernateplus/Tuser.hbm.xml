@@ -1,0 +1,72 @@
+
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--   
+    <hibernate-mapping>一般不去配置，采用默认即可。  
+    default-cascade="none"：默认的级联风格，表与表联动。  
+    default-lazy="true"：默认延迟加载  
+ -->
+<hibernate-mapping>
+
+    <!--   
+        <class>：使用class元素定义一个持久化类。  
+        name="cn.javass.user.vo.UserModel"：持久化类的java全限定名；  
+        table="tbl_user"：对应数据库表名；  
+        mutable="true"：默认为true，设置为false时则不可以被应用程序更新或删除；  
+        dynamic-insert="false"：默认为false，动态修改那些有改变过的字段，而不用修改所有字段；  
+        dynamic-update="false"：默认为false，动态插入非空值字段；  
+        select-before-update="false"：默认为false，在修改之前先做一次查询，与用户的值进行对比，有变化都会真正更新；  
+        optimistic-lock="version"：默认为version(检查version/timestamp字段)，取值：all(检查全部字段)、dirty(只检查修改过的字段)、  
+                                   none(不使用乐观锁定)，此参数主要用来处理并发，每条值都有固定且唯一的版本，版本为最新时才能执行操作；  
+     -->
+    <class name="com.baomidou.hibernateplus.Tuser" table="user" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+
+        <!--   
+            <id>：定义了该属性到数据库表主键字段的映射。  
+            name="userId"：标识属性的名字；  
+            column="userId"：表主键字段的名字，如果不填写与name一样；  
+         -->
+        <id name="test_id">
+            <!-- <generator>：指定主键由什么生成，推荐使用uuid，assigned指用户手工填入。 -->
+            <generator class="uuid"/>
+        </id>
+        <!--
+            <version/>：使用版本控制来处理并发，要开启optimistic-lock="version"和dynamic-update="true"。  
+            name="version"：持久化类的属性名，column="version"：指定持有版本号的字段名；  
+         -->
+        <version name="name" column="name"/>
+
+        <!--   
+            <property>：为类定义一个持久化的javaBean风格的属性。  
+            name="name"：标识属性的名字，以小写字母开头；  
+            column="name"：表主键字段的名字，如果不填写与name一样；  
+            update="true"/insert="true"：默认为true，表示可以被更新或插入；  
+         -->
+        <property name="age" column="age" />
+        <property name="test_type" column="test_type"/>
+        <property name="role" column="role"/>
+        <property name="phone" column="phone"/>
+        <property name="desc" column="desc"/>
+
+        <!--   
+            组件映射：把多个属性打包在一起当一个属性使用，用来把类的粒度变小。  
+            <component name="属性，这里指对象">  
+                <property name="name1"></property>  
+                <property name="name2"></property>  
+            </component>  
+         -->
+
+        <!--
+           <join>:一个对象映射多个表，该元素必须放在所有<property>之后。
+           <join table="tbl_test：子表名">
+               <key column="uuid：子表主键"></key>
+           <property name="name1：对象属性" column="name：子表字段"></property>
+        </join>
+         -->
+
+    </class>
+
+</hibernate-mapping> 

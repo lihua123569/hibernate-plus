@@ -1,0 +1,22 @@
+<hibernate-configuration>
+
+    <session-factory>
+        <!--为true表示将Hibernate发送给数据库的sql显示出来 -->
+        <property name="show_sql">true</property>
+        <!-- SQL方言，这边设定的是MySQL -->
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+        <!-- 一次读的数据库记录数 -->
+        <property name="jdbc.fetch_size">50</property>
+        <!-- 设定对数据库进行批量删除 -->
+        <property name="jdbc.batch_size">30</property>
+        <!--驱动程序-->
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <!-- JDBC URL -->
+        <property name="connection.url">jdbc:mysql://localhost:3306/mybatis-plus?characterEncoding=utf-8</property>
+        <!-- 数据库用户名-->
+        <property name="connection.username">root</property>
+        <!-- 数据库密码-->
+        <property name="connection.password">521</property>
+        <mapping resource="com/baomidou/hibernateplus/Tuser.hbm.xml" />
+    </session-factory>
+</hibernate-configuration>

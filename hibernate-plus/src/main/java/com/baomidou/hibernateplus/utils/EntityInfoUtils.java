@@ -22,13 +22,18 @@
  */
 package com.baomidou.hibernateplus.utils;
 
-import com.baomidou.framework.entity.EntityInfo;
-import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
-
-import javax.persistence.Table;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.persistence.Table;
+
+import org.hibernate.jpa.internal.EntityManagerFactoryImpl;
+
+import com.baomidou.framework.entity.EntityInfo;
+import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 
 /**
  * <p>
@@ -85,15 +90,33 @@ public class EntityInfoUtils {
 		if (tableName == null){
 			throw new HibernatePlusException("Error: Entity @Table Not Found!");
 		}
+        /*.   .getIdentifier();*/
 		entityInfo.setTableName(tableName);
-		/* 实体字段 */
+        Method[] declaredMethods = clazz.getDeclaredMethods();
+        for (Method declaredMethod : declaredMethods) {
+            Type genericReturnType = declaredMethod.getGenericReturnType();
+            Class<? extends Type> aClass = genericReturnType.getClass();
+            System.out.println(aClass);
+            String name = declaredMethod.getName();
+        }
+        /* 实体字段 */
 		Field[] fields = clazz.getDeclaredFields();
 		entityInfo.setFields(fields);
+		for (Field field : fields) {
+            Class<?> type = field.getType();
+            System.out.println(field.getType());
+            String name = field.getName();
+            System.out.println(field.getName());
+            String methodCapitalize = ReflectionKit.getMethodCapitalize(name);
+            System.out.println(methodCapitalize);
+        }
+
 		/*
 		 * 注入
 		 */
 		modelCache.put(clazz.getName(), entityInfo);
 		return entityInfo;
 	}
+
 
 }
