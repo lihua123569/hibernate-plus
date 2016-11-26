@@ -135,13 +135,13 @@ public class SqlUtils {
 			if (page != null) {
 				wrapper.orderBy(page.getOrderByField(), page.isAsc());
 			}
-			return String.format(SqlUtils.SQL_LIST, StringUtils.isBlank(sqlSelect) ? "*" : sqlSelect, tableName,
+			return String.format(SqlUtils.SQL_LIST, StringUtils.isBlank(sqlSelect) ? select(clazz) : sqlSelect, tableName,
 					wrapper.getSqlSegment());
 		}
 		if (page != null) {
-			return concatOrderBy(String.format(SqlUtils.SQL_LIST, "*", tableName, StringUtils.EMPTY_STRING), page, true);
+			return concatOrderBy(String.format(SqlUtils.SQL_LIST, select(clazz), tableName, StringUtils.EMPTY_STRING), page, true);
 		}
-		return String.format(SqlUtils.SQL_LIST, "*", tableName, StringUtils.EMPTY_STRING);
+		return String.format(SqlUtils.SQL_LIST, select(clazz), tableName, StringUtils.EMPTY_STRING);
 
 	}
 
@@ -208,4 +208,15 @@ public class SqlUtils {
 		}
 		return String.format(SqlUtils.SQL_UPDATE, tableName, builder.toString(), StringUtils.EMPTY_STRING);
 	}
+
+	/**
+	 * 获取select
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public static String select(Class clazz) {
+		return EntityInfoUtils.getEntityInfo(clazz).getSelect();
+	}
+
 }

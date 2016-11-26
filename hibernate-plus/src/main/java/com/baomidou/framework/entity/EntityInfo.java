@@ -23,8 +23,11 @@
 package com.baomidou.framework.entity;
 
 import java.lang.reflect.Field;
+import java.util.Iterator;
 import java.util.Set;
 
+import com.baomidou.hibernateplus.utils.CollectionUtils;
+import com.baomidou.hibernateplus.utils.StringUtils;
 import org.hibernate.SessionFactory;
 
 /**
@@ -61,6 +64,7 @@ public class EntityInfo {
 	 */
 
 	private Set<EntityFieldInfo> fieldInfos;
+	private String select;
 
 	/**
 	 * SessionFactory
@@ -113,5 +117,39 @@ public class EntityInfo {
 
 	public void setFieldInfos(Set<EntityFieldInfo> fieldInfos) {
 		this.fieldInfos = fieldInfos;
+	}
+
+	public String getSelect() {
+		if (StringUtils.isBlank(select)) {
+			Set<EntityFieldInfo> fieldInfos = getFieldInfos();
+			if (CollectionUtils.isNotEmpty(fieldInfos)) {
+				StringBuilder selectBuild = new StringBuilder();
+				Iterator<EntityFieldInfo> iterator = fieldInfos.iterator();
+				int _size = fieldInfos.size();
+				int i = 0;
+				while (iterator.hasNext()) {
+					EntityFieldInfo fieldInfo = iterator.next();
+					String column = fieldInfo.getColumn();
+					String property = fieldInfo.getProperty();
+					if (i + 1 == _size) {
+						selectBuild.append(column);
+						selectBuild.append(" AS ");
+						selectBuild.append(property);
+					} else {
+						selectBuild.append(column);
+						selectBuild.append(" AS ");
+						selectBuild.append(property);
+						selectBuild.append(",");
+					}
+					i++;
+				}
+				setSelect(selectBuild.toString());
+			}
+		}
+		return select;
+	}
+
+	public void setSelect(String select) {
+		this.select = select;
 	}
 }
