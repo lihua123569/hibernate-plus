@@ -18,28 +18,13 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
 - **数据库友好**：基于Hibernate，基本支持所有数据库
 - **避免Sql注入**：内置Sql注入内容剥离器，预防Sql注入攻击
 
-# 文档 | Documentation
-
-[中文]() | [English]()
-
-
-# 应用实例 | Demo
-
-[Spring-MVC]()
-
-
-# 下载地址 | Download
-
-[点此去下载]() | [暂时没有上传至中央仓库]()
-
 # 结构目录 | Architecture
 
-![项目结构说明](http://git.oschina.net/uploads/images/2016/1121/012311_edbc3377_620321.png "项目结构说明")
+![项目结构说明](http://git.oschina.net/uploads/images/2016/1126/164418_9ce74358_620321.png "项目结构说明")
 
-# API | API
+# 通用方法 | API
 
-![API说明](http://git.oschina.net/uploads/images/2016/1121/011922_87453c40_620321.png "API说明")
-![API说明](http://git.oschina.net/uploads/images/2016/1121/011912_84d43c37_620321.png "API说明")
+![API说明](http://git.oschina.net/uploads/images/2016/1126/164243_7fc54d36_620321.png "API说明")
 
 # 其他开源项目 | Other Project
 
