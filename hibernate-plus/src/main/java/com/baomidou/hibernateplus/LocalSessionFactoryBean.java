@@ -485,6 +485,7 @@ public class LocalSessionFactoryBean extends HibernateExceptionTranslator
 		// Build SessionFactory instance.
 		this.configuration = sfb;
 		this.sessionFactory = buildSessionFactory(sfb);
+		// TODO Caratacus 自动注入sessionFactory
 	}
 
 	/**

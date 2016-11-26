@@ -321,7 +321,9 @@ public class LocalSessionFactoryBuilder extends Configuration {
 		try {
 			ClassLoader cl = this.resourcePatternResolver.getClassLoader();
 			for (String className : entityClassNames) {
-				addAnnotatedClass(cl.loadClass(className));
+                Class<?> cls = cl.loadClass(className);
+                //TODO Caratacus 初始化 EntityInfo 相关实体
+                addAnnotatedClass(cls);
 			}
 			for (String className : converterClassNames) {
 				addAttributeConverter((Class<? extends AttributeConverter<?, ?>>) cl.loadClass(className));
