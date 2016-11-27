@@ -141,7 +141,4 @@ public class AssistTools {
 		}
 	}
 
-	public static void main(String[] args) {
-		deleteAllFile(new File("D:\\bin"));
-	}
 }

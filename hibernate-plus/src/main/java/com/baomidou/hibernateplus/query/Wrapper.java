@@ -595,13 +595,4 @@ public abstract class Wrapper implements Serializable {
         }
         return StringUtils.sqlArgsFill(sqlStr, params);
     }
-
-    public static void main(String[] args) {
-        Map map = new HashMap();
-        map.put("a","a");
-        map.put("b","b");
-        map.put("c","c");
-        System.out.println(Condition.instance().eq("yyy", 2).allEq(map).toString());
-
-    }
 }
