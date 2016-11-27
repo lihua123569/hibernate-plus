@@ -109,17 +109,21 @@ public class EntityInfo {
 
 	public String getSelect() {
 		if (StringUtils.isBlank(select)) {
+			StringBuilder selectBuild = new StringBuilder();
+			selectBuild.append(getKeyColumn());
+			selectBuild.append(" AS ");
+			selectBuild.append(getKeyProperty());
+			selectBuild.append(",");
 			Set<EntityFieldInfo> fieldInfos = getFieldInfos();
 			if (CollectionUtils.isNotEmpty(fieldInfos)) {
-				StringBuilder selectBuild = new StringBuilder();
 				Iterator<EntityFieldInfo> iterator = fieldInfos.iterator();
 				int _size = fieldInfos.size();
-				int i = 0;
+				int i = 1;
 				while (iterator.hasNext()) {
 					EntityFieldInfo fieldInfo = iterator.next();
 					String column = fieldInfo.getColumn();
 					String property = fieldInfo.getProperty();
-					if (i + 1 == _size) {
+					if (i == _size) {
 						selectBuild.append(column);
 						selectBuild.append(" AS ");
 						selectBuild.append(property);
@@ -131,8 +135,8 @@ public class EntityInfo {
 					}
 					i++;
 				}
-				setSelect(selectBuild.toString());
 			}
+			setSelect(selectBuild.toString());
 		}
 		return select;
 	}

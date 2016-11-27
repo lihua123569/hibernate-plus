@@ -23,14 +23,12 @@
 package com.baomidou.hibernateplus.utils;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.util.Map;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import com.baomidou.framework.entity.EntityFieldInfo;
@@ -168,15 +166,24 @@ public class ReflectionKit {
 	 * @param clazz
 	 * @return
 	 */
-	public static Map<String, Method> hasReturnMethod(Class<?> clazz) {
+	public static Map<String, Method> getReturnMethods(Class<?> clazz) {
 		Method[] methods = clazz.getDeclaredMethods();
 		Map<String, Method> methodMap = new HashMap<String, Method>();
 		for (Method method : methods) {
 			Type genericReturnType = method.getGenericReturnType();
-			if (!Void.TYPE.equals(genericReturnType)) {
-				methodMap.put(method.getName(), method);
+			if (Void.TYPE.equals(genericReturnType)) {
+				continue;
 			}
+			methodMap.put(method.getName(), method);
 		}
+
+		/* 处理父类方法 */
+		Class<?> superClass = clazz.getSuperclass();
+		if (superClass.equals(Object.class)) {
+			return methodMap;
+		}
+		methodMap.putAll(getReturnMethods(superClass));
+
 		return methodMap;
 	}
 

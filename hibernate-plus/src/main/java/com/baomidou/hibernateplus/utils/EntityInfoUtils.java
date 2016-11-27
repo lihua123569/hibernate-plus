@@ -141,7 +141,7 @@ public class EntityInfoUtils {
 	 */
 	private static Set<EntityFieldInfo> entityFieldInfos(Class<?> clazz, EntityInfo entityInfo) {
 		Set<EntityFieldInfo> fieldInfos = new LinkedHashSet<EntityFieldInfo>();
-		Map<String, Method> methodMap = ReflectionKit.hasReturnMethod(clazz);
+		Map<String, Method> methodMap = ReflectionKit.getReturnMethods(clazz);
 		Set<Field> fields = getClassFields(clazz);
 		for (Field field : fields) {
 			Class<?> type = field.getType();
@@ -152,16 +152,22 @@ public class EntityInfoUtils {
 				method = methodMap.get(StringUtils.concatCapitalize("is", fieldName));
 			}
 			if (method != null) {
-				if (ReflectionKit.hasAnnotation(method, Column.class)) {
+				if (ReflectionKit.hasAnnotation(method, Id.class)) {
+					if (ReflectionKit.hasAnnotation(method, Column.class)){
+						Column column = method.getAnnotation(Column.class);
+						String name = column.name();
+						entityInfo.setKeyColumn(StringUtils.isBlank(name) ? fieldName : name);
+					}else{
+						entityInfo.setKeyColumn(fieldName);
+					}
+					entityInfo.setKeyProperty(fieldName);
+				}else if (ReflectionKit.hasAnnotation(method, Column.class)) {
 					Column column = method.getAnnotation(Column.class);
 					String name = column.name();
 					EntityFieldInfo entityFieldInfo = new EntityFieldInfo();
 					entityFieldInfo.setProperty(fieldName);
 					entityFieldInfo.setColumn(StringUtils.isBlank(name) ? fieldName : name);
 					fieldInfos.add(entityFieldInfo);
-				} else if (ReflectionKit.hasAnnotation(method, Id.class)) {
-					entityInfo.setKeyColumn(fieldName);
-					entityInfo.setKeyProperty(fieldName);
 				}
 			} else {
 				throw new HibernatePlusException(String.format("Error: Entity Field %s does has get Method!", fieldName));
@@ -201,7 +207,7 @@ public class EntityInfoUtils {
 			result.add(field);
 		}
 
-		/* 处理父类字段 */
+		/* 处理父类方法 */
 		Class<?> superClass = clazz.getSuperclass();
 		if (superClass.equals(Object.class)) {
 			return result;
