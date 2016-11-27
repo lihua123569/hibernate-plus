@@ -39,12 +39,54 @@ import java.util.Map;
  */
 public interface IDao<T, V> {
 	/**
+	 * 根据id获取对象
+	 *
+	 * @param id
+	 * @return
+	 */
+	public T get(Serializable id);
+
+	/**
+	 *
+	 * 获取单个对象
+	 *
+	 * @param property
+	 * @param value
+	 * @return
+	 *
+	 */
+	public T get(String property, Object value);
+
+	/**
 	 * 保存方法
 	 *
 	 * @param o
 	 * @return
 	 */
 	public T save(T o);
+
+	/**
+	 * 保存/修改方法
+	 *
+	 * @param o
+	 */
+	public void saveOrUpdate(T o);
+
+	/**
+	 * 修改方法
+	 *
+	 * @param o
+	 */
+	public void update(T o);
+
+	/**
+	 * 修改方法
+	 *
+	 * @param setMap
+	 * @param wrapper
+	 * @return
+	 */
+	public int update(Map<String, Object> setMap, Wrapper wrapper);
 
 	/**
 	 * 删除方法
@@ -60,37 +102,6 @@ public interface IDao<T, V> {
 	 * @return
 	 */
 	public int delete(Wrapper wrapper);
-
-	/**
-	 * 修改方法
-	 *
-	 * @param o
-	 */
-	public void update(T o);
-
-	/**
-	 * 修改方法
-	 * 
-	 * @param setMap
-	 * @param wrapper
-	 * @return
-	 */
-	public int update(Map<String, Object> setMap, Wrapper wrapper);
-
-	/**
-	 * 保存/修改方法
-	 *
-	 * @param o
-	 */
-	public void saveOrUpdate(T o);
-
-	/**
-	 * 根据id获取对象
-	 *
-	 * @param id
-	 * @return
-	 */
-	public T get(Serializable id);
 
 	/**
 	 * 批量添加
@@ -109,6 +120,25 @@ public interface IDao<T, V> {
 	 * @return
 	 */
 	public boolean updateBatch(List<T> list, int size);
+
+	/**
+	 * 查询列表
+	 *
+	 * @param wrapper
+	 * @param clazz
+	 * @param <E>
+	 * @return
+	 */
+	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz);
+
+	/**
+	 * 查询列表
+	 *
+	 * @param wrapper
+	 * @param <T>
+	 * @return
+	 */
+	public <T> List<T> selectList(Wrapper wrapper);
 
 	/**
 	 * 查询数量
@@ -144,6 +174,14 @@ public interface IDao<T, V> {
 	public int selectCount(Map<String, Object> map);
 
 	/**
+	 * 查询数量
+	 *
+	 * @param wrapper
+	 * @return
+	 */
+	public int selectCount(Wrapper wrapper);
+
+	/**
 	 * 查询分页
 	 * 
 	 * @param wrapper
@@ -153,42 +191,5 @@ public interface IDao<T, V> {
 	 * @return
 	 */
 	public <E> Page<E> selectPage(Wrapper wrapper, Class<E> clazz, Page<E> page);
-
-	/**
-	 * 查询列表
-	 * 
-	 * @param wrapper
-	 * @param clazz
-	 * @param <E>
-	 * @return
-	 */
-	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz);
-	/**
-	 * 查询列表
-	 *
-	 * @param wrapper
-	 * @param <T>
-	 * @return
-	 */
-	public <T> List<T> selectList(Wrapper wrapper);
-
-	/**
-	 * 查询数量
-	 *
-	 * @param wrapper
-	 * @return
-	 */
-	public int selectCount(Wrapper wrapper);
-
-	/**
-	 *
-	 * 获取单个对象
-	 *
-	 * @param property
-	 * @param value
-	 * @return
-	 *
-	 */
-	public T get(String property, Object value);
 
 }

@@ -60,19 +60,20 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	@Autowired
 	protected IDao<T, V> baseDao;
 
+
+	@Override
+	public V get(Serializable id) {
+		return baseDao.get(id) == null ? null : baseDao.get(id).convert(voClass());
+	}
+
+	@Override
+	public V get(String property, Object value) {
+		return baseDao.get(property, value) == null ? null : baseDao.get(property, value).convert(voClass());
+	}
+
 	@Override
 	public V save(V vo) {
 		return baseDao.save(vo.convert(toClass())).convert(voClass());
-	}
-
-	@Override
-	public void delete(V vo) {
-		baseDao.delete(vo.convert(toClass()));
-	}
-
-	@Override
-	public void update(V vo) {
-		baseDao.update(vo.convert(toClass()));
 	}
 
 	@Override
@@ -81,8 +82,43 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	}
 
 	@Override
-	public V get(Serializable id) {
-		return baseDao.get(id) == null ? null : baseDao.get(id).convert(voClass());
+	public void update(V vo) {
+		baseDao.update(vo.convert(toClass()));
+	}
+
+	@Override
+	public boolean update(Map<String, Object> setMap, Wrapper wrapper) {
+		return retBool(baseDao.update(setMap, wrapper));
+	}
+
+	@Override
+	public void delete(V vo) {
+		baseDao.delete(vo.convert(toClass()));
+	}
+
+	@Override
+	public boolean delete(Wrapper wrapper) {
+		return retBool(baseDao.delete(wrapper));
+	}
+
+	@Override
+	public boolean insertBatch(List<V> list) {
+		return baseDao.insertBatch(BeanConverter.convert(toClass(), list), 30);
+	}
+
+	@Override
+	public boolean insertBatch(List<V> list, int size) {
+		return baseDao.insertBatch(BeanConverter.convert(toClass(), list), size);
+	}
+
+	@Override
+	public boolean updateBatch(List<V> list) {
+		return baseDao.updateBatch(BeanConverter.convert(toClass(), list), 30);
+	}
+
+	@Override
+	public boolean updateBatch(List<V> list, int size) {
+		return baseDao.updateBatch(BeanConverter.convert(toClass(), list), size);
 	}
 
 	@Override
@@ -99,23 +135,13 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	}
 
 	@Override
-	public boolean insertBatch(List<V> list) {
-		return baseDao.insertBatch(BeanConverter.convert(toClass(), list), 30);
+	public List<V> selectList(Wrapper wrapper) {
+		return baseDao.selectList(wrapper);
 	}
 
 	@Override
-	public boolean updateBatch(List<V> list) {
-		return baseDao.updateBatch(BeanConverter.convert(toClass(), list), 30);
-	}
-
-	@Override
-	public boolean insertBatch(List<V> list, int size) {
-		return baseDao.insertBatch(BeanConverter.convert(toClass(), list), size);
-	}
-
-	@Override
-	public boolean updateBatch(List<V> list, int size) {
-		return baseDao.updateBatch(BeanConverter.convert(toClass(), list), size);
+	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz) {
+		return baseDao.<E> selectList(wrapper, clazz);
 	}
 
 	@Override
@@ -139,6 +165,11 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	}
 
 	@Override
+	public int selectCount(Wrapper wrapper) {
+		return baseDao.selectCount(wrapper);
+	}
+
+	@Override
 	public Page<V> selectPage(Page<V> page) {
 		return baseDao.selectPage(Condition.instance(), voClass(), page);
 	}
@@ -156,38 +187,6 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	@Override
 	public <E> Page<E> selectPage(Wrapper wrapper, Class<E> clazz, Page<E> page) {
 		return baseDao.<E> selectPage(wrapper, clazz, page);
-	}
-
-	@Override
-	public List<V> selectList(Wrapper wrapper) {
-		return baseDao.selectList(wrapper);
-	}
-
-	@Override
-	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz) {
-		return baseDao.<E> selectList(wrapper, clazz);
-	}
-
-	@Override
-	public int selectCount(Wrapper wrapper) {
-		return baseDao.selectCount(wrapper);
-	}
-
-	@Override
-	public boolean delete(Wrapper wrapper) {
-		return retBool(baseDao.delete(wrapper));
-
-	}
-
-	@Override
-	public boolean update(Map<String, Object> setMap, Wrapper wrapper) {
-		return retBool(baseDao.update(setMap, wrapper));
-	}
-
-	@Override
-	public V get(String property, Object value) {
-		return baseDao.get(property, value) == null ? null : baseDao.get(property, value).convert(voClass());
-
 	}
 
 	/**

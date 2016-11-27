@@ -39,34 +39,6 @@ import java.util.Map;
  * @date 2016-11-23
  */
 public interface IService<V extends Convert> {
-	/**
-	 * 保存
-	 *
-	 * @param vo
-	 * @return
-	 */
-	public V save(V vo);
-
-	/**
-	 * 删除
-	 *
-	 * @param vo
-	 */
-	public void delete(V vo);
-
-	/**
-	 * 修改
-	 *
-	 * @param vo
-	 */
-	public void update(V vo);
-
-	/**
-	 * 保存或修改
-	 *
-	 * @param vo
-	 */
-	public void saveOrUpdate(V vo);
 
 	/**
 	 * 获取单个对象
@@ -75,14 +47,6 @@ public interface IService<V extends Convert> {
 	 * @return
 	 */
 	public V get(Serializable id);
-
-	/**
-	 * 获取单个对象
-	 *
-	 * @param wrapper
-	 * @return
-	 */
-	public V selectOne(Wrapper wrapper);
 
 	/**
 	 *
@@ -96,20 +60,57 @@ public interface IService<V extends Convert> {
 	public V get(String property, Object value);
 
 	/**
+	 * 保存
+	 *
+	 * @param vo
+	 * @return
+	 */
+	public V save(V vo);
+
+	/**
+	 * 保存或修改
+	 *
+	 * @param vo
+	 */
+	public void saveOrUpdate(V vo);
+
+	/**
+	 * 修改
+	 *
+	 * @param vo
+	 */
+	public void update(V vo);
+
+	/**
+	 * 根据Wrapper修改
+	 *
+	 * @param wrapper
+	 * @return
+	 */
+	boolean update(Map<String, Object> setMap, Wrapper wrapper);
+
+	/**
+	 * 删除
+	 *
+	 * @param vo
+	 */
+	public void delete(V vo);
+
+	/**
+	 * 根据Wrapper删除
+	 *
+	 * @param wrapper
+	 * @return
+	 */
+	boolean delete(Wrapper wrapper);
+
+	/**
 	 * 批量插入
 	 * 
 	 * @param list
 	 * @return
 	 */
 	public boolean insertBatch(List<V> list);
-
-	/**
-	 * 批量修改
-	 * 
-	 * @param list
-	 * @return
-	 */
-	public boolean updateBatch(List<V> list);
 
 	/**
 	 * 批量插入
@@ -124,10 +125,44 @@ public interface IService<V extends Convert> {
 	 * 批量修改
 	 *
 	 * @param list
+	 * @return
+	 */
+	public boolean updateBatch(List<V> list);
+
+	/**
+	 * 批量修改
+	 *
+	 * @param list
 	 * @param size
 	 * @return
 	 */
 	public boolean updateBatch(List<V> list, int size);
+
+	/**
+	 * 获取单个对象
+	 *
+	 * @param wrapper
+	 * @return
+	 */
+	public V selectOne(Wrapper wrapper);
+
+	/**
+	 * 查询列表
+	 *
+	 * @param wrapper
+	 * @return
+	 */
+	public List<V> selectList(Wrapper wrapper);
+
+	/**
+	 * 查询列表
+	 *
+	 * @param wrapper
+	 * @param clazz
+	 * @param <E>
+	 * @return
+	 */
+	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz);
 
 	/**
 	 * 查询全表数量
@@ -161,6 +196,14 @@ public interface IService<V extends Convert> {
 	 * @return
 	 */
 	public int selectCount(Map<String, Object> map);
+
+	/**
+	 * 查询数量
+	 *
+	 * @param wrapper
+	 * @return
+	 */
+	public int selectCount(Wrapper wrapper);
 
 	/**
 	 * 查询分页
@@ -199,47 +242,5 @@ public interface IService<V extends Convert> {
 	 * @return
 	 */
 	public <E> Page<E> selectPage(Wrapper wrapper, Class<E> clazz, Page<E> page);
-
-	/**
-	 * 查询列表
-	 * 
-	 * @param wrapper
-	 * @return
-	 */
-	public List<V> selectList(Wrapper wrapper);
-
-	/**
-	 * 查询列表
-	 * 
-	 * @param wrapper
-	 * @param clazz
-	 * @param <E>
-	 * @return
-	 */
-	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz);
-
-	/**
-	 * 查询数量
-	 * 
-	 * @param wrapper
-	 * @return
-	 */
-	public int selectCount(Wrapper wrapper);
-
-	/**
-	 * 根据Wrapper删除
-	 * 
-	 * @param wrapper
-	 * @return
-	 */
-	boolean delete(Wrapper wrapper);
-
-	/**
-	 * 根据Wrapper修改
-	 *
-	 * @param wrapper
-	 * @return
-	 */
-	boolean update(Map<String, Object> setMap, Wrapper wrapper);
 
 }
