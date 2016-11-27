@@ -22,7 +22,20 @@
  */
 package com.baomidou.hibernateplus.dao.impl;
 
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.transform.Transformers;
+import org.jboss.logging.Logger;
+
 import com.baomidou.framework.entity.Convert;
+import com.baomidou.framework.service.impl.ServiceImpl;
 import com.baomidou.hibernateplus.dao.IDao;
 import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 import com.baomidou.hibernateplus.page.CountOptimize;
@@ -35,17 +48,6 @@ import com.baomidou.hibernateplus.utils.MapUtils;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
 import com.baomidou.hibernateplus.utils.SqlUtils;
 import com.baomidou.hibernateplus.utils.StringUtils;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.transform.Transformers;
-
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * <p>
@@ -57,7 +59,7 @@ import java.util.logging.Logger;
  */
 public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V> {
 
-	protected static final Logger logger = Logger.getLogger("DaoImpl");
+	private static final Logger logger = Logger.getLogger(DaoImpl.class);
 	/* 反射TO泛型 */
 	protected Class<T> toCls = null;
 
@@ -119,7 +121,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			}
 			t = (T) query.uniqueResult();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return t;
 
@@ -201,7 +203,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			HibernateUtils.setPage(page, rows, query);
 			list = query.list();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return list;
 
@@ -233,7 +235,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 				}
 			}
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 			return false;
 		}
 		return true;
@@ -253,7 +255,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 				}
 			}
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 			return false;
 		}
 		return true;
@@ -369,7 +371,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			HibernateUtils.setPage(page, rows, query);
 			list = query.list();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return list;
 	}
@@ -456,7 +458,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			HibernateUtils.setPage(page, rows, query);
 			list = query.list();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return list;
 
@@ -541,7 +543,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			BigInteger bigInteger = (BigInteger) countQuery.uniqueResult();
 			page.setTotal(bigInteger.intValue());
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return page;
 	}
@@ -555,7 +557,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 					Transformers.aliasToBean(clazz));
 			list = query.list();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return list;
 	}
@@ -569,7 +571,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 					Transformers.aliasToBean(toClass()));
 			list = query.list();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return list;
 	}
@@ -583,7 +585,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			BigInteger bigInteger = (BigInteger) query.uniqueResult();
 			count = bigInteger.intValue();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return count;
 	}
@@ -704,7 +706,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			}
 			entity = (E) query.uniqueResult();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return entity;
 	}
@@ -753,7 +755,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 				}
 				resultCount = query.executeUpdate();
 			} catch (Exception e) {
-				logger.warning("Warn: Unexpected exception.  Cause:" + e);
+				logger.warn("Warn: Unexpected exception.  Cause:" + e);
 			}
 		}
 		return resultCount;
@@ -782,7 +784,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			}
 			list = query.list();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return list;
 	}
@@ -840,7 +842,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			HibernateUtils.setPage(page, rows, query);
 			list = query.list();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return list;
 	}
@@ -878,7 +880,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			}
 			list = query.list();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return list;
 	}
@@ -929,7 +931,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			HibernateUtils.setPage(page, rows, query);
 			list = query.list();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return list;
 	}
@@ -968,7 +970,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			}
 			entity = (E) query.uniqueResult();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return entity;
 	}
@@ -993,7 +995,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			}
 			resultCount = query.executeUpdate();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return resultCount;
 	}
@@ -1042,7 +1044,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			HibernateUtils.setParams(query, "0", value);
 			t = (T) query.uniqueResult();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return t;
 	}
@@ -1070,7 +1072,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			list = query.list();
 
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return list;
 
@@ -1096,7 +1098,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			}
 			list = query.list();
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return list;
 
@@ -1135,7 +1137,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			list = query.list();
 
 		} catch (Exception e) {
-			logger.warning("Warn: Unexpected exception.  Cause:" + e);
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return list;
 	}

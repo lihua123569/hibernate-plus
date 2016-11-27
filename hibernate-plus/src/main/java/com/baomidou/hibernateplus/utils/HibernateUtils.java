@@ -25,6 +25,7 @@ package com.baomidou.hibernateplus.utils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.jboss.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +41,9 @@ import java.util.Map;
  * @date 2016-10-14
  */
 public class HibernateUtils {
+
+	private static final Logger logger = Logger.getLogger(HibernateUtils.class);
+
 	private static final String BASE_COUNT = "SELECT COUNT(0) FROM ";
 	private static final String BASE_LIST = " FROM ";
 
@@ -345,7 +349,7 @@ public class HibernateUtils {
 	 * @return
 	 */
 	public static Query getSqlQuery(String sql, SessionFactory factory) {
-		System.err.println("Execute SQL：" + SqlUtils.sqlFormat(sql, true));
+		logger.debug("Execute SQL：" + SqlUtils.sqlFormat(sql, true));
 		return getCurrentSession(factory).createSQLQuery(sql);
 	}
 
@@ -357,7 +361,7 @@ public class HibernateUtils {
 	 * @return
 	 */
 	public static Query getHqlQuery(String hql, SessionFactory factory) {
-		System.err.println("Execute HQL：" + SqlUtils.sqlFormat(hql, true));
+		logger.debug("Execute HQL：" + SqlUtils.sqlFormat(hql, true));
 		return getCurrentSession(factory).createQuery(hql);
 	}
 

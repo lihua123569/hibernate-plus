@@ -40,6 +40,7 @@ import com.baomidou.framework.entity.EntityFieldInfo;
 import com.baomidou.framework.entity.EntityInfo;
 import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 import org.hibernate.SessionFactory;
+import org.jboss.logging.Logger;
 
 /**
  * <p>
@@ -51,6 +52,7 @@ import org.hibernate.SessionFactory;
  */
 public class EntityInfoUtils {
 
+	private static final Logger logger = Logger.getLogger(EntityInfoUtils.class);
 	/*
 	 * 默认表主键
 	 */
@@ -114,7 +116,7 @@ public class EntityInfoUtils {
 			tableName = table.name();
 		}
 		if (tableName == null) {
-			throw new HibernatePlusException("Error: Entity @Table Not Found!");
+			logger.warn("Warn: Entity @Table Not Found!");
 		}
 		// 实体字段
 		Set<EntityFieldInfo> fieldInfos = entityFieldInfos(clazz, entityInfo);
@@ -153,15 +155,15 @@ public class EntityInfoUtils {
 			}
 			if (method != null) {
 				if (ReflectionKit.hasAnnotation(method, Id.class)) {
-					if (ReflectionKit.hasAnnotation(method, Column.class)){
+					if (ReflectionKit.hasAnnotation(method, Column.class)) {
 						Column column = method.getAnnotation(Column.class);
 						String name = column.name();
 						entityInfo.setKeyColumn(StringUtils.isBlank(name) ? fieldName : name);
-					}else{
+					} else {
 						entityInfo.setKeyColumn(fieldName);
 					}
 					entityInfo.setKeyProperty(fieldName);
-				}else if (ReflectionKit.hasAnnotation(method, Column.class)) {
+				} else if (ReflectionKit.hasAnnotation(method, Column.class)) {
 					Column column = method.getAnnotation(Column.class);
 					String name = column.name();
 					EntityFieldInfo entityFieldInfo = new EntityFieldInfo();
@@ -170,7 +172,8 @@ public class EntityInfoUtils {
 					fieldInfos.add(entityFieldInfo);
 				}
 			} else {
-				throw new HibernatePlusException(String.format("Error: Entity Field %s does has get Method!", fieldName));
+				logger.warn(String.format("Warn: Entity Field %s does has get Method!", fieldName));
+
 			}
 
 		}
