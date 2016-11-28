@@ -324,7 +324,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	@Override
 	public Page selectPage(Wrapper wrapper, Page page) {
 		try {
-			String sql = SqlUtils.sqlList(toClass(), wrapper, page);
+			String sql = SqlUtils.sqlEntityList(toClass(), wrapper, page);
 			Query query = HibernateUtils.getEntitySqlQuery(toClass(), sql, getSessionFactory());
 			HibernateUtils.setPage(page.getCurrent(), page.getSize(), query);
 			page.setRecords(query.list());
