@@ -27,6 +27,7 @@ import com.baomidou.hibernateplus.dao.IDao;
 import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 import com.baomidou.hibernateplus.page.CountOptimize;
 import com.baomidou.hibernateplus.page.Page;
+import com.baomidou.hibernateplus.query.Condition;
 import com.baomidou.hibernateplus.query.Wrapper;
 import com.baomidou.hibernateplus.utils.CollectionUtils;
 import com.baomidou.hibernateplus.utils.EntityInfoUtils;
@@ -82,17 +83,15 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 
 	@Override
 	public T get(String property, Object value) {
-		T t = null;
-		try {
-			String hql = HibernateUtils.getListHql(toClass(), property);
-			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory()).setResultTransformer(
-					Transformers.aliasToBean(toClass()));
-			HibernateUtils.setParams(query, "0", value);
-			t = (T) query.uniqueResult();
-		} catch (Exception e) {
-			logger.warn("Warn: Unexpected exception.  Cause:" + e);
+		List<T> list = selectList(Condition.instance().eq(property, value));
+		if (CollectionUtils.isNotEmpty(list)) {
+			int size = list.size();
+			if (size > 1) {
+				logger.warn(String.format("Warn: get Method There are  %s results.", size));
+			}
+			return list.get(0);
 		}
-		return t;
+		return null;
 	}
 
 	/**
@@ -222,8 +221,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 		List<T> list = Collections.emptyList();
 		try {
 			String sql = SqlUtils.sqlEntityList(toClass(), wrapper, null);
-			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
-					Transformers.aliasToBean(toClass()));
+			Query query = HibernateUtils.getEntitySqlQuery(toClass(), sql, getSessionFactory());
 			list = query.list();
 		} catch (Exception e) {
 			logger.warn("Warn: Unexpected exception.  Cause:" + e);
