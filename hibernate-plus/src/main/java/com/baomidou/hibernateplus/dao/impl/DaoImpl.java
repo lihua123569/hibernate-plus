@@ -234,7 +234,8 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 		List<Map<String, Object>> list = Collections.emptyList();
 		try {
 			String sql = SqlUtils.sqlList(toClass(), wrapper, null);
-			Query query = HibernateUtils.getEntitySqlQuery(toClass(), sql, getSessionFactory());
+			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
+					Transformers.ALIAS_TO_ENTITY_MAP);
 			list = query.list();
 		} catch (Exception e) {
 			logger.warn("Warn: Unexpected exception.  Cause:" + e);
