@@ -255,25 +255,37 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 
 	@Override
 	public int selectCount(String[] property, Object... value) {
-		String countHql = HibernateUtils.getCountHql(toClass(), property);
-		Query query = HibernateUtils.getHqlQuery(countHql, getSessionFactory());
-		for (int i = 0; i < value.length; i++) {
-			HibernateUtils.setParams(query, StringUtils.toString(i), value[i]);
+		int count = 0;
+		try {
+			String countHql = HibernateUtils.getCountHql(toClass(), property);
+			Query query = HibernateUtils.getHqlQuery(countHql, getSessionFactory());
+			for (int i = 0; i < value.length; i++) {
+				HibernateUtils.setParams(query, StringUtils.toString(i), value[i]);
+			}
+			count = ((Long) query.uniqueResult()).intValue();
+		} catch (Exception e) {
+
 		}
-		return (Integer) query.uniqueResult();
+		return count;
 	}
 
 	@Override
 	public int selectCount(Map<String, Object> params) {
-		String hql = HibernateUtils.getCountHql(toClass(), params);
-		Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
-		if (MapUtils.isNotEmpty(params)) {
-			for (String key : params.keySet()) {
-				Object obj = params.get(key);
-				HibernateUtils.setParams(query, key, obj);
+		int count = 0;
+		try {
+			String hql = HibernateUtils.getCountHql(toClass(), params);
+			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory());
+			if (MapUtils.isNotEmpty(params)) {
+				for (String key : params.keySet()) {
+					Object obj = params.get(key);
+					HibernateUtils.setParams(query, key, obj);
+				}
 			}
+			count = ((Long) query.uniqueResult()).intValue();
+		} catch (Exception e) {
+
 		}
-		return (Integer) query.uniqueResult();
+		return count;
 
 	}
 

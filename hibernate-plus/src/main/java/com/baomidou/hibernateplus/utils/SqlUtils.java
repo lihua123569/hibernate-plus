@@ -161,7 +161,9 @@ public class SqlUtils {
 		if (wrapper != null) {
 			String sqlSelect = wrapper.getSqlSelect();
 			if (page != null) {
-				wrapper.orderBy(page.getOrderByField(), page.isAsc());
+				if (StringUtils.isNotBlank(page.getOrderByField())) {
+					wrapper.orderBy(page.getOrderByField(), page.isAsc());
+				}
 			}
 			return String.format(SqlUtils.SQL_LIST, StringUtils.isBlank(sqlSelect) ? select : sqlSelect, tableName,
 					wrapper.getSqlSegment());
