@@ -166,7 +166,7 @@ public class SqlUtils {
 				}
 			}
 			return String.format(SqlUtils.SQL_LIST, StringUtils.isBlank(sqlSelect) ? select : sqlSelect, tableName,
-					wrapper.getSqlSegment());
+					StringUtils.isNotBlank(wrapper.getSqlSegment()) ? wrapper.getSqlSegment() : StringUtils.EMPTY_STRING);
 		}
 		if (page != null) {
 			return concatOrderBy(String.format(SqlUtils.SQL_LIST, select, tableName, StringUtils.EMPTY_STRING), page, true);
