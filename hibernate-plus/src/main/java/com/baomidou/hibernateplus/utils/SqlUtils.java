@@ -193,6 +193,12 @@ public class SqlUtils {
 		return String.format(SqlUtils.SQL_COUNT, tableName, StringUtils.EMPTY_STRING);
 	}
 
+	/**
+	 * 根据Class获取表名
+	 * 
+	 * @param clazz
+	 * @return
+	 */
 	public static String getTableName(Class clazz) {
 		EntityInfo entityInfo = EntityInfoUtils.getEntityInfo(clazz);
 		String tableName = entityInfo.getTableName();
