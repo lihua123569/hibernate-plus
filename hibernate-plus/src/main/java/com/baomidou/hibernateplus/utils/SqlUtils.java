@@ -128,28 +128,67 @@ public class SqlUtils {
 		}
 	}
 
-	public static String sqlList(Class clazz, Wrapper wrapper, Page page) {
+	/**
+	 * 获取hibernate实体映射List sql
+	 * 
+	 * @param clazz
+	 * @param wrapper
+	 * @param page
+	 * @return
+	 */
+	public static String sqlEntityList(Class clazz, Wrapper wrapper, Page page) {
+		return sqlList(clazz, true, wrapper, page);
+	}
+
+	/**
+	 * 获取普通List sql
+	 * 
+	 * @param clazz
+	 * @param isMapping
+	 *            是否映射
+	 * @param wrapper
+	 * @param page
+	 * @return
+	 */
+	public static String sqlList(Class clazz, boolean isMapping, Wrapper wrapper, Page page) {
+		String select;
+		if (isMapping) {
+			select = "*";
+		} else {
+			select = select(clazz);
+		}
 		String tableName = getTableName(clazz);
 		if (wrapper != null) {
 			String sqlSelect = wrapper.getSqlSelect();
 			if (page != null) {
 				wrapper.orderBy(page.getOrderByField(), page.isAsc());
 			}
-			return String.format(SqlUtils.SQL_LIST, StringUtils.isBlank(sqlSelect) ? select(clazz) : sqlSelect, tableName,
+			return String.format(SqlUtils.SQL_LIST, StringUtils.isBlank(sqlSelect) ? select : sqlSelect, tableName,
 					wrapper.getSqlSegment());
 		}
 		if (page != null) {
-			return concatOrderBy(String.format(SqlUtils.SQL_LIST, select(clazz), tableName, StringUtils.EMPTY_STRING), page, true);
+			return concatOrderBy(String.format(SqlUtils.SQL_LIST, select, tableName, StringUtils.EMPTY_STRING), page, true);
 		}
-		return String.format(SqlUtils.SQL_LIST, select(clazz), tableName, StringUtils.EMPTY_STRING);
+		return String.format(SqlUtils.SQL_LIST, select, tableName, StringUtils.EMPTY_STRING);
 
+	}
+
+	/**
+	 * 获取普通List sql
+	 * 
+	 * @param clazz
+	 * @param wrapper
+	 * @param page
+	 * @return
+	 */
+	public static String sqlList(Class clazz, Wrapper wrapper, Page page) {
+		return sqlList(clazz, false, wrapper, page);
 	}
 
 	public static String sqlCount(Class clazz, Wrapper wrapper) {
 		String tableName = getTableName(clazz);
 		if (wrapper != null) {
 			return String.format(SqlUtils.SQL_COUNT, tableName, wrapper.getSqlSegment());
-
 		}
 		return String.format(SqlUtils.SQL_COUNT, tableName, StringUtils.EMPTY_STRING);
 	}

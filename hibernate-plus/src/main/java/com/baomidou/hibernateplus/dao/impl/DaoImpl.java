@@ -22,20 +22,7 @@
  */
 package com.baomidou.hibernateplus.dao.impl;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.transform.Transformers;
-import org.jboss.logging.Logger;
-
 import com.baomidou.framework.entity.Convert;
-import com.baomidou.framework.service.impl.ServiceImpl;
 import com.baomidou.hibernateplus.dao.IDao;
 import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 import com.baomidou.hibernateplus.page.CountOptimize;
@@ -48,6 +35,17 @@ import com.baomidou.hibernateplus.utils.MapUtils;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
 import com.baomidou.hibernateplus.utils.SqlUtils;
 import com.baomidou.hibernateplus.utils.StringUtils;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.transform.Transformers;
+import org.jboss.logging.Logger;
+
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -223,7 +221,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	public <T> List<T> selectList(Wrapper wrapper) {
 		List<T> list = Collections.emptyList();
 		try {
-			String sql = SqlUtils.sqlList(toClass(), wrapper, null);
+			String sql = SqlUtils.sqlEntityList(toClass(), wrapper, null);
 			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
 					Transformers.aliasToBean(toClass()));
 			list = query.list();
@@ -234,12 +232,11 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	}
 
 	@Override
-	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz) {
-		List<E> list = Collections.emptyList();
+	public List<Map<String, Object>> selectMaps(Wrapper wrapper) {
+		List<Map<String, Object>> list = Collections.emptyList();
 		try {
 			String sql = SqlUtils.sqlList(toClass(), wrapper, null);
-			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
-					Transformers.aliasToBean(clazz));
+			Query query = HibernateUtils.getEntitySqlQuery(toClass(), sql, getSessionFactory());
 			list = query.list();
 		} catch (Exception e) {
 			logger.warn("Warn: Unexpected exception.  Cause:" + e);
@@ -296,11 +293,11 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	}
 
 	@Override
-	public <E> Page<E> selectPage(Wrapper wrapper, Class<E> clazz, Page<E> page) {
+	public Page<Map<String, Object>> selectMapPage(Wrapper wrapper, Page<Map<String, Object>> page) {
 		try {
 			String sql = SqlUtils.sqlList(toClass(), wrapper, page);
 			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
-					Transformers.aliasToBean(clazz));
+					Transformers.ALIAS_TO_ENTITY_MAP);
 			HibernateUtils.setPage(page.getCurrent(), page.getSize(), query);
 			page.setRecords(query.list());
 			CountOptimize countOptimize = SqlUtils.getCountOptimize(sql, page.isOptimizeCount());
@@ -313,7 +310,22 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 		return page;
 	}
 
-	// /-----------------------------
+	@Override
+	public Page selectPage(Wrapper wrapper, Page page) {
+		try {
+			String sql = SqlUtils.sqlList(toClass(), wrapper, page);
+			Query query = HibernateUtils.getEntitySqlQuery(toClass(), sql, getSessionFactory());
+			HibernateUtils.setPage(page.getCurrent(), page.getSize(), query);
+			page.setRecords(query.list());
+			CountOptimize countOptimize = SqlUtils.getCountOptimize(sql, page.isOptimizeCount());
+			Query countQuery = HibernateUtils.getSqlQuery(countOptimize.getCountSQL(), getSessionFactory());
+			BigInteger bigInteger = (BigInteger) countQuery.uniqueResult();
+			page.setTotal(bigInteger.intValue());
+		} catch (Exception e) {
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
+		}
+		return page;
+	}
 
 	/**
 	 * 查询列表

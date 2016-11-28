@@ -22,13 +22,6 @@
  */
 package com.baomidou.framework.service.impl;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-
-import org.jboss.logging.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.baomidou.framework.entity.Convert;
 import com.baomidou.framework.service.IService;
 import com.baomidou.hibernateplus.converter.BeanConverter;
@@ -38,6 +31,12 @@ import com.baomidou.hibernateplus.query.Condition;
 import com.baomidou.hibernateplus.query.Wrapper;
 import com.baomidou.hibernateplus.utils.CollectionUtils;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
+import org.jboss.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -59,7 +58,6 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 
 	@Autowired
 	protected IDao<T, V> baseDao;
-
 
 	@Override
 	public V get(Serializable id) {
@@ -136,12 +134,12 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 
 	@Override
 	public List<V> selectList(Wrapper wrapper) {
-		return baseDao.selectList(wrapper);
+		return BeanConverter.convert(voClass(), baseDao.selectList(wrapper));
 	}
 
 	@Override
-	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz) {
-		return baseDao.<E> selectList(wrapper, clazz);
+	public List<Map<String, Object>> selectMaps(Wrapper wrapper) {
+		return baseDao.selectMaps(wrapper);
 	}
 
 	@Override
@@ -171,7 +169,7 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 
 	@Override
 	public Page<V> selectPage(Page<V> page) {
-		return baseDao.selectPage(Condition.instance(), voClass(), page);
+		return selectPage(Condition.instance(), page);
 	}
 
 	@Override
@@ -181,12 +179,14 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 
 	@Override
 	public Page<V> selectPage(Wrapper wrapper, Page<V> page) {
-		return baseDao.selectPage(wrapper, voClass(), page);
+		page = baseDao.selectPage(wrapper, page);
+		page.setRecords(BeanConverter.convert(voClass(), page.getRecords()));
+		return page;
 	}
 
 	@Override
-	public <E> Page<E> selectPage(Wrapper wrapper, Class<E> clazz, Page<E> page) {
-		return baseDao.<E> selectPage(wrapper, clazz, page);
+	public Page<Map<String, Object>> selectMapPage(Wrapper wrapper, Page<Map<String, Object>> page) {
+		return baseDao.selectMapPage(wrapper, page);
 	}
 
 	/**

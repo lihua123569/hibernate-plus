@@ -122,14 +122,12 @@ public interface IDao<T, V> {
 	public boolean updateBatch(List<T> list, int size);
 
 	/**
-	 * 查询列表
+	 * 查询List<Map<String,Object>>结果集
 	 *
 	 * @param wrapper
-	 * @param clazz
-	 * @param <E>
 	 * @return
 	 */
-	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz);
+	public List<Map<String, Object>> selectMaps(Wrapper wrapper);
 
 	/**
 	 * 查询列表
@@ -185,11 +183,18 @@ public interface IDao<T, V> {
 	 * 查询分页
 	 * 
 	 * @param wrapper
-	 * @param clazz
 	 * @param page
-	 * @param <E>
 	 * @return
 	 */
-	public <E> Page<E> selectPage(Wrapper wrapper, Class<E> clazz, Page<E> page);
+	public Page<Map<String, Object>> selectMapPage(Wrapper wrapper, Page<Map<String, Object>> page);
+
+	/**
+	 * 查询分页
+	 *
+	 * @param wrapper
+	 * @param page
+	 * @return
+	 */
+	public Page selectPage(Wrapper wrapper, Page page);
 
 }

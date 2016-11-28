@@ -158,11 +158,9 @@ public interface IService<V extends Convert> {
 	 * 查询列表
 	 *
 	 * @param wrapper
-	 * @param clazz
-	 * @param <E>
 	 * @return
 	 */
-	public <E> List<E> selectList(Wrapper wrapper, Class<E> clazz);
+	public List<Map<String,Object>> selectMaps(Wrapper wrapper);
 
 	/**
 	 * 查询全表数量
@@ -236,11 +234,9 @@ public interface IService<V extends Convert> {
 	 * 查询分页
 	 * 
 	 * @param wrapper
-	 * @param clazz
 	 * @param page
-	 * @param <E>
 	 * @return
 	 */
-	public <E> Page<E> selectPage(Wrapper wrapper, Class<E> clazz, Page<E> page);
+	public Page<Map<String,Object>> selectMapPage(Wrapper wrapper, Page<Map<String,Object>> page);
 
 }

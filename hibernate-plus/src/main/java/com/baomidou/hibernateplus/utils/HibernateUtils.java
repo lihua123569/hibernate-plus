@@ -22,7 +22,9 @@
  */
 package com.baomidou.hibernateplus.utils;
 
+import com.baomidou.framework.entity.Convert;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jboss.logging.Logger;
@@ -342,6 +344,33 @@ public class HibernateUtils {
 	}
 
 	/**
+	 * 获取Entity SQLQuery对象
+	 *
+	 * @param sql
+	 * @param factory
+	 * @return
+	 */
+	public static Query getEntitySqlQuery(Class<? extends Convert> cls, String sql, SessionFactory factory) {
+		return getSqlQuery(cls, sql, factory);
+	}
+
+	/**
+	 * 获取SQLQuery对象
+	 *
+	 * @param sql
+	 * @param factory
+	 * @return
+	 */
+	public static Query getSqlQuery(Class<? extends Convert> cls, String sql, SessionFactory factory) {
+		logger.debug("Execute SQL：" + SqlUtils.sqlFormat(sql, true));
+		SQLQuery sqlQuery = getCurrentSession(factory).createSQLQuery(sql);
+		if (cls != null) {
+			sqlQuery.addEntity(cls);
+		}
+		return sqlQuery;
+	}
+
+	/**
 	 * 获取SQLQuery对象
 	 *
 	 * @param sql
@@ -349,8 +378,7 @@ public class HibernateUtils {
 	 * @return
 	 */
 	public static Query getSqlQuery(String sql, SessionFactory factory) {
-		logger.debug("Execute SQL：" + SqlUtils.sqlFormat(sql, true));
-		return getCurrentSession(factory).createSQLQuery(sql);
+		return getSqlQuery(null, sql, factory);
 	}
 
 	/**
