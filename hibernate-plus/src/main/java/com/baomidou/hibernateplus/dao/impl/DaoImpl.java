@@ -632,32 +632,28 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	/**
 	 * 根据HQL查询列表
 	 *
-	 * @param clazz
 	 * @param hql
-	 * @param <E>
 	 * @return
 	 */
-	protected <E> List<E> queryListWithHql(Class<E> clazz, String hql) {
-		return this.<E> queryListWithHql(clazz, hql, 0, 0);
+	protected List<Map<String, Object>> queryMapsWithHql(String hql) {
+		return queryMapsWithHql(hql, 0, 0);
 	}
 
 	/**
 	 * 根据HQL查询列表
 	 *
-	 * @param clazz
 	 * @param hql
 	 * @param page
 	 * @param rows
-	 * @param <E>
 	 * @return
 	 */
-	protected <E> List<E> queryListWithHql(Class<E> clazz, String hql, int page, int rows) {
+	protected List<Map<String, Object>> queryMapsWithHql(String hql, int page, int rows) {
 		if (StringUtils.isBlank(hql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
-		List<E> list = Collections.emptyList();
+		List<Map<String, Object>> list = Collections.emptyList();
 		try {
 			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory()).setResultTransformer(
-					Transformers.aliasToBean(clazz));
+					Transformers.ALIAS_TO_ENTITY_MAP);
 			HibernateUtils.setPage(page, rows, query);
 			list = query.list();
 
@@ -795,60 +791,54 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	/**
 	 * 执行SQL返回单个对象
 	 *
-	 * @param clazz
 	 * @param sql
 	 * @param params
-	 * @param <E>
 	 * @return
 	 */
-	protected <E> E queryObjWithSql(Class<E> clazz, String sql, Map<String, Object> params) {
+	protected Map<String, Object> queryMapWithSql(String sql, Map<String, Object> params) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
-		E entity = null;
+		Map<String, Object> map = Collections.emptyMap();
 		try {
 			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
-					Transformers.aliasToBean(clazz));
+					Transformers.ALIAS_TO_ENTITY_MAP);
 			if (MapUtils.isNotEmpty(params)) {
 				for (String key : params.keySet()) {
 					Object obj = params.get(key);
 					HibernateUtils.setParams(query, key, obj);
 				}
 			}
-			entity = (E) query.uniqueResult();
+			map = (Map<String, Object>) query.uniqueResult();
 		} catch (Exception e) {
 			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
-		return entity;
+		return map;
 	}
 
 	/**
 	 * 执行SQL返回单个对象
 	 *
-	 * @param clazz
 	 * @param sql
-	 * @param <E>
 	 * @return
 	 */
-	protected <E> E queryObjWithSql(Class<E> clazz, String sql) {
-		return (E) this.<E> queryObjWithSql(clazz, sql, Collections.EMPTY_MAP);
+	protected Map<String, Object> queryMapWithSql(String sql) {
+		return queryMapWithSql(sql, Collections.EMPTY_MAP);
 	}
 
 	/**
 	 * 执行SQL查询列表
 	 *
-	 * @param clazz
 	 * @param sql
 	 * @param args
-	 * @param <E>
 	 * @return
 	 */
-	protected <E> List<E> queryListWithSql(Class<E> clazz, String sql, Object[] args) {
+	protected List<Map<String, Object>> queryMapsWithSql(String sql, Object[] args) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
-		List<E> list = Collections.EMPTY_LIST;
+		List<Map<String, Object>> list = Collections.emptyList();
 		try {
 			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
-					Transformers.aliasToBean(clazz));
+					Transformers.ALIAS_TO_ENTITY_MAP);
 			if (null != args) {
 				for (int i = 0; i < args.length; i++) {
 					HibernateUtils.setParams(query, StringUtils.toString(i), args[i]);
@@ -864,47 +854,41 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	/**
 	 * 执行SQL查询列表
 	 *
-	 * @param clazz
 	 * @param sql
-	 * @param <E>
 	 * @return
 	 */
-	protected <E> List<E> queryListWithSql(Class<E> clazz, String sql) {
-		return this.<E> queryListWithSql(clazz, sql, Collections.EMPTY_MAP);
+	protected List<Map<String, Object>> queryMapsWithSql(String sql) {
+		return queryMapsWithSql(sql, Collections.EMPTY_MAP);
 	}
 
 	/**
 	 * 执行SQL查询列表
 	 *
-	 * @param clazz
 	 * @param sql
 	 * @param page
 	 * @param rows
-	 * @param <E>
 	 * @return
 	 */
-	protected <E> List<E> queryListWithSql(Class<E> clazz, String sql, int page, int rows) {
-		return this.<E> queryListWithSql(clazz, sql, Collections.EMPTY_MAP, page, rows);
+	protected List<Map<String, Object>> queryMapsWithSql(String sql, int page, int rows) {
+		return queryMapsWithSql(sql, Collections.EMPTY_MAP, page, rows);
 	}
 
 	/**
 	 * 执行SQL查询列表
 	 *
-	 * @param clazz
 	 * @param sql
 	 * @param params
 	 * @param page
 	 * @param rows
-	 * @param <E>
 	 * @return
 	 */
-	protected <E> List<E> queryListWithSql(Class<E> clazz, String sql, Map<String, Object> params, int page, int rows) {
+	protected List<Map<String, Object>> queryMapsWithSql(String sql, Map<String, Object> params, int page, int rows) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
-		List<E> list = Collections.emptyList();
+		List<Map<String, Object>> list = Collections.emptyList();
 		try {
 			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
-					Transformers.aliasToBean(clazz));
+					Transformers.ALIAS_TO_ENTITY_MAP);
 			if (MapUtils.isNotEmpty(params)) {
 				for (String key : params.keySet()) {
 					Object obj = params.get(key);
@@ -922,14 +906,12 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	/**
 	 * 执行SQL查询列表
 	 *
-	 * @param clazz
 	 * @param sql
 	 * @param params
-	 * @param <E>
 	 * @return
 	 */
-	protected <E> List<E> queryListWithSql(Class<E> clazz, String sql, Map<String, Object> params) {
-		return this.<E> queryListWithSql(clazz, sql, params, 0, 0);
+	protected List<Map<String, Object>> queryMapsWithSql(String sql, Map<String, Object> params) {
+		return queryMapsWithSql(sql, params, 0, 0);
 	}
 
 	/**
@@ -1022,80 +1004,53 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	/**
 	 * 执行SQL返回单个对象
 	 *
-	 * @param clazz
 	 * @param sql
 	 * @param args
-	 * @param <E>
 	 * @return
 	 */
-	protected <E> E queryObjWithSql(Class<E> clazz, String sql, Object[] args) {
+	protected Map<String, Object> queryMapWithSql(String sql, Object[] args) {
 		if (StringUtils.isBlank(sql))
 			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
-		E entity = null;
+		Map<String, Object> map = Collections.emptyMap();
 		try {
 			Query query = HibernateUtils.getSqlQuery(sql, getSessionFactory()).setResultTransformer(
-					Transformers.aliasToBean(clazz));
+					Transformers.ALIAS_TO_ENTITY_MAP);
 			if (null != args) {
 				for (int i = 0; i < args.length; i++) {
 					HibernateUtils.setParams(query, StringUtils.toString(i), args[i]);
 				}
 			}
-			entity = (E) query.uniqueResult();
+			map = (Map<String, Object>) query.uniqueResult();
 		} catch (Exception e) {
 			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
-		return entity;
+		return map;
 	}
 
 	/**
 	 * 查询列表
 	 *
-	 * @param clazz
-	 * @param <E>
-	 * @return
-	 */
-	public <E> List<E> queryListWithClass(Class<E> clazz) {
-		return this.<E> queryListWithClass(clazz, Collections.EMPTY_MAP);
-	}
-
-	/**
-	 * 查询列表
-	 *
-	 * @param <E>
-	 * @return
-	 */
-	public <E> List<E> queryListWithClass() {
-		return queryListWithClass(toClass(), Collections.EMPTY_MAP);
-	}
-
-	/**
-	 * 查询列表
-	 *
-	 * @param clazz
 	 * @param property
 	 * @param value
-	 * @param <E>
 	 * @return
 	 */
-	public <E> List<E> queryListWithClass(Class<E> clazz, String property, Object value) {
-		return this.<E> queryListWithClass(clazz, new String[] { property }, value);
+	public List<Map<String, Object>> queryMapsWithClass(String property, Object value) {
+		return queryMapsWithClass(new String[] { property }, value);
 	}
 
 	/**
 	 * 查询列表
 	 *
-	 * @param clazz
 	 * @param property
 	 * @param value
-	 * @param <E>
 	 * @return
 	 */
-	public <E> List<E> queryListWithClass(Class<E> clazz, String[] property, Object... value) {
-		List<E> list = Collections.emptyList();
+	public List<Map<String, Object>> queryMapsWithClass(String[] property, Object... value) {
+		List<Map<String, Object>> list = Collections.emptyList();
 		try {
 			String hql = HibernateUtils.getListHql(toClass(), property);
 			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory()).setResultTransformer(
-					Transformers.aliasToBean(clazz));
+					Transformers.ALIAS_TO_ENTITY_MAP);
 			if (null != value) {
 				for (int i = 0; i < value.length; i++) {
 					HibernateUtils.setParams(query, StringUtils.toString(i), value);
@@ -1113,17 +1068,16 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	/**
 	 * 查询列表
 	 *
-	 * @param clazz
 	 * @param map
-	 * @param <E>
 	 * @return
 	 */
-	public <E> List<E> queryListWithClass(Class<E> clazz, Map<String, Object> map) {
-		List<E> list = Collections.emptyList();
+
+	public List<Map<String, Object>> queryMapWithClass(Map<String, Object> map) {
+		List<Map<String, Object>> list = Collections.emptyList();
 		try {
 			String hql = HibernateUtils.getListHql(toClass(), map);
 			Query query = HibernateUtils.getHqlQuery(hql, getSessionFactory()).setResultTransformer(
-					Transformers.aliasToBean(clazz));
+					Transformers.ALIAS_TO_ENTITY_MAP);
 			for (String key : map.keySet()) {
 				Object obj = map.get(key);
 				HibernateUtils.setParams(query, key, obj);
