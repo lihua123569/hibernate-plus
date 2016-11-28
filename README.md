@@ -18,6 +18,7 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
 - **数据库友好**：基于Hibernate，基本支持所有数据库
 - **避免Sql注入**：内置Sql注入内容剥离器，预防Sql注入攻击
 - **最最最重要的是**:让你感觉使用`hibernate`也是如此的得心应手	
+
 # 应用实例 | Demo
 
 [Spring-MVC](http://git.oschina.net/cancerGit/springmvc-hibernate-plus)
