@@ -1,14 +1,15 @@
 package com.baomidou.hibernateplus.test;
 
-import com.baomidou.hibernateplus.model.AppTestModel;
-import com.baomidou.hibernateplus.utils.HibernateUtils;
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.baomidou.hibernateplus.model.AppTestModel;
+import com.baomidou.hibernateplus.utils.HibernateUtils;
 
 /**
  * <p>

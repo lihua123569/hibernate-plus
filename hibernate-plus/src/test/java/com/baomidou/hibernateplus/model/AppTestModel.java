@@ -1,17 +1,29 @@
 package com.baomidou.hibernateplus.model;
 
+import com.baomidou.framework.entity.Convert;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * <p>
  * AppTestModel
  * </p>
  *
  * @author Caratacus
- * @date 2016-10-14
+ * @date 2016-11-29
  */
-public class AppTestModel {
+@Table(name = "app_table")
+public class AppTestModel extends Convert{
 	private Integer id;
 	private String str;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "s_id")
 	public Integer getId() {
 		return id;
 	}
@@ -20,6 +32,7 @@ public class AppTestModel {
 		this.id = id;
 	}
 
+	@Column(name = "s_str")
 	public String getStr() {
 		return str;
 	}
