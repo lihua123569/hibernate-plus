@@ -24,11 +24,11 @@ package com.baomidou.hibernateplus.dao.impl;
 
 import com.baomidou.framework.entity.Convert;
 import com.baomidou.hibernateplus.dao.IDao;
-import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 import com.baomidou.hibernateplus.page.CountOptimize;
 import com.baomidou.hibernateplus.page.Page;
 import com.baomidou.hibernateplus.query.Condition;
 import com.baomidou.hibernateplus.query.Wrapper;
+import com.baomidou.hibernateplus.utils.Assert;
 import com.baomidou.hibernateplus.utils.CollectionUtils;
 import com.baomidou.hibernateplus.utils.EntityInfoUtils;
 import com.baomidou.hibernateplus.utils.HibernateUtils;
@@ -85,8 +85,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 
 	@Override
 	public T get(Serializable id) {
-		if (null == id)
-			throw new HibernatePlusException("execute Get Fail! Param is Empty !");
+		Assert.isNull(id);
 		return (T) HibernateUtils.getCurrentSession(slaveSession()).get(toClass(), id);
 	}
 
@@ -96,7 +95,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 		if (CollectionUtils.isNotEmpty(list)) {
 			int size = list.size();
 			if (size > 1) {
-				logger.warn(String.format("Warn: get Method There are  %s results.", size));
+				logger.warn(String.format("Warn: There are  %s results.", size));
 			}
 			return list.get(0);
 		}
@@ -121,8 +120,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected T get(String hql, Map<String, Object> params) {
-		if (StringUtils.isBlank(hql))
-			throw new HibernatePlusException("execute Get Fail! Param is Empty !");
+		Assert.hasLength(hql);
 		T t = null;
 		try {
 			Query query = HibernateUtils.getHqlQuery(hql, slaveSession());
@@ -142,38 +140,33 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 
 	@Override
 	public T save(T t) {
-		if (null == t)
-			throw new HibernatePlusException("execute Save Fail! Param is Empty !");
+		Assert.isNull(t);
 		HibernateUtils.getCurrentSession(masterSession()).save(t);
 		return t;
 	}
 
 	@Override
 	public void saveOrUpdate(T t) {
-		if (null == t)
-			throw new HibernatePlusException("execute SaveOrUpdate! Param is Empty !");
+		Assert.isNull(t);
 		HibernateUtils.getCurrentSession(masterSession()).saveOrUpdate(t);
 	}
 
 	@Override
 	public void update(T t) {
-		if (null == t)
-			throw new HibernatePlusException("execute Update! Param is Empty !");
+		Assert.isNull(t);
 		HibernateUtils.getCurrentSession(masterSession()).merge(t);
 	}
 
 	@Override
 	public int update(Map<String, Object> setMap, Wrapper wrapper) {
-		if (MapUtils.isEmpty(setMap))
-			throw new HibernatePlusException("execute Update! Param is Empty !");
+		Assert.notEmpty(setMap);
 		String sqlUpdate = SqlUtils.sqlUpdate(toClass(), setMap, wrapper);
 		return executeSqlUpdate(sqlUpdate);
 	}
 
 	@Override
 	public void delete(T t) {
-		if (null == t)
-			throw new HibernatePlusException("execute Delete! Param is Empty !");
+		Assert.isNull(t);
 		HibernateUtils.getCurrentSession(masterSession()).delete(t);
 	}
 
@@ -186,8 +179,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 
 	@Override
 	public boolean insertBatch(List<T> list, int size) {
-		if (CollectionUtils.isEmpty(list))
-			throw new HibernatePlusException("execute BatchInsert Fail! Param is Empty !");
+		Assert.notEmpty(list);
 		try {
 			Session session = HibernateUtils.getCurrentSession(masterSession());
 			for (int i = 0; i < list.size(); i++) {
@@ -206,8 +198,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 
 	@Override
 	public boolean updateBatch(List<T> list, int size) {
-		if (CollectionUtils.isEmpty(list))
-			throw new HibernatePlusException("execute BatchUpdate Fail! Param is Empty !");
+		Assert.notEmpty(list);
 		try {
 			Session session = HibernateUtils.getCurrentSession(masterSession());
 			for (int i = 0; i < list.size(); i++) {
@@ -263,6 +254,8 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 
 	@Override
 	public int selectCount(String[] property, Object... value) {
+		Assert.notEmpty(property);
+		Assert.notEmpty(value);
 		int count = 0;
 		try {
 			String countHql = HibernateUtils.getCountHql(toClass(), property);
@@ -272,7 +265,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			}
 			count = ((Long) query.uniqueResult()).intValue();
 		} catch (Exception e) {
-
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return count;
 	}
@@ -291,7 +284,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			}
 			count = ((Long) query.uniqueResult()).intValue();
 		} catch (Exception e) {
-
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
 		return count;
 
@@ -577,8 +570,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected int executeHql(String hql, Map<String, Object> params) {
-		if (StringUtils.isBlank(hql))
-			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Assert.hasLength(hql);
 		Query query = HibernateUtils.getHqlQuery(hql, masterSession());
 		if (MapUtils.isNotEmpty(params)) {
 			for (String key : params.keySet()) {
@@ -620,8 +612,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected List<T> queryListWithHql(String hql, Map<String, Object> params, int page, int rows) {
-		if (StringUtils.isBlank(hql))
-			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Assert.hasLength(hql);
 		List<T> list = Collections.emptyList();
 		try {
 			Query query = HibernateUtils.getHqlQuery(hql, slaveSession());
@@ -666,8 +657,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected List<Map<String, Object>> queryMapsWithHql(String hql, int page, int rows) {
-		if (StringUtils.isBlank(hql))
-			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Assert.hasLength(hql);
 		List<Map<String, Object>> list = Collections.emptyList();
 		try {
 			Query query = HibernateUtils.getHqlQuery(hql, slaveSession()).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
@@ -698,8 +688,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected int queryCountWithHql(String hql, Map<String, Object> params) {
-		if (StringUtils.isBlank(hql))
-			throw new HibernatePlusException("Query Count Fail! Param is Empty !");
+		Assert.hasLength(hql);
 		Query query = HibernateUtils.getHqlQuery(hql, slaveSession());
 		if (MapUtils.isNotEmpty(params)) {
 			for (String key : params.keySet()) {
@@ -729,8 +718,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected int executeSqlUpdate(String sql, Object[] args) {
-		if (StringUtils.isBlank(sql))
-			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Assert.hasLength(sql);
 		int resultCount = 0;
 		try {
 			Query query = HibernateUtils.getSqlQuery(sql, masterSession());
@@ -754,8 +742,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected int executeSqlUpdate(String sql, Map<String, Object> params) {
-		if (StringUtils.isBlank(sql))
-			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Assert.hasLength(sql);
 		int resultCount = 0;
 		if (StringUtils.isNotBlank(sql)) {
 			try {
@@ -792,8 +779,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected int queryCountWithSql(String sql, Map<String, Object> params) {
-		if (StringUtils.isBlank(sql))
-			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Assert.hasLength(sql);
 		Query query = HibernateUtils.getSqlQuery(sql, slaveSession());
 		if (MapUtils.isNotEmpty(params)) {
 			for (String key : params.keySet()) {
@@ -813,8 +799,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected Map<String, Object> queryMapWithSql(String sql, Map<String, Object> params) {
-		if (StringUtils.isBlank(sql))
-			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Assert.hasLength(sql);
 		Map<String, Object> map = Collections.emptyMap();
 		try {
 			Query query = HibernateUtils.getSqlQuery(sql, slaveSession()).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
@@ -849,8 +834,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected List<Map<String, Object>> queryMapsWithSql(String sql, Object[] args) {
-		if (StringUtils.isBlank(sql))
-			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Assert.hasLength(sql);
 		List<Map<String, Object>> list = Collections.emptyList();
 		try {
 			Query query = HibernateUtils.getSqlQuery(sql, slaveSession()).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
@@ -898,8 +882,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected List<Map<String, Object>> queryMapsWithSql(String sql, Map<String, Object> params, int page, int rows) {
-		if (StringUtils.isBlank(sql))
-			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Assert.hasLength(sql);
 		List<Map<String, Object>> list = Collections.emptyList();
 		try {
 			Query query = HibernateUtils.getSqlQuery(sql, slaveSession()).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
@@ -936,8 +919,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected List queryListWithSql(String sql, Object[] args) {
-		if (StringUtils.isBlank(sql))
-			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Assert.hasLength(sql);
 		List list = Collections.EMPTY_LIST;
 		try {
 			Query query = HibernateUtils.getSqlQuery(sql, slaveSession());
@@ -985,8 +967,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected List queryListWithSql(String sql, Map<String, Object> params, int page, int rows) {
-		if (StringUtils.isBlank(sql))
-			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Assert.hasLength(sql);
 		List list = Collections.emptyList();
 		try {
 			Query query = HibernateUtils.getSqlQuery(sql, slaveSession());
@@ -1012,7 +993,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected List queryListWithSql(String sql, Map<String, Object> params) {
-		return this.queryListWithSql(sql, params, 0, 0);
+		return queryListWithSql(sql, params, 0, 0);
 	}
 
 	/**
@@ -1023,8 +1004,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected Map<String, Object> queryMapWithSql(String sql, Object[] args) {
-		if (StringUtils.isBlank(sql))
-			throw new HibernatePlusException("execute Query Fail! Param is Empty !");
+		Assert.hasLength(sql);
 		Map<String, Object> map = Collections.emptyMap();
 		try {
 			Query query = HibernateUtils.getSqlQuery(sql, slaveSession()).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
