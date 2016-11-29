@@ -24,7 +24,6 @@ package com.baomidou.hibernateplus.dao.impl;
 
 import com.baomidou.framework.entity.Convert;
 import com.baomidou.hibernateplus.dao.IDao;
-import com.baomidou.hibernateplus.page.CountOptimize;
 import com.baomidou.hibernateplus.page.Page;
 import com.baomidou.hibernateplus.query.Condition;
 import com.baomidou.hibernateplus.query.Wrapper;
@@ -311,8 +310,8 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			Query query = HibernateUtils.getSqlQuery(sql, slaveSession()).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 			HibernateUtils.setPage(page.getCurrent(), page.getSize(), query);
 			page.setRecords(query.list());
-			CountOptimize countOptimize = SqlUtils.getCountOptimize(sql, page.isOptimizeCount());
-			Query countQuery = HibernateUtils.getSqlQuery(countOptimize.getCountSQL(), slaveSession());
+			String sqlCount = SqlUtils.sqlCountOptimize(sql);
+			Query countQuery = HibernateUtils.getSqlQuery(sqlCount, slaveSession());
 			BigInteger bigInteger = (BigInteger) countQuery.uniqueResult();
 			page.setTotal(bigInteger.intValue());
 		} catch (Exception e) {
@@ -328,8 +327,8 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 			Query query = HibernateUtils.getEntitySqlQuery(toClass(), sql, slaveSession());
 			HibernateUtils.setPage(page.getCurrent(), page.getSize(), query);
 			page.setRecords(query.list());
-			CountOptimize countOptimize = SqlUtils.getCountOptimize(sql, page.isOptimizeCount());
-			Query countQuery = HibernateUtils.getSqlQuery(countOptimize.getCountSQL(), slaveSession());
+			String sqlcount = SqlUtils.sqlCountOptimize(sql);
+			Query countQuery = HibernateUtils.getSqlQuery(sqlcount, slaveSession());
 			BigInteger bigInteger = (BigInteger) countQuery.uniqueResult();
 			page.setTotal(bigInteger.intValue());
 		} catch (Exception e) {

@@ -22,16 +22,27 @@
  */
 package com.baomidou.hibernateplus.utils;
 
-import com.baomidou.framework.entity.EntityInfo;
 import com.baomidou.framework.entity.Convert;
+import com.baomidou.framework.entity.EntityInfo;
 import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
-import com.baomidou.hibernateplus.page.CountOptimize;
 import com.baomidou.hibernateplus.page.Page;
 import com.baomidou.hibernateplus.page.Pagination;
 import com.baomidou.hibernateplus.query.Wrapper;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.Function;
+import net.sf.jsqlparser.expression.LongValue;
+import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.statement.select.Distinct;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.select.SelectExpressionItem;
+import net.sf.jsqlparser.statement.select.SelectItem;
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,52 +55,62 @@ import java.util.Map;
  */
 public class SqlUtils {
 
-	private final static BasicFormatterImpl sqlFormatter = new BasicFormatterImpl();
+	private static final BasicFormatterImpl sqlFormatter = new BasicFormatterImpl();
 	private static final String SQL_COUNT = "SELECT COUNT(0) FROM %s %s";
+	private static final String SQL_BASE_COUNT = "SELECT COUNT(0) FROM ( %s )";
 	private static final String SQL_LIST = "SELECT %s FROM %s %s";
 	private static final String SQL_DELETE = "DELETE FROM %s %s";
 	private static final String SQL_UPDATE = "UPDATE %s SET %s %s";
+	private static List<SelectItem> countSelectItem = null;
 
 	/**
-	 * 获取CountOptimize
+	 * 获取select的count语句
 	 *
 	 * @param originalSql
-	 *            需要计算Count SQL
-	 * @param isOptimizeCount
-	 *            是否需要优化Count
-	 * @return CountOptimize
+	 *            selectSQL
+	 * @return
 	 */
-	public static CountOptimize getCountOptimize(String originalSql, boolean isOptimizeCount) {
-		boolean optimize = false;
-		CountOptimize countOptimize = CountOptimize.newInstance();
-		StringBuffer countSql = new StringBuffer("SELECT COUNT(0) ");
-		if (isOptimizeCount) {
-			String tempSql = originalSql.replaceAll("(?i)ORDER[\\s]+BY", "ORDER BY").replaceAll("(?i)GROUP[\\s]+BY", "GROUP BY");
-			String indexOfSql = tempSql.toUpperCase();
-			if (!indexOfSql.contains("DISTINCT") && !indexOfSql.contains("GROUP BY")) {
-				int formIndex = indexOfSql.indexOf("FROM");
-				if (formIndex > -1) {
-					// 有排序情况
-					int orderByIndex = indexOfSql.lastIndexOf("ORDER BY");
-					if (orderByIndex > -1) {
-						tempSql = tempSql.substring(0, orderByIndex);
-						countSql.append(tempSql.substring(formIndex));
-						countOptimize.setOrderBy(false);
-						// 无排序情况
-					} else {
-						countSql.append(tempSql.substring(formIndex));
-					}
-					// 执行优化
-					optimize = true;
-				}
+	public static String sqlCountOptimize(String originalSql) {
+		Assert.hasLength(originalSql);
+		String sqlCount = null;
+		try {
+			Select selectStatement = (Select) CCJSqlParserUtil.parse(originalSql);
+			PlainSelect plainSelect = (PlainSelect) selectStatement.getSelectBody();
+			Distinct distinct = plainSelect.getDistinct();
+			List<Expression> groupByColumnReferences = plainSelect.getGroupByColumnReferences();
+			if (distinct != null || CollectionUtils.isNotEmpty(groupByColumnReferences)) {
+				return String.format(SQL_BASE_COUNT, originalSql);
 			}
+			List<SelectItem> selectCount = countSelectItem();
+			plainSelect.setSelectItems(selectCount);
+			sqlCount = selectStatement.toString();
+		} catch (Exception e) {
+			sqlCount = String.format(SQL_BASE_COUNT, originalSql);
 		}
-		if (!optimize) {
-			// 无优化SQL
-			countSql.append("FROM (").append(originalSql).append(") A");
+		return sqlCount;
+	}
+
+	/**
+	 * 获取jsqlparser中count的SelectItem
+	 * 
+	 * @return
+	 */
+	private static List<SelectItem> countSelectItem() {
+		if (CollectionUtils.isNotEmpty(countSelectItem)) {
+			return countSelectItem;
 		}
-		countOptimize.setCountSQL(countSql.toString());
-		return countOptimize;
+		Function function = new Function();
+		function.setName("count");
+		List<Expression> expressions = new ArrayList<Expression>();
+		LongValue longValue = new LongValue(1);
+		ExpressionList expressionList = new ExpressionList();
+		expressions.add(longValue);
+		expressionList.setExpressions(expressions);
+		function.setParameters(expressionList);
+		countSelectItem = new ArrayList<SelectItem>();
+		SelectExpressionItem selectExpressionItem = new SelectExpressionItem(function);
+		countSelectItem.add(selectExpressionItem);
+		return countSelectItem;
 	}
 
 	/**
@@ -99,12 +120,10 @@ public class SqlUtils {
 	 *            需要拼接的SQL
 	 * @param page
 	 *            page对象
-	 * @param orderBy
-	 *            是否需要拼接Order By
 	 * @return
 	 */
-	public static String concatOrderBy(String originalSql, Pagination page, boolean orderBy) {
-		if (orderBy && StringUtils.isNotBlank(page.getOrderByField())) {
+	public static String concatOrderBy(String originalSql, Pagination page) {
+		if (StringUtils.isNotBlank(page.getOrderByField())) {
 			StringBuffer buildSql = new StringBuffer(originalSql);
 			buildSql.append(" ORDER BY ").append(page.getOrderByField());
 			buildSql.append(page.isAsc() ? " ASC " : " DESC ");
@@ -130,7 +149,7 @@ public class SqlUtils {
 
 	/**
 	 * 获取hibernate实体映射List sql
-	 * 
+	 *
 	 * @param clazz
 	 * @param wrapper
 	 * @param page
@@ -142,7 +161,7 @@ public class SqlUtils {
 
 	/**
 	 * 获取普通List sql
-	 * 
+	 *
 	 * @param clazz
 	 * @param isMapping
 	 *            是否映射
@@ -169,7 +188,7 @@ public class SqlUtils {
 					StringUtils.isNotBlank(wrapper.getSqlSegment()) ? wrapper.getSqlSegment() : StringUtils.EMPTY_STRING);
 		}
 		if (page != null) {
-			return concatOrderBy(String.format(SqlUtils.SQL_LIST, select, tableName, StringUtils.EMPTY_STRING), page, true);
+			return concatOrderBy(String.format(SqlUtils.SQL_LIST, select, tableName, StringUtils.EMPTY_STRING), page);
 		}
 		return String.format(SqlUtils.SQL_LIST, select, tableName, StringUtils.EMPTY_STRING);
 
@@ -177,7 +196,7 @@ public class SqlUtils {
 
 	/**
 	 * 获取普通List sql
-	 * 
+	 *
 	 * @param clazz
 	 * @param wrapper
 	 * @param page
@@ -197,7 +216,7 @@ public class SqlUtils {
 
 	/**
 	 * 根据Class获取表名
-	 * 
+	 *
 	 * @param clazz
 	 * @return
 	 */
@@ -228,7 +247,7 @@ public class SqlUtils {
 
 	/**
 	 * 获取Update SQL
-	 * 
+	 *
 	 * @param clazz
 	 * @param setMap
 	 * @param wrapper
@@ -258,7 +277,7 @@ public class SqlUtils {
 
 	/**
 	 * 获取select
-	 * 
+	 *
 	 * @param clazz
 	 * @return
 	 */

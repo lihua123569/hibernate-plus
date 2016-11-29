@@ -27,10 +27,10 @@
     </developers>
 
     <scm>
-       <connection>scm:git:git@git.oschina.net:baomidou/hibernate-plus.git</connection>
-       <developerConnection>scm:git:git@git.oschina.net:baomidou/hibernate-plus.git</developerConnection>
-       <url>git@git.oschina.net:baomidou/hibernate-plus.git</url>
-   </scm>
+        <connection>scm:git:git@git.oschina.net:baomidou/hibernate-plus.git</connection>
+        <developerConnection>scm:git:git@git.oschina.net:baomidou/hibernate-plus.git</developerConnection>
+        <url>git@git.oschina.net:baomidou/hibernate-plus.git</url>
+    </scm>
 
     <properties>
         <!-- common -->
@@ -38,6 +38,7 @@
         <java.version>1.6</java.version>
         <!-- dependency -->
         <springframework.version>4.3.3.RELEASE</springframework.version>
+        <jsqlparser.version>0.9.6</jsqlparser.version>
         <hibernate.version>5.1.0.Final</hibernate.version>
         <freemarker.version>2.3.23</freemarker.version>
         <mysql.connector.version>5.1.39</mysql.connector.version>
@@ -102,6 +103,12 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
+        </dependency>
+        <!--jsqlparser-->
+        <dependency>
+            <groupId>com.github.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>${jsqlparser.version}</version>
         </dependency>
         <!--junit-->
         <dependency>

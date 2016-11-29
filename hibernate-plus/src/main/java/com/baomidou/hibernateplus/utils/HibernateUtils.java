@@ -338,7 +338,7 @@ public class HibernateUtils {
 	public static void setPage(int page, int rows, Query query) {
 		if (0 != rows) {
 			// 只判断row , 如果page异常 初始化为1
-			page = ObjectUtils.getInteger(page, 1);
+			page = TypeConvert.toInteger(page, 1);
 			query.setFirstResult((page - 1) * rows).setMaxResults(rows);
 		}
 	}

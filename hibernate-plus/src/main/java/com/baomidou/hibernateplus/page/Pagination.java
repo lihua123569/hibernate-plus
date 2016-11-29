@@ -30,8 +30,6 @@ import java.io.Serializable;
  * <p>
  * 简单分页模型
  * </p>
- * 用户可以通过继承 org.apache.ibatis.session.RowBounds实现自己的分页模型<br>
- * 注意：插件仅支持RowBounds及其子类作为分页参数
  *
  * @author hubin
  * @Date 2016-01-23
@@ -54,9 +52,6 @@ public class Pagination implements Serializable {
 
 	/* 查询总记录数（默认 true） */
 	private boolean searchCount = true;
-
-	/* 查询总数优化（默认 true） */
-	private boolean optimizeCount = true;
 
 	/**
 	 * <p>
@@ -160,14 +155,6 @@ public class Pagination implements Serializable {
 
 	public void setSearchCount(boolean searchCount) {
 		this.searchCount = searchCount;
-	}
-
-	public boolean isOptimizeCount() {
-		return optimizeCount;
-	}
-
-	public void setOptimizeCount(boolean optimizeCount) {
-		this.optimizeCount = optimizeCount;
 	}
 
 	public String getOrderByField() {
