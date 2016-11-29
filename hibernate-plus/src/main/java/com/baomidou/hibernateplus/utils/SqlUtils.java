@@ -72,7 +72,7 @@ public class SqlUtils {
 	 */
 	public static String sqlCountOptimize(String originalSql) {
 		Assert.hasLength(originalSql);
-		String sqlCount = null;
+		String sqlCount;
 		try {
 			Select selectStatement = (Select) CCJSqlParserUtil.parse(originalSql);
 			PlainSelect plainSelect = (PlainSelect) selectStatement.getSelectBody();
@@ -100,7 +100,7 @@ public class SqlUtils {
 			return countSelectItem;
 		}
 		Function function = new Function();
-		function.setName("count");
+		function.setName("COUNT");
 		List<Expression> expressions = new ArrayList<Expression>();
 		LongValue longValue = new LongValue(1);
 		ExpressionList expressionList = new ExpressionList();
