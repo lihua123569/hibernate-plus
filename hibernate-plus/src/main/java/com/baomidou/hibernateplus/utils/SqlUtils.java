@@ -78,13 +78,13 @@ public class SqlUtils {
 			Select selectStatement = (Select) CCJSqlParserUtil.parse(originalSql);
 			PlainSelect plainSelect = (PlainSelect) selectStatement.getSelectBody();
 			Distinct distinct = plainSelect.getDistinct();
-			List<Expression> groupByColumnReferences = plainSelect.getGroupByColumnReferences();
+			List<Expression> groupBy = plainSelect.getGroupByColumnReferences();
 			// 优化Order by
 			List<OrderByElement> orderBy = plainSelect.getOrderByElements();
 			if (CollectionUtils.isNotEmpty(orderBy)) {
 				plainSelect.setOrderByElements(null);
 			}
-			if (distinct != null || CollectionUtils.isNotEmpty(groupByColumnReferences)) {
+			if (distinct != null || CollectionUtils.isNotEmpty(groupBy)) {
 				return String.format(SQL_BASE_COUNT, selectStatement.toString());
 			}
 			List<SelectItem> selectCount = countSelectItem();
