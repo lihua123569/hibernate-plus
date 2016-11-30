@@ -34,6 +34,7 @@ import net.sf.jsqlparser.expression.LongValue;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.select.Distinct;
+import net.sf.jsqlparser.statement.select.OrderByElement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectExpressionItem;
@@ -78,8 +79,13 @@ public class SqlUtils {
 			PlainSelect plainSelect = (PlainSelect) selectStatement.getSelectBody();
 			Distinct distinct = plainSelect.getDistinct();
 			List<Expression> groupByColumnReferences = plainSelect.getGroupByColumnReferences();
+			// 优化Order by
+			List<OrderByElement> orderBy = plainSelect.getOrderByElements();
+			if (CollectionUtils.isNotEmpty(orderBy)) {
+				plainSelect.setOrderByElements(null);
+			}
 			if (distinct != null || CollectionUtils.isNotEmpty(groupByColumnReferences)) {
-				return String.format(SQL_BASE_COUNT, originalSql);
+				return String.format(SQL_BASE_COUNT, selectStatement.toString());
 			}
 			List<SelectItem> selectCount = countSelectItem();
 			plainSelect.setSelectItems(selectCount);
