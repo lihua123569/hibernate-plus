@@ -192,13 +192,13 @@ public class HibernateSpringSessionFactoryBuilder extends Configuration {
 							"Can only apply JtaTransactionManager which has a TransactionManager reference set");
 				}
 				getProperties().put(AvailableSettings.JTA_PLATFORM,
-						new ConfigurableJtaPlatform(jtaTm.getTransactionManager(), jtaTm.getUserTransaction(),
+						new HibernateConfigurableJtaPlatform(jtaTm.getTransactionManager(), jtaTm.getUserTransaction(),
 								jtaTm.getTransactionSynchronizationRegistry()));
 			}
 		}
 		else if (jtaTransactionManager instanceof TransactionManager) {
 			getProperties().put(AvailableSettings.JTA_PLATFORM,
-					new ConfigurableJtaPlatform((TransactionManager) jtaTransactionManager, null, null));
+					new HibernateConfigurableJtaPlatform((TransactionManager) jtaTransactionManager, null, null));
 		}
 		else {
 			throw new IllegalArgumentException(

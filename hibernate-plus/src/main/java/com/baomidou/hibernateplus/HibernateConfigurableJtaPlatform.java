@@ -16,6 +16,11 @@
 
 package com.baomidou.hibernateplus;
 
+import org.hibernate.TransactionException;
+import org.hibernate.engine.transaction.jta.platform.spi.JtaPlatform;
+import org.springframework.transaction.jta.UserTransactionAdapter;
+import org.springframework.util.Assert;
+
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
@@ -23,11 +28,6 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.TransactionSynchronizationRegistry;
 import javax.transaction.UserTransaction;
-
-import org.hibernate.TransactionException;
-import org.hibernate.engine.transaction.jta.platform.spi.JtaPlatform;
-import org.springframework.transaction.jta.UserTransactionAdapter;
-import org.springframework.util.Assert;
 
 /**
  * Implementation of Hibernate 5's JtaPlatform SPI, exposing passed-in {@link TransactionManager},
@@ -37,7 +37,7 @@ import org.springframework.util.Assert;
  * @since 4.2
  */
 @SuppressWarnings("serial")
-class ConfigurableJtaPlatform implements JtaPlatform {
+class HibernateConfigurableJtaPlatform implements JtaPlatform {
 
 	private final TransactionManager transactionManager;
 
@@ -53,7 +53,7 @@ class ConfigurableJtaPlatform implements JtaPlatform {
 	 * @param ut the JTA UserTransaction reference (optional)
 	 * @param tsr the JTA 1.1 TransactionSynchronizationRegistry (optional)
 	 */
-	public ConfigurableJtaPlatform(TransactionManager tm, UserTransaction ut, TransactionSynchronizationRegistry tsr) {
+	public HibernateConfigurableJtaPlatform(TransactionManager tm, UserTransaction ut, TransactionSynchronizationRegistry tsr) {
 		Assert.notNull(tm, "TransactionManager reference must not be null");
 		this.transactionManager = tm;
 		this.userTransaction = (ut != null ? ut : new UserTransactionAdapter(tm));

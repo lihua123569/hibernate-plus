@@ -112,6 +112,11 @@ public class HibernateSpringSessionFactoryBean extends HibernateExceptionTransla
 
 	private SessionFactory sessionFactory;
 
+	private String type;
+
+	public void setType(String type) {
+		this.type = type;
+	}
 	/**
 	 * Set the DataSource to be used by the SessionFactory. If set, this will
 	 * override corresponding settings in Hibernate properties.
