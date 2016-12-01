@@ -20,7 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.baomidou.production.factory;
+package com.baomidou.hibernateplus.production.factory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,8 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.baomidou.production.domain.Table;
-import com.baomidou.production.tools.AssistTools;
+import com.baomidou.hibernateplus.production.domain.Table;
+import com.baomidou.hibernateplus.production.tools.AssistTools;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

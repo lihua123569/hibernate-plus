@@ -20,7 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.baomidou.production.jdbc;
+package com.baomidou.hibernateplus.production.jdbc;
 
 
 import java.sql.Connection;
@@ -35,8 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.baomidou.production.domain.Table;
-import com.baomidou.production.tools.StringUtilsWithDB;
+import com.baomidou.hibernateplus.production.domain.Table;
+import com.baomidou.hibernateplus.production.tools.StringUtilsWithDB;
 
 public class JDBCHandle {
 	private static final String BASE_SQL = "SELECT * FROM %s";

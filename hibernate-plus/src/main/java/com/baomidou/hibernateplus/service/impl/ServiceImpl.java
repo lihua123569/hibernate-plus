@@ -20,23 +20,24 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.baomidou.framework.service.impl;
-
-import com.baomidou.framework.entity.Convert;
-import com.baomidou.framework.service.IService;
-import com.baomidou.hibernateplus.converter.BeanConverter;
-import com.baomidou.hibernateplus.dao.IDao;
-import com.baomidou.hibernateplus.page.Page;
-import com.baomidou.hibernateplus.query.Condition;
-import com.baomidou.hibernateplus.query.Wrapper;
-import com.baomidou.hibernateplus.utils.CollectionUtils;
-import com.baomidou.hibernateplus.utils.ReflectionKit;
-import org.jboss.logging.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+package com.baomidou.hibernateplus.service.impl;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+
+import org.jboss.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.baomidou.hibernateplus.converter.BeanConverter;
+import com.baomidou.hibernateplus.dao.IDao;
+import com.baomidou.hibernateplus.entity.Convert;
+import com.baomidou.hibernateplus.entity.page.Page;
+import com.baomidou.hibernateplus.query.Condition;
+import com.baomidou.hibernateplus.query.Wrapper;
+import com.baomidou.hibernateplus.service.IService;
+import com.baomidou.hibernateplus.utils.CollectionUtils;
+import com.baomidou.hibernateplus.utils.ReflectionKit;
 
 /**
  * <p>

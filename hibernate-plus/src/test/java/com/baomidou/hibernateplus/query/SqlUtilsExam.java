@@ -28,9 +28,9 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.baomidou.framework.entity.EntityInfo;
+import com.baomidou.hibernateplus.entity.EntityInfo;
+import com.baomidou.hibernateplus.entity.page.Page;
 import com.baomidou.hibernateplus.model.AppTestModel;
-import com.baomidou.hibernateplus.page.Page;
 import com.baomidou.hibernateplus.utils.EntityInfoUtils;
 import com.baomidou.hibernateplus.utils.SqlUtils;
 

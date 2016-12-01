@@ -20,18 +20,18 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.baomidou.production;
+package com.baomidou.hibernateplus.production;
 
 import java.io.File;
 import java.sql.Connection;
 
-import com.baomidou.production.domain.Table;
-import com.baomidou.production.factory.BaseFactory;
-import com.baomidou.production.glocal.ClassNames;
-import com.baomidou.production.glocal.GlobalParam;
-import com.baomidou.production.jdbc.JDBCHandle;
-import com.baomidou.production.jdbc.JDBCTemplate;
-import com.baomidou.production.tools.AssistTools;
+import com.baomidou.hibernateplus.production.domain.Table;
+import com.baomidou.hibernateplus.production.factory.BaseFactory;
+import com.baomidou.hibernateplus.production.glocal.ClassNames;
+import com.baomidou.hibernateplus.production.glocal.GlobalParam;
+import com.baomidou.hibernateplus.production.jdbc.JDBCHandle;
+import com.baomidou.hibernateplus.production.jdbc.JDBCTemplate;
+import com.baomidou.hibernateplus.production.tools.AssistTools;
 
 public class Production {
 	static final String webroot = "webapp";

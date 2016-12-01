@@ -20,31 +20,41 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.baomidou.production.glocal;
+package com.baomidou.hibernateplus.entity;
 
-public class GlobalParam {
-	public static String getTemplateName(int index) {
-		String name = "";
-		switch (index) {
-		case 1:// beanName
-			name = "vo.ftl";
-			break;
-		case 2:// op action name
-			name = "po.ftl";
-			break;
-		case 3:// dao name
-			name = "controller.ftl";
-			break;
-		case 4:// service name
-			name = "service.ftl";
-			break;
-		case 5:// sql name
-			name = "serviceimpl.ftl";
-			break;
+/**
+ * <p>
+ * 数据库表字段反射信息
+ * </p>
+ *
+ * @author Caratacus
+ * @Date 2016-11-27
+ */
+public class EntityFieldInfo {
 
-		default:
-			break;
-		}
-		return name;
+	/**
+	 * 字段名
+	 */
+	private String column;
+
+	/**
+	 * 属性名
+	 */
+	private String property;
+
+	public String getColumn() {
+		return column;
+	}
+
+	public void setColumn(String column) {
+		this.column = column;
+	}
+
+	public String getProperty() {
+		return property;
+	}
+
+	public void setProperty(String property) {
+		this.property = property;
 	}
 }

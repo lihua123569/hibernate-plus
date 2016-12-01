@@ -22,8 +22,8 @@
  */
 package com.baomidou.hibernateplus.utils;
 
-import com.baomidou.framework.entity.EntityFieldInfo;
-import com.baomidou.framework.entity.EntityInfo;
+import com.baomidou.hibernateplus.entity.EntityFieldInfo;
+import com.baomidou.hibernateplus.entity.EntityInfo;
 import org.jboss.logging.Logger;
 
 import java.lang.annotation.Annotation;

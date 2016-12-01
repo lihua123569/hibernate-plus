@@ -20,7 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.baomidou.production.glocal;
+package com.baomidou.hibernateplus.production.glocal;
 
 public enum ClassNames {
 	VO(1, "vo", ".java"), PO(2, "po", ".java"),CONTROLLER(3, "controller", "Controller.java"),SERVICE(4, "service", "Service.java"),SERVICEIMPL(5, "service.impl", "ServiceImpl.java");

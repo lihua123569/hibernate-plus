@@ -20,41 +20,41 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.baomidou.framework.entity;
+package com.baomidou.hibernateplus.entity;
+
+import com.baomidou.hibernateplus.converter.BeanConverter;
+import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
+import com.baomidou.hibernateplus.utils.Assert;
+
+import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 /**
  * <p>
- * 数据库表字段反射信息
+ * 统一VO TO互转方法
  * </p>
  *
  * @author Caratacus
- * @Date 2016-11-27
+ * @date 2016-11-23
  */
-public class EntityFieldInfo {
+@MappedSuperclass
+public class Convert implements Serializable {
 
 	/**
-	 * 字段名
+	 * 互转方法
+	 * 
+	 * @param clazz
+	 * @param <T>
+	 * @return
 	 */
-	private String column;
-
-	/**
-	 * 属性名
-	 */
-	private String property;
-
-	public String getColumn() {
-		return column;
+    public <T> T convert(Class<T> clazz) {
+		Assert.isNull(clazz);
+		try {
+			T entity = clazz.newInstance();
+			return BeanConverter.convert(entity, this);
+		} catch (Exception e) {
+			throw new HibernatePlusException("Error: Conversion Object Failed. Cause:" + e);
+		}
 	}
 
-	public void setColumn(String column) {
-		this.column = column;
-	}
-
-	public String getProperty() {
-		return property;
-	}
-
-	public void setProperty(String property) {
-		this.property = property;
-	}
 }

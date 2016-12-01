@@ -20,41 +20,31 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.baomidou.framework.entity;
+package com.baomidou.hibernateplus.production.glocal;
 
-import com.baomidou.hibernateplus.converter.BeanConverter;
-import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
-import com.baomidou.hibernateplus.utils.Assert;
+public class GlobalParam {
+	public static String getTemplateName(int index) {
+		String name = "";
+		switch (index) {
+		case 1:// beanName
+			name = "vo.ftl";
+			break;
+		case 2:// op action name
+			name = "po.ftl";
+			break;
+		case 3:// dao name
+			name = "controller.ftl";
+			break;
+		case 4:// service name
+			name = "service.ftl";
+			break;
+		case 5:// sql name
+			name = "serviceimpl.ftl";
+			break;
 
-import javax.persistence.MappedSuperclass;
-import java.io.Serializable;
-
-/**
- * <p>
- * 统一VO TO互转方法
- * </p>
- *
- * @author Caratacus
- * @date 2016-11-23
- */
-@MappedSuperclass
-public class Convert implements Serializable {
-
-	/**
-	 * 互转方法
-	 * 
-	 * @param clazz
-	 * @param <T>
-	 * @return
-	 */
-    public <T> T convert(Class<T> clazz) {
-		Assert.isNull(clazz);
-		try {
-			T entity = clazz.newInstance();
-			return BeanConverter.convert(entity, this);
-		} catch (Exception e) {
-			throw new HibernatePlusException("Error: Conversion Object Failed. Cause:" + e);
+		default:
+			break;
 		}
+		return name;
 	}
-
 }

@@ -1,8 +1,8 @@
 package com.baomidou.hibernateplus;
 
-import com.baomidou.production.Production;
-import com.baomidou.production.glocal.ClassNames;
-import com.baomidou.production.jdbc.JDBCTemplate;
+import com.baomidou.hibernateplus.production.Production;
+import com.baomidou.hibernateplus.production.glocal.ClassNames;
+import com.baomidou.hibernateplus.production.jdbc.JDBCTemplate;
 
 public class AutoCode {
 

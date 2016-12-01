@@ -20,14 +20,14 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.baomidou.framework.service;
+package com.baomidou.hibernateplus.service;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import com.baomidou.framework.entity.Convert;
-import com.baomidou.hibernateplus.page.Page;
+import com.baomidou.hibernateplus.entity.Convert;
+import com.baomidou.hibernateplus.entity.page.Page;
 import com.baomidou.hibernateplus.query.Wrapper;
 
 /**
@@ -237,6 +237,6 @@ public interface IService<V extends Convert> {
 	 * @param page
 	 * @return
 	 */
-	public Page<Map<String,Object>> selectMapPage(Wrapper wrapper, Page<Map<String,Object>> page);
+	public Page<Map<String,Object>> selectMapPage(Wrapper wrapper, Page<Map<String, Object>> page);
 
 }

@@ -1,12 +1,13 @@
 package com.baomidou.hibernateplus.model;
 
+import com.baomidou.hibernateplus.entity.Convert;
+
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.baomidou.framework.entity.Convert;
 
 /**
  * <p>
@@ -17,7 +18,7 @@ import com.baomidou.framework.entity.Convert;
  * @date 2016-11-29
  */
 @Table(name = "app_table")
-public class AppTestModel extends Convert{
+public class AppTestModel extends Convert {
 	private Integer id;
 	private String str;
 

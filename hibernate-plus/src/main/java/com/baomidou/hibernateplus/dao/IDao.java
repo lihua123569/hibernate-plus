@@ -26,7 +26,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import com.baomidou.hibernateplus.page.Page;
+import com.baomidou.hibernateplus.entity.page.Page;
 import com.baomidou.hibernateplus.query.Wrapper;
 
 /**
