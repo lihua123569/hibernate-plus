@@ -22,18 +22,6 @@
  */
 package com.baomidou.hibernateplus.dao.impl;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.transform.Transformers;
-import org.jboss.logging.Logger;
-
 import com.baomidou.hibernateplus.dao.IDao;
 import com.baomidou.hibernateplus.entity.Convert;
 import com.baomidou.hibernateplus.entity.page.Page;
@@ -48,6 +36,18 @@ import com.baomidou.hibernateplus.utils.RandomUtils;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
 import com.baomidou.hibernateplus.utils.SqlUtils;
 import com.baomidou.hibernateplus.utils.StringUtils;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.transform.Transformers;
+import org.jboss.logging.Logger;
+
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -87,11 +87,11 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	public SessionFactory slaveSession() {
-		SessionFactory slave = RandomUtils.getRandomElement(EntityInfoUtils.getEntityInfo(toClass()).getSlaves());
-		if (slave == null) {
-			return sessionFactory;
+		Set<SessionFactory> slaves = EntityInfoUtils.getEntityInfo(toClass()).getSlaves();
+		if (CollectionUtils.isEmpty(slaves)) {
+			return masterSession();
 		}
-		return slave;
+		return RandomUtils.getRandomElement(slaves);
 	}
 
 	@Override
