@@ -62,9 +62,13 @@ public class EntityInfo {
 	private String select;
 
 	/**
-	 * SessionFactory
+	 * Master SessionFactory
 	 */
-	private SessionFactory sessionFactory;
+	private SessionFactory master;
+	/**
+	 * Slave SessionFactory
+	 */
+	private Set<SessionFactory> slaves;
 
 	public String getTableName() {
 		return tableName;
@@ -88,14 +92,6 @@ public class EntityInfo {
 
 	public void setKeyColumn(String keyColumn) {
 		this.keyColumn = keyColumn;
-	}
-
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
 	}
 
 	public Set<EntityFieldInfo> getFieldInfos() {
@@ -142,5 +138,21 @@ public class EntityInfo {
 
 	public void setSelect(String select) {
 		this.select = select;
+	}
+
+	public SessionFactory getMaster() {
+		return master;
+	}
+
+	public void setMaster(SessionFactory master) {
+		this.master = master;
+	}
+
+	public Set<SessionFactory> getSlaves() {
+		return slaves;
+	}
+
+	public void setSlaves(Set<SessionFactory> slaves) {
+		this.slaves = slaves;
 	}
 }

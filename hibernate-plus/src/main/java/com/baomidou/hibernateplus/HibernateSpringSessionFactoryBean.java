@@ -16,6 +16,7 @@
 
 package com.baomidou.hibernateplus;
 
+import com.baomidou.hibernateplus.enums.Setting;
 import com.baomidou.hibernateplus.utils.EntityInfoUtils;
 import org.hibernate.Interceptor;
 import org.hibernate.SessionFactory;
@@ -53,8 +54,8 @@ import java.util.Properties;
  * data access objects via dependency injection.
  *
  * <p>
- * Compatible with Hibernate 5.0/5.1 as well as 5.2, as of Spring 4.3.
- * Copy LocalSpringSessionFactoryBean
+ * Compatible with Hibernate 5.0/5.1 as well as 5.2, as of Spring 4.3. Copy
+ * LocalSpringSessionFactoryBean
  *
  * @author Juergen Hoeller
  * @since 4.2
@@ -112,11 +113,13 @@ public class HibernateSpringSessionFactoryBean extends HibernateExceptionTransla
 
 	private SessionFactory sessionFactory;
 
-	private String type;
+	private Setting setting;
 
 	public void setType(String type) {
-		this.type = type;
+		Setting setting = Setting.getSetting(type);
+		this.setting = setting;
 	}
+
 	/**
 	 * Set the DataSource to be used by the SessionFactory. If set, this will
 	 * override corresponding settings in Hibernate properties.
@@ -543,7 +546,7 @@ public class HibernateSpringSessionFactoryBean extends HibernateExceptionTransla
 		this.configuration = sfb;
 		this.sessionFactory = buildSessionFactory(sfb);
 		// TODO Caratacus 自动注入sessionFactory
-		EntityInfoUtils.initSession(sessionFactory);
+		EntityInfoUtils.initSession(sessionFactory,setting);
 	}
 
 	/**

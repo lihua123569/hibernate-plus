@@ -22,25 +22,26 @@
  */
 package com.baomidou.hibernateplus.utils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import com.baomidou.framework.entity.EntityFieldInfo;
+import com.baomidou.framework.entity.EntityInfo;
+import com.baomidou.hibernateplus.enums.Setting;
+import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
+import org.hibernate.SessionFactory;
+import org.jboss.logging.Logger;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import org.hibernate.SessionFactory;
-import org.jboss.logging.Logger;
-
-import com.baomidou.framework.entity.EntityFieldInfo;
-import com.baomidou.framework.entity.EntityInfo;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -83,13 +84,26 @@ public class EntityInfoUtils {
 	 * @param sessionFactory
 	 * @return
 	 */
-	public static void initSession(SessionFactory sessionFactory) {
+	public static void initSession(SessionFactory sessionFactory, Setting setting) {
 		Iterator<Map.Entry<String, EntityInfo>> iterator = modelCache.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Map.Entry<String, EntityInfo> entry = (Map.Entry<String, EntityInfo>) iterator.next();
 			EntityInfo entityInfo = entry.getValue();
-			if (entityInfo.getSessionFactory() == null)
-				entityInfo.setSessionFactory(sessionFactory);
+			switch (setting) {
+			case MASTER:
+				if (entityInfo.getMaster() == null)
+					entityInfo.setMaster(sessionFactory);
+				break;
+			case SLAVE:
+				Set<SessionFactory> slaves = entityInfo.getSlaves();
+				if (CollectionUtils.isEmpty(slaves))
+					slaves = new HashSet<SessionFactory>();
+				slaves.add(sessionFactory);
+				break;
+			default:
+				throw new HibernatePlusException("Error: Master-slave Setting error !");
+			}
+
 		}
 	}
 
