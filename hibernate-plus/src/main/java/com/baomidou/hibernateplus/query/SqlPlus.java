@@ -22,11 +22,11 @@
  */
 package com.baomidou.hibernateplus.query;
 
-import com.baomidou.hibernateplus.utils.CollectionUtils;
-import com.baomidou.hibernateplus.utils.StringUtils;
-
 import java.text.MessageFormat;
 import java.util.Collection;
+
+import com.baomidou.hibernateplus.utils.CollectionUtils;
+import com.baomidou.hibernateplus.utils.StringUtils;
 
 /**
  * <p>

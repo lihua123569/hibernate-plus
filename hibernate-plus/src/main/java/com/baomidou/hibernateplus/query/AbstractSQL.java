@@ -22,12 +22,12 @@
  */
 package com.baomidou.hibernateplus.query;
 
-import com.baomidou.hibernateplus.utils.StringUtils;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.baomidou.hibernateplus.utils.StringUtils;
 
 
 /**

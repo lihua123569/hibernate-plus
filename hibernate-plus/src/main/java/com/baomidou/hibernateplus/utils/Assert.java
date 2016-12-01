@@ -22,10 +22,10 @@
  */
 package com.baomidou.hibernateplus.utils;
 
-import com.baomidou.hibernateplus.exceptions.HibernatePlusIllegalArgumentException;
-
 import java.util.Collection;
 import java.util.Map;
+
+import com.baomidou.hibernateplus.exceptions.HibernatePlusIllegalArgumentException;
 
 
 /**

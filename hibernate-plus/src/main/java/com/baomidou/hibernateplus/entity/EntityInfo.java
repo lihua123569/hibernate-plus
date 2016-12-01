@@ -22,12 +22,13 @@
  */
 package com.baomidou.hibernateplus.entity;
 
-import com.baomidou.hibernateplus.utils.CollectionUtils;
-import com.baomidou.hibernateplus.utils.StringUtils;
-import org.hibernate.SessionFactory;
-
 import java.util.Iterator;
 import java.util.Set;
+
+import org.hibernate.SessionFactory;
+
+import com.baomidou.hibernateplus.utils.CollectionUtils;
+import com.baomidou.hibernateplus.utils.StringUtils;
 
 /**
  * <p>

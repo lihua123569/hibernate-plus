@@ -16,8 +16,12 @@
 
 package com.baomidou.hibernateplus;
 
-import com.baomidou.hibernateplus.enums.Setting;
-import com.baomidou.hibernateplus.utils.EntityInfoUtils;
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
+
+import javax.sql.DataSource;
+
 import org.hibernate.Interceptor;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -42,10 +46,8 @@ import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.orm.hibernate5.HibernateExceptionTranslator;
 import org.springframework.util.Assert;
 
-import javax.sql.DataSource;
-import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
+import com.baomidou.hibernateplus.enums.Setting;
+import com.baomidou.hibernateplus.utils.EntityInfoUtils;
 
 /**
  * {@link FactoryBean} that creates a Hibernate {@link SessionFactory}. This is

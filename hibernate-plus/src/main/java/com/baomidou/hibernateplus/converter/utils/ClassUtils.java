@@ -1,7 +1,5 @@
 package com.baomidou.hibernateplus.converter.utils;
 
-import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -12,6 +10,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
+
+import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 
 
 /**

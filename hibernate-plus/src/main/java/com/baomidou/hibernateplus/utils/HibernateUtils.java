@@ -22,17 +22,18 @@
  */
 package com.baomidou.hibernateplus.utils;
 
-import com.baomidou.hibernateplus.entity.Convert;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jboss.logging.Logger;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import com.baomidou.hibernateplus.entity.Convert;
 
 /**
  * <p>

@@ -1,10 +1,10 @@
 package com.baomidou.hibernateplus.converter.utils;
 
 
-import com.baomidou.hibernateplus.utils.ArrayUtils;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.baomidou.hibernateplus.utils.ArrayUtils;
 
 /**
  * 本类来源于apache-commons-lang > StringUtils

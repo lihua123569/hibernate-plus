@@ -22,13 +22,13 @@
  */
 package com.baomidou.hibernateplus.converter.page;
 
-import com.baomidou.hibernateplus.converter.BeanConverter;
-import com.baomidou.hibernateplus.converter.utils.ClassUtils;
-import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.baomidou.hibernateplus.converter.BeanConverter;
+import com.baomidou.hibernateplus.converter.utils.ClassUtils;
+import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 
 /**
  * 分页等常用信息存储
