@@ -12,7 +12,7 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
 - **最少依赖**：仅仅依赖 `Hibernate`
 - **自动生成代码**：简化操作，使其专注于业务
 - **自定义操作**：提供大量API，使开发更加顺畅
-- **简化操作**：只需专注于业务，查询操作请交给 `Hibernate-Plus`
+- **简化操作**：只需专注于业务，数据库操作请交给 `Hibernate-Plus`
 - **无缝分页**：基于`Hibernate`分页，无需具体实现
 - **数据库友好**：基于`Hibernate`，支持目前大多数主流数据库
 - **避免Sql注入**：内置对特殊字符转义，从根本上预防Sql注入攻击
@@ -22,10 +22,6 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
 # 应用实例 | Demo
 
 [Spring-MVC](http://git.oschina.net/cancerGit/springmvc-hibernate-plus)
-
-# 结构目录 | Architecture
-
-![项目结构说明](http://git.oschina.net/uploads/images/2016/1126/164418_9ce74358_620321.png "项目结构说明")
 
 # 通用方法 | API
 
@@ -39,14 +35,22 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
 
 ##Hibernate-Plus - Spring集成
 	
- 	<!-- 配置Hibernate-Plus SessionFactory -->
-    <bean id="sessionFactory" class="com.baomidou.hibernateplus.LocalSessionFactoryBean">
+ 	 <!-- 配置数据源 -->
+    <bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${master.url}"/>
+        <property name="driverClassName" value="${master.driverClassName}"/>
+        <property name="username" value="${master.username}"/>
+        <property name="password" value="${master.password}"/>
+    </bean>
+
+    <!-- 配置hibernate session工厂 master -->
+    <bean id="masterSessionFactory" class="com.baomidou.hibernateplus.HibernateSpringSessionFactoryBean">
+		<!--主从数据库设置 Master主-->
+        <property name="type" value="master"/>
         <property name="dataSource" ref="dataSource"/>
         <property name="hibernateProperties">
             <props>
-				<!--Hibernate自动建表相关-->
                 <!--<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>-->
-				<!--数据库方言-->
                 <prop key="hibernate.dialect">${hibernate.dialect}</prop>
                 <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
                 <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
@@ -54,7 +58,7 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
             </props>
         </property>
 
-        <!-- 自动扫描注解方式配置的Hibernate-Plus映射类文件 -->
+        <!-- 自动扫描注解方式配置的hibernate类文件 -->
         <property name="packagesToScan">
             <list>
                 <value>com.baomidou.hibernate.model.po</value>
@@ -62,12 +66,13 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
         </property>
 
     </bean>
-	 <!-- 配置事务管理器 -->
-    <bean name="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
-        <property name="sessionFactory" ref="sessionFactory"></property>
+
+    <!-- 配置事务管理器 -->
+    <bean name="masterTransactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="masterSessionFactory"></property>
     </bean>
     <!-- 拦截器方式配置事物 -->
-    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+    <tx:advice id="masterTransactionAdvice" transaction-manager="masterTransactionManager">
         <tx:attributes>
             <tx:method name="save*" propagation="REQUIRED"/>
             <tx:method name="update*" propagation="REQUIRED"/>
@@ -79,10 +84,60 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
         </tx:attributes>
     </tx:advice>
     <aop:config>
-        <aop:pointcut id="transactionPointcut"
-                      expression="execution(* com.baomidou.hibernate.service..*Impl.*(..)) or execution(* com.baomidou.framework.service..*Impl.*(..))"/>
-        <aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice"/>
-    </aop:config>	
+        <aop:pointcut id="masterTransactionPointcut"
+                      expression="execution(* com.baomidou.hibernate.service..*Impl.*(..)) or execution(* com.baomidou.hibernateplus.service..*Impl.*(..))"/>
+        <aop:advisor pointcut-ref="masterTransactionPointcut" advice-ref="masterTransactionAdvice"/>
+    </aop:config>
+	
+
+	<!--如果不需要从数据库以下可以不配置-->
+	
+    <!-- slave数据源 -->
+    <bean name="slaveDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+          destroy-method="close">
+        <property name="url" value="${slave.url}"/>
+        <property name="driverClassName" value="${slave.driverClassName}"/>
+        <property name="username" value="${slave.username}"/>
+        <property name="password" value="${slave.password}"/>
+    </bean>
+    <!-- 配置hibernate session工厂 slave -->
+    <bean id="slaveSessionFactory" class="com.baomidou.hibernateplus.HibernateSpringSessionFactoryBean">
+		<!--主从数据库设置 Slave从-->        
+		<property name="type" value="slave"/>
+        <property name="dataSource" ref="slaveDataSource"/>
+        <property name="hibernateProperties">
+            <props>
+                <!--<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>-->
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+                <prop key="hibernate.use_sql_comments">${hibernate.use_sql_comments}</prop>
+            </props>
+        </property>
+
+        <!-- 自动扫描注解方式配置的hibernate类文件 -->
+        <property name="packagesToScan">
+            <list>
+                <value>com.baomidou.hibernate.model.po</value>
+            </list>
+        </property>
+
+    </bean>
+    <!-- 配置事务管理器 -->
+    <bean name="slaveTransactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="slaveSessionFactory"></property>
+    </bean>
+    <!-- 拦截器方式配置事物 -->
+    <tx:advice id="slaveTransactionAdvice" transaction-manager="slaveTransactionManager">
+        <tx:attributes>
+            <tx:method name="*" propagation="REQUIRED" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+    <aop:config>
+        <aop:pointcut id="slaveTransactionPointcut"
+                      expression="execution(* com.baomidou.hibernate.service..*Impl.*(..)) or execution(* com.baomidou.hibernateplus.service..*Impl.*(..))"/>
+        <aop:advisor pointcut-ref="slaveTransactionPointcut" advice-ref="slaveTransactionAdvice"/>
+    </aop:config>
 
 ###DAO层
 
@@ -162,117 +217,81 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
 
 示例代码：
 
-	//查询表中所有数量
-	int count = demoService.selectCount();
-    //根据条件查询数量 Condition的链式风格使你的代码看起来更加优美
-	int count = demoService.selectCount(Condition.instance().eq("id",1));
-	//查询单条数据
-	Demo demo = demoService.selectOne(Condition.instance().eq("id",1));
-	List<Demo> demos = demoService.selectOne(Condition.instance().gt("id",1).like("name","plus").in("sex","1,2,3"));
-    //查询分页
-    Page<Demo> demos = demoService.selectPage(new Page(1,10));
-    下面是API自行感受
-	...
+		List<Vdemo> lists = new ArrayList<Vdemo>();
+		for (int i = 0; i <= 100; i++) {
+			Vdemo vdemo = new Vdemo();
+			vdemo.setDemo1(i + "");
+			vdemo.setDemo2(i + "");
+			vdemo.setDemo3(i + "");
+			lists.add(vdemo);
+		}
+		// 批量插入
+		boolean insertBatch = demoService.insertBatch(lists);
+		System.out.println(insertBatch);
+		// 查询数量
+		int selectCount = demoService.selectCount();
+		System.out.println(selectCount);
+		// Condition 链式查询列表
+		List<Vdemo> vdemoList = demoService.selectList(Condition.instance().le("id", 10));
+		System.out.println(vdemoList);
+		Map map = new HashMap<>();
+		map.put("id", 99L);
+		// 根据Map查询数量
+		int count = demoService.selectCount(map);
+		System.out.println(count);
+		// 根据普通属性查询数量
+		int selectCount1 = demoService.selectCount("demo1", "20");
+		System.out.println(selectCount1);
+		// 根据Condition 查询单条记录
+		Vdemo vdemo = demoService.selectOne(Condition.instance().eq("id", 10));
+		System.out.println(vdemo);
+		List<Map<String, Object>> mapList = demoService.selectMaps(Condition.instance().ge("id", 80));
+		System.out.println(mapList);
+		// 根据属性查询单条记录
+		Vdemo vdemo1 = demoService.get("id", "1");
+		vdemo1.setDemo1("999");
+		vdemo1.setDemo2("999");
+		vdemo1.setDemo3("999");
+		// 修改或保存
+		demoService.saveOrUpdate(vdemo1);
+		Vdemo vdemo2 = demoService.get("id", "1");
+		vdemo2.setId(null);
+		demoService.saveOrUpdate(vdemo2);
+		int selectCount2 = demoService.selectCount(Condition.instance().ge("id", 80));
+		System.out.println(selectCount2);
+		Page page = new Page(1, 20);
+		page.setOrderByField("id");
+		page.setAsc(false);
+		// 查询分页
+		Page selectPage = demoService.selectPage(page);
+		System.out.println(selectPage);
+		// Condition链式查询分页返回Map
+		Page selectMapPage = demoService.selectMapPage(Condition.instance().ge("id", 50), page);
+		System.out.println(selectMapPage);
+		// 单属性查询分页
+		Page selectPage1 = demoService.selectPage(page, "id", 50);
+		System.out.println(selectPage1);
+		// Condition链式查询分页返回VO
+		Page selectPage2 = demoService.selectPage(Condition.instance().ge("id", 50), page);
+		System.out.println(selectPage2);
+		// Condition链式 删除单条记录
+		demoService.delete(Condition.instance().eq("id", 1));
+		List<Vdemo> vdemos = demoService.selectList(Condition.instance());
+		Iterator<Vdemo> iterator = vdemos.iterator();
+		while (iterator.hasNext()) {
+			Vdemo vdemo3 = iterator.next();
+			vdemo3.setDemo1(vdemo3.getDemo1() + "Caratacus Plus 1");
+			vdemo3.setDemo2(vdemo3.getDemo2() + "Caratacus Plus 2");
+			vdemo3.setDemo3(vdemo3.getDemo3() + "Caratacus Plus 3");
+		}
+		// 批量修改
+		demoService.updateBatch(vdemos);
+		// Condition链式 删除所有记录
+		demoService.delete(Condition.DEFAULT);
 
-###Service通用API
+		...
 
-	public V get(Serializable id);
-	public V get(String property, Object value);
-	public V save(V vo);
-	public void saveOrUpdate(V vo);
-	public void update(V vo);
-	public boolean update(Map<String, Object> setMap, Wrapper wrapper);
-	public void delete(V vo);
-	public boolean delete(Wrapper wrapper);
-	public boolean insertBatch(List<V> list);
-	public boolean insertBatch(List<V> list, int size);
-	public boolean updateBatch(List<V> list);
-	public boolean updateBatch(List<V> list, int size);
-	public V selectOne(Wrapper wrapper);
-	public List<V> selectList(Wrapper wrapper);
-	public List<Map<String, Object>> selectMaps(Wrapper wrapper);
-	public int selectCount();
-	public int selectCount(String property, Object... value);
-	public int selectCount(String[] property, Object... value);
-	public int selectCount(Map<String, Object> map);
-	public int selectCount(Wrapper wrapper);
-	public Page<V> selectPage(Page<V> page);
-	public Page<V> selectPage(Page<V> page, String property, Object value);
-	public Page<V> selectPage(Wrapper wrapper, Page<V> page);
-	public Page<Map<String, Object>> selectMapPage(Wrapper wrapper, Page<Map<String, Object>> page);
-
-###Dao通用API
-
-	public T get(Serializable id);
-	public T get(String property, Object value);
-	protected T get(String hql);
-	protected T get(String hql, Map<String, Object> params);
-	public T save(T t);
-	public void saveOrUpdate(T t);
-	public void update(T t);
-	public int update(Map<String, Object> setMap, Wrapper wrapper);
-	public void delete(T t);
-	public int delete(Wrapper wrapper);
-	public boolean insertBatch(List<T> list, int size);
-	public boolean updateBatch(List<T> list, int size);
-	public <T> List<T> selectList(Wrapper wrapper);
-	public List<Map<String, Object>> selectMaps(Wrapper wrapper);
-	public int selectCount();
-	public int selectCount(String property, Object... value);
-	public int selectCount(String[] property, Object... value);
-	public int selectCount(Map<String, Object> params);
-	public int selectCount(Wrapper wrapper);
-	public Page<Map<String, Object>> selectMapPage(Wrapper wrapper, Page<Map<String, Object>> page);
-	public Page selectPage(Wrapper wrapper, Page page);
-	public List<T> query(String property, Object value);
-	public List<T> query(String[] property, Object... value);
-	public List<T> query(int page, int rows, String property, Object value);
-	public List<T> query(int page, int rows, String[] property, Object... value);
-	public List<T> query(String order, String property, Object value);
-	public List<T> query(String order, String[] property, Object... value);
-	public List<T> query(int page, int rows, String order, String property, Object value);
-	public List<T> query(int page, int rows, String order, String[] property, Object... value);
-	public List<T> query(String order);
-	public List<T> query(String order, int page, int rows);
-	public List<T> query();
-	public List<T> query(int page, int rows);
-	public List<T> query(Map<String, Object> params);
-	public List<T> query(Map<String, Object> params, String order);
-	public List<T> query(int page, int rows, Map<String, Object> params, String order);
-	public List<T> query(int page, int rows, Map<String, Object> map);
-	protected int executeHql(String hql);
-	protected int executeHql(String hql, Map<String, Object> params);
-	protected List<T> queryListWithHql(String hql);
-	protected List<T> queryListWithHql(String hql, Map<String, Object> params);
-	protected List<T> queryListWithHql(String hql, Map<String, Object> params, int page, int rows);
-	protected List<T> queryListWithHql(String hql, int page, int rows);
-	protected List<Map<String, Object>> queryMapsWithHql(String hql);
-	protected List<Map<String, Object>> queryMapsWithHql(String hql, int page, int rows);
-	protected int queryCountWithHql(String hql);
-	protected int queryCountWithHql(String hql, Map<String, Object> params);
-	protected int executeSqlUpdate(String sql);
-	protected int executeSqlUpdate(String sql, Object[] args);
-	protected int executeSqlUpdate(String sql, Map<String, Object> params);
-	protected int queryCountWithSql(String sql);
-	protected int queryCountWithSql(String sql, Map<String, Object> params);
-	protected Map<String, Object> queryMapWithSql(String sql, Map<String, Object> params);
-	protected Map<String, Object> queryMapWithSql(String sql);
-	protected List<Map<String, Object>> queryMapsWithSql(String sql, Object[] args);
-	protected List<Map<String, Object>> queryMapsWithSql(String sql);
-	protected List<Map<String, Object>> queryMapsWithSql(String sql, int page, int rows);
-	protected List<Map<String, Object>> queryMapsWithSql(String sql, Map<String, Object> params, int page, int rows)
-	protected List<Map<String, Object>> queryMapsWithSql(String sql, Map<String, Object> params);
-	protected List queryListWithSql(String sql, Object[] args);
-	protected List queryListWithSql(String sql);
-	protected List queryListWithSql(String sql, int page, int rows);
-	protected List queryListWithSql(String sql, Map<String, Object> params, int page, int rows);
-	protected List queryListWithSql(String sql, Map<String, Object> params);
-	protected Map<String, Object> queryMapWithSql(String sql, Object[] args);
-	public List<Map<String, Object>> queryMapsWithClass(String property, Object value);
-	public List<Map<String, Object>> queryMapsWithClass(String[] property, Object... value);
-	public List<Map<String, Object>> queryMapWithClass(Map<String, Object> map);
-
-
+其他 具体请查看 `示例` 项目  [Spring-MVC](http://git.oschina.net/cancerGit/springmvc-hibernate-plus)
 	
 
 # 其他开源项目 | Other Project

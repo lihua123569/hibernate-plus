@@ -109,6 +109,7 @@
             <groupId>com.github.jsqlparser</groupId>
             <artifactId>jsqlparser</artifactId>
             <version>${jsqlparser.version}</version>
+            <scope>provided</scope>
         </dependency>
         <!--junit-->
         <dependency>
