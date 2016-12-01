@@ -22,13 +22,12 @@
  */
 package com.baomidou.hibernateplus.entity;
 
-import java.io.Serializable;
-
-import javax.persistence.MappedSuperclass;
-
 import com.baomidou.hibernateplus.converter.BeanConverter;
 import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 import com.baomidou.hibernateplus.utils.Assert;
+
+import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 /**
  * <p>
@@ -49,7 +48,7 @@ public class Convert implements Serializable {
 	 * @return
 	 */
     public <T> T convert(Class<T> clazz) {
-		Assert.isNull(clazz);
+		Assert.notNull(clazz);
 		try {
 			T entity = clazz.newInstance();
 			return BeanConverter.convert(entity, this);

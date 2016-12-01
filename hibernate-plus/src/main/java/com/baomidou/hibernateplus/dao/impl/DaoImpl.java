@@ -96,7 +96,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 
 	@Override
 	public T get(Serializable id) {
-		Assert.isNull(id);
+		Assert.notNull(id);
 		return (T) HibernateUtils.getCurrentSession(slaveSession()).get(toClass(), id);
 	}
 
@@ -151,20 +151,20 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 
 	@Override
 	public T save(T t) {
-		Assert.isNull(t);
+		Assert.notNull(t);
 		HibernateUtils.getCurrentSession(masterSession()).save(t);
 		return t;
 	}
 
 	@Override
 	public void saveOrUpdate(T t) {
-		Assert.isNull(t);
+		Assert.notNull(t);
 		HibernateUtils.getCurrentSession(masterSession()).saveOrUpdate(t);
 	}
 
 	@Override
 	public void update(T t) {
-		Assert.isNull(t);
+		Assert.notNull(t);
 		HibernateUtils.getCurrentSession(masterSession()).merge(t);
 	}
 
@@ -177,7 +177,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 
 	@Override
 	public void delete(T t) {
-		Assert.isNull(t);
+		Assert.notNull(t);
 		HibernateUtils.getCurrentSession(masterSession()).delete(t);
 	}
 
