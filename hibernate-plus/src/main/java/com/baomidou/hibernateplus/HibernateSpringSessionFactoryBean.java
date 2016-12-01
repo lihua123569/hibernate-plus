@@ -16,12 +16,7 @@
 
 package com.baomidou.hibernateplus;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
+import com.baomidou.hibernateplus.utils.EntityInfoUtils;
 import org.hibernate.Interceptor;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -46,7 +41,10 @@ import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.orm.hibernate5.HibernateExceptionTranslator;
 import org.springframework.util.Assert;
 
-import com.baomidou.hibernateplus.utils.EntityInfoUtils;
+import javax.sql.DataSource;
+import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * {@link FactoryBean} that creates a Hibernate {@link SessionFactory}. This is
@@ -56,14 +54,16 @@ import com.baomidou.hibernateplus.utils.EntityInfoUtils;
  *
  * <p>
  * Compatible with Hibernate 5.0/5.1 as well as 5.2, as of Spring 4.3.
+ * Copy LocalSpringSessionFactoryBean
  *
  * @author Juergen Hoeller
  * @since 4.2
  * @see #setDataSource
  * @see #setPackagesToScan
- * @see LocalSessionFactoryBuilder
+ * @see HibernateSpringSessionFactoryBuilder
+ *
  */
-public class LocalSessionFactoryBean extends HibernateExceptionTranslator implements FactoryBean<SessionFactory>,
+public class HibernateSpringSessionFactoryBean extends HibernateExceptionTranslator implements FactoryBean<SessionFactory>,
 		ResourceLoaderAware, InitializingBean, DisposableBean {
 
 	private DataSource dataSource;
@@ -258,7 +258,7 @@ public class LocalSessionFactoryBean extends HibernateExceptionTranslator implem
 	 * JTA {@link javax.transaction.TransactionManager} to be used with
 	 * Hibernate, if any. Implicitly sets up {@code JtaPlatform}.
 	 * 
-	 * @see LocalSessionFactoryBuilder#setJtaTransactionManager
+	 * @see HibernateSpringSessionFactoryBuilder#setJtaTransactionManager
 	 */
 	public void setJtaTransactionManager(Object jtaTransactionManager) {
 		this.jtaTransactionManager = jtaTransactionManager;
@@ -269,7 +269,7 @@ public class LocalSessionFactoryBean extends HibernateExceptionTranslator implem
 	 * SessionFactory.
 	 * 
 	 * @since 4.3
-	 * @see LocalSessionFactoryBuilder#setMultiTenantConnectionProvider
+	 * @see HibernateSpringSessionFactoryBuilder#setMultiTenantConnectionProvider
 	 */
 	public void setMultiTenantConnectionProvider(MultiTenantConnectionProvider multiTenantConnectionProvider) {
 		this.multiTenantConnectionProvider = multiTenantConnectionProvider;
@@ -279,7 +279,7 @@ public class LocalSessionFactoryBean extends HibernateExceptionTranslator implem
 	 * Set a {@link CurrentTenantIdentifierResolver} to be passed on to the
 	 * SessionFactory.
 	 * 
-	 * @see LocalSessionFactoryBuilder#setCurrentTenantIdentifierResolver
+	 * @see HibernateSpringSessionFactoryBuilder#setCurrentTenantIdentifierResolver
 	 */
 	public void setCurrentTenantIdentifierResolver(CurrentTenantIdentifierResolver currentTenantIdentifierResolver) {
 		this.currentTenantIdentifierResolver = currentTenantIdentifierResolver;
@@ -365,7 +365,7 @@ public class LocalSessionFactoryBean extends HibernateExceptionTranslator implem
 	 * sure to avoid early {@code SessionFactory} calls in init methods of
 	 * related beans, even for metadata introspection purposes.
 	 * 
-	 * @see LocalSessionFactoryBuilder#buildSessionFactory(AsyncTaskExecutor)
+	 * @see HibernateSpringSessionFactoryBuilder#buildSessionFactory(AsyncTaskExecutor)
 	 * @since 4.3
 	 */
 	public void setBootstrapExecutor(AsyncTaskExecutor bootstrapExecutor) {
@@ -393,7 +393,7 @@ public class LocalSessionFactoryBean extends HibernateExceptionTranslator implem
 	 * 
 	 * @return the MetadataSources to use (never {@code null})
 	 * @since 4.3
-	 * @see LocalSessionFactoryBuilder#LocalSessionFactoryBuilder(DataSource,
+	 * @see HibernateSpringSessionFactoryBuilder#HibernateSpringSessionFactoryBuilder(DataSource,
 	 *      ResourceLoader, MetadataSources)
 	 */
 	public MetadataSources getMetadataSources() {
@@ -434,7 +434,7 @@ public class LocalSessionFactoryBean extends HibernateExceptionTranslator implem
 
 	@Override
 	public void afterPropertiesSet() throws IOException {
-		LocalSessionFactoryBuilder sfb = new LocalSessionFactoryBuilder(this.dataSource, getResourceLoader(),
+		HibernateSpringSessionFactoryBuilder sfb = new HibernateSpringSessionFactoryBuilder(this.dataSource, getResourceLoader(),
 				getMetadataSources());
 
 		if (this.configLocations != null) {
@@ -555,9 +555,9 @@ public class LocalSessionFactoryBean extends HibernateExceptionTranslator implem
 	 *            LocalSessionFactoryBuilder prepared by this
 	 *            LocalSessionFactoryBean
 	 * @return the SessionFactory instance
-	 * @see LocalSessionFactoryBuilder#buildSessionFactory
+	 * @see HibernateSpringSessionFactoryBuilder#buildSessionFactory
 	 */
-	protected SessionFactory buildSessionFactory(LocalSessionFactoryBuilder sfb) {
+	protected SessionFactory buildSessionFactory(HibernateSpringSessionFactoryBuilder sfb) {
 		return (this.bootstrapExecutor != null ? sfb.buildSessionFactory(this.bootstrapExecutor) : sfb.buildSessionFactory());
 	}
 

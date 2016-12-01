@@ -16,26 +16,7 @@
 
 package com.baomidou.hibernateplus;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
-import javax.sql.DataSource;
-import javax.transaction.TransactionManager;
-
+import com.baomidou.hibernateplus.utils.EntityInfoUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
 import org.hibernate.SessionFactory;
@@ -63,23 +44,41 @@ import org.springframework.transaction.jta.JtaTransactionManager;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
-import com.baomidou.hibernateplus.utils.EntityInfoUtils;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
+import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.MappedSuperclass;
+import javax.sql.DataSource;
+import javax.transaction.TransactionManager;
+import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 /**
  * A Spring-provided extension of the standard Hibernate {@link Configuration} class,
  * adding {@link SpringSessionContext} as a default and providing convenient ways
  * to specify a DataSource and an application class loader.
  *
  * <p>This is designed for programmatic use, e.g. in {@code @Bean} factory methods.
- * Consider using {@link LocalSessionFactoryBean} for XML bean definition files.
+ * Consider using {@link HibernateSpringSessionFactoryBean} for XML bean definition files.
  *
  * <p>Compatible with Hibernate 5.0/5.1 as well as 5.2, as of Spring 4.3.
+ * Copy LocalSessionFactoryBuilder
  *
  * @author Juergen Hoeller
  * @since 4.2
- * @see LocalSessionFactoryBean
+ * @see HibernateSpringSessionFactoryBean
  */
 @SuppressWarnings("serial")
-public class LocalSessionFactoryBuilder extends Configuration {
+public class HibernateSpringSessionFactoryBuilder extends Configuration {
 
 	private static final String RESOURCE_PATTERN = "/**/*.class";
 
@@ -103,7 +102,7 @@ public class LocalSessionFactoryBuilder extends Configuration {
 	 * @param dataSource the JDBC DataSource that the resulting Hibernate SessionFactory should be using
 	 * (may be {@code null})
 	 */
-	public LocalSessionFactoryBuilder(DataSource dataSource) {
+	public HibernateSpringSessionFactoryBuilder(DataSource dataSource) {
 		this(dataSource, new PathMatchingResourcePatternResolver());
 	}
 
@@ -113,7 +112,7 @@ public class LocalSessionFactoryBuilder extends Configuration {
 	 * (may be {@code null})
 	 * @param classLoader the ClassLoader to load application classes from
 	 */
-	public LocalSessionFactoryBuilder(DataSource dataSource, ClassLoader classLoader) {
+	public HibernateSpringSessionFactoryBuilder(DataSource dataSource, ClassLoader classLoader) {
 		this(dataSource, new PathMatchingResourcePatternResolver(classLoader));
 	}
 
@@ -123,7 +122,7 @@ public class LocalSessionFactoryBuilder extends Configuration {
 	 * (may be {@code null})
 	 * @param resourceLoader the ResourceLoader to load application classes from
 	 */
-	public LocalSessionFactoryBuilder(DataSource dataSource, ResourceLoader resourceLoader) {
+	public HibernateSpringSessionFactoryBuilder(DataSource dataSource, ResourceLoader resourceLoader) {
 		this(dataSource, resourceLoader, new MetadataSources(
 				new BootstrapServiceRegistryBuilder().applyClassLoader(resourceLoader.getClassLoader()).build()));
 	}
@@ -136,7 +135,7 @@ public class LocalSessionFactoryBuilder extends Configuration {
 	 * @param metadataSources the Hibernate MetadataSources service to use (e.g. reusing an existing one)
 	 * @since 4.3
 	 */
-	public LocalSessionFactoryBuilder(DataSource dataSource, ResourceLoader resourceLoader, MetadataSources metadataSources) {
+	public HibernateSpringSessionFactoryBuilder(DataSource dataSource, ResourceLoader resourceLoader, MetadataSources metadataSources) {
 		super(metadataSources);
 
 		getProperties().put(AvailableSettings.CURRENT_SESSION_CONTEXT_CLASS, SpringSessionContext.class.getName());
@@ -177,7 +176,7 @@ public class LocalSessionFactoryBuilder extends Configuration {
 	 * <p>Note: If this is set, the Hibernate settings should not contain a JTA platform
 	 * setting to avoid meaningless double configuration.
 	 */
-	public LocalSessionFactoryBuilder setJtaTransactionManager(Object jtaTransactionManager) {
+	public HibernateSpringSessionFactoryBuilder setJtaTransactionManager(Object jtaTransactionManager) {
 		Assert.notNull(jtaTransactionManager, "Transaction manager reference must not be null");
 
 		if (jtaTransactionManager instanceof JtaTransactionManager) {
@@ -231,7 +230,7 @@ public class LocalSessionFactoryBuilder extends Configuration {
 	 * @since 4.3
 	 * @see AvailableSettings#MULTI_TENANT_CONNECTION_PROVIDER
 	 */
-	public LocalSessionFactoryBuilder setMultiTenantConnectionProvider(MultiTenantConnectionProvider multiTenantConnectionProvider) {
+	public HibernateSpringSessionFactoryBuilder setMultiTenantConnectionProvider(MultiTenantConnectionProvider multiTenantConnectionProvider) {
 		getProperties().put(AvailableSettings.MULTI_TENANT_CONNECTION_PROVIDER, multiTenantConnectionProvider);
 		return this;
 	}
@@ -254,7 +253,7 @@ public class LocalSessionFactoryBuilder extends Configuration {
 	 * or {@code @javax.persistence.MappedSuperclass}.
 	 * @see #scanPackages
 	 */
-	public LocalSessionFactoryBuilder setEntityTypeFilters(TypeFilter... entityTypeFilters) {
+	public HibernateSpringSessionFactoryBuilder setEntityTypeFilters(TypeFilter... entityTypeFilters) {
 		this.entityTypeFilters = entityTypeFilters;
 		return this;
 	}
@@ -264,7 +263,7 @@ public class LocalSessionFactoryBuilder extends Configuration {
 	 * @see #addAnnotatedClass
 	 * @see #scanPackages
 	 */
-	public LocalSessionFactoryBuilder addAnnotatedClasses(Class<?>... annotatedClasses) {
+	public HibernateSpringSessionFactoryBuilder addAnnotatedClasses(Class<?>... annotatedClasses) {
 		for (Class<?> annotatedClass : annotatedClasses) {
 			addAnnotatedClass(annotatedClass);
 		}
@@ -276,7 +275,7 @@ public class LocalSessionFactoryBuilder extends Configuration {
 	 * @see #addPackage
 	 * @see #scanPackages
 	 */
-	public LocalSessionFactoryBuilder addPackages(String... annotatedPackages) {
+	public HibernateSpringSessionFactoryBuilder addPackages(String... annotatedPackages) {
 		for (String annotatedPackage : annotatedPackages) {
 			addPackage(annotatedPackage);
 		}
@@ -290,7 +289,7 @@ public class LocalSessionFactoryBuilder extends Configuration {
 	 * @throws HibernateException if scanning fails for any reason
 	 */
 	@SuppressWarnings("unchecked")
-	public LocalSessionFactoryBuilder scanPackages(String... packagesToScan) throws HibernateException {
+	public HibernateSpringSessionFactoryBuilder scanPackages(String... packagesToScan) throws HibernateException {
 		Set<String> entityClassNames = new TreeSet<String>();
 		Set<String> converterClassNames = new TreeSet<String>();
 		Set<String> packageNames = new TreeSet<String>();
