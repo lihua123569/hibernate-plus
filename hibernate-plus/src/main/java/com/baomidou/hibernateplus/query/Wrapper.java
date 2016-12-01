@@ -22,15 +22,14 @@
  */
 package com.baomidou.hibernateplus.query;
 
-import com.baomidou.hibernateplus.utils.MapUtils;
-import com.baomidou.hibernateplus.utils.StringUtils;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import com.baomidou.hibernateplus.utils.MapUtils;
+import com.baomidou.hibernateplus.utils.StringUtils;
 
 
 

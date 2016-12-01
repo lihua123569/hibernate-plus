@@ -23,9 +23,6 @@
 package com.baomidou.production.jdbc;
 
 
-import com.baomidou.production.domain.Table;
-import com.baomidou.production.tools.StringUtilsWithDB;
-
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -37,6 +34,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.baomidou.production.domain.Table;
+import com.baomidou.production.tools.StringUtilsWithDB;
 
 public class JDBCHandle {
 	private static final String BASE_SQL = "SELECT * FROM %s";

@@ -22,12 +22,11 @@
  */
 package com.baomidou.hibernateplus.utils;
 
-import com.baomidou.framework.entity.Convert;
-import com.baomidou.framework.entity.EntityInfo;
-import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
-import com.baomidou.hibernateplus.page.Page;
-import com.baomidou.hibernateplus.page.Pagination;
-import com.baomidou.hibernateplus.query.Wrapper;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.expression.LongValue;
@@ -39,12 +38,15 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectExpressionItem;
 import net.sf.jsqlparser.statement.select.SelectItem;
+
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import com.baomidou.framework.entity.Convert;
+import com.baomidou.framework.entity.EntityInfo;
+import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
+import com.baomidou.hibernateplus.page.Page;
+import com.baomidou.hibernateplus.page.Pagination;
+import com.baomidou.hibernateplus.query.Wrapper;
 
 /**
  * <p>

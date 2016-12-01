@@ -22,9 +22,6 @@
  */
 package com.baomidou.hibernateplus.converter.cache;
 
-import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
-import com.baomidou.hibernateplus.converter.utils.StrUtils;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -34,6 +31,9 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
+
+import com.baomidou.hibernateplus.converter.utils.StrUtils;
+import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 
 /**
  * JavaBean信息缓存

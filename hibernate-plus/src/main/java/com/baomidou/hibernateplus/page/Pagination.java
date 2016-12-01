@@ -22,9 +22,9 @@
  */
 package com.baomidou.hibernateplus.page;
 
-import com.baomidou.hibernateplus.utils.StringUtils;
-
 import java.io.Serializable;
+
+import com.baomidou.hibernateplus.utils.StringUtils;
 
 /**
  * <p>

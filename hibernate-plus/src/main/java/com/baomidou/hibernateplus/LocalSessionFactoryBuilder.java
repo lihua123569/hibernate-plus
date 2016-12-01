@@ -36,7 +36,6 @@ import javax.persistence.MappedSuperclass;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
-import com.baomidou.hibernateplus.utils.EntityInfoUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
 import org.hibernate.SessionFactory;
@@ -63,6 +62,8 @@ import org.springframework.orm.hibernate5.SpringSessionContext;
 import org.springframework.transaction.jta.JtaTransactionManager;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
+
+import com.baomidou.hibernateplus.utils.EntityInfoUtils;
 /**
  * A Spring-provided extension of the standard Hibernate {@link Configuration} class,
  * adding {@link SpringSessionContext} as a default and providing convenient ways

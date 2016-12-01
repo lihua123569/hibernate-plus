@@ -22,7 +22,6 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import com.baomidou.hibernateplus.utils.EntityInfoUtils;
 import org.hibernate.Interceptor;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -46,6 +45,8 @@ import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.orm.hibernate5.HibernateExceptionTranslator;
 import org.springframework.util.Assert;
+
+import com.baomidou.hibernateplus.utils.EntityInfoUtils;
 
 /**
  * {@link FactoryBean} that creates a Hibernate {@link SessionFactory}. This is

@@ -22,6 +22,10 @@
  */
 package com.baomidou.hibernateplus.utils;
 
+import com.baomidou.framework.entity.EntityFieldInfo;
+import com.baomidou.framework.entity.EntityInfo;
+import org.jboss.logging.Logger;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -29,12 +33,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.jboss.logging.Logger;
-
-import com.baomidou.framework.entity.EntityFieldInfo;
-import com.baomidou.framework.entity.EntityInfo;
-import com.baomidou.hibernateplus.dao.impl.DaoImpl;
 
 /**
  * <p>

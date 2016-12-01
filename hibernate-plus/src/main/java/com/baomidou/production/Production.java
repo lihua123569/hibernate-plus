@@ -22,6 +22,9 @@
  */
 package com.baomidou.production;
 
+import java.io.File;
+import java.sql.Connection;
+
 import com.baomidou.production.domain.Table;
 import com.baomidou.production.factory.BaseFactory;
 import com.baomidou.production.glocal.ClassNames;
@@ -29,9 +32,6 @@ import com.baomidou.production.glocal.GlobalParam;
 import com.baomidou.production.jdbc.JDBCHandle;
 import com.baomidou.production.jdbc.JDBCTemplate;
 import com.baomidou.production.tools.AssistTools;
-
-import java.io.File;
-import java.sql.Connection;
 
 public class Production {
 	static final String webroot = "webapp";
