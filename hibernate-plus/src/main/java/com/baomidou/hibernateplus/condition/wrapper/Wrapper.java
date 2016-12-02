@@ -20,7 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.baomidou.hibernateplus.query;
+package com.baomidou.hibernateplus.condition.wrapper;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -45,28 +45,9 @@ import com.baomidou.hibernateplus.utils.StringUtils;
 public abstract class Wrapper implements Serializable {
 
     /**
-     * SQL 查询字段内容，例如：id,name,age
-     */
-    protected String sqlSelect = null;
-
-    /**
      * 实现了TSQL语法的SQL实体
      */
     protected SqlPlus sql = new SqlPlus();
-
-    public String getSqlSelect() {
-        if (StringUtils.isBlank(sqlSelect)) {
-            return null;
-        }
-        return stripSqlInjection(sqlSelect);
-    }
-
-    public Wrapper setSqlSelect(String sqlSelect) {
-        if (StringUtils.isNotBlank(sqlSelect)) {
-            this.sqlSelect = sqlSelect;
-        }
-        return this;
-    }
 
     /**
      * SQL 片段 (子类实现)

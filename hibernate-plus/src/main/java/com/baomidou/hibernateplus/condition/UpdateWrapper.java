@@ -20,28 +20,71 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.baomidou.hibernateplus.query;
+package com.baomidou.hibernateplus.condition;
 
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
 import com.baomidou.hibernateplus.utils.StringUtils;
 
 /**
  * <p>
- * 条件查询构造器
+ * Update条件构造器
  * </p>
  *
- * @author hubin Caratacus
- * @date 2016-11-7
+ * @author Caratacus
+ * @date 2016-12-2
  */
 @SuppressWarnings({ "rawtypes", "serial" })
-public class Condition extends Wrapper {
-
-	public static final Condition DEFAULT = Condition.instance();
+public class UpdateWrapper extends Wrapper {
+	/**
+	 * DEFAULT
+	 */
+	public static final UpdateWrapper DEFAULT = UpdateWrapper.instance();
+	/**
+	 * SQL 查询字段内容，例如：id,name,age
+	 */
+	protected Map<String, String> setMap = new HashMap<String, String>();
 
 	/**
 	 * 获取实例
 	 */
-	public static Condition instance() {
-		return new Condition();
+	public static UpdateWrapper instance() {
+		return new UpdateWrapper();
+	}
+
+	/**
+	 * 一次赋值
+	 * 
+	 * @param key
+	 * @param value
+	 * @return
+	 */
+	public UpdateWrapper set(String key, String value) {
+		setMap.put(key, value);
+		return this;
+	}
+
+	/**
+	 * 多次赋值
+	 * 
+	 * @param setMap
+	 * @return
+	 */
+	public UpdateWrapper sets(Map<String, String> setMap) {
+		setMap.putAll(setMap);
+		return this;
+	}
+
+	/**
+	 * 获取setMap
+	 * 
+	 * @return
+	 */
+	public Map<String, String> getSetMap() {
+		return setMap;
 	}
 
 	/**
@@ -59,5 +102,12 @@ public class Condition extends Wrapper {
 
 		return sqlWhere;
 	}
+	public static class Builder {
 
+
+		public UpdateWrapper build() {
+			return new JacksonConfig(pretty, dateFormat, charset, exclude, include, nonNull,numberToString);
+		}
+
+	}
 }

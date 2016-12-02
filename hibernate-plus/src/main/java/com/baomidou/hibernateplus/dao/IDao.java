@@ -26,8 +26,11 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.hibernateplus.condition.DeleteWrapper;
+import com.baomidou.hibernateplus.condition.SelectWrapper;
+import com.baomidou.hibernateplus.condition.UpdateWrapper;
+import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
 import com.baomidou.hibernateplus.entity.page.Page;
-import com.baomidou.hibernateplus.query.Wrapper;
 
 /**
  * <p>
@@ -45,17 +48,6 @@ public interface IDao<T> {
 	 * @return
 	 */
 	public T get(Serializable id);
-
-	/**
-	 *
-	 * 获取单个对象
-	 *
-	 * @param property
-	 * @param value
-	 * @return
-	 *
-	 */
-	public T get(String property, Object value);
 
 	/**
 	 * 保存方法
@@ -82,11 +74,10 @@ public interface IDao<T> {
 	/**
 	 * 修改方法
 	 *
-	 * @param setMap
-	 * @param wrapper
+	 * @param updateWrapper
 	 * @return
 	 */
-	public int update(Map<String, Object> setMap, Wrapper wrapper);
+	public int update(UpdateWrapper updateWrapper);
 
 	/**
 	 * 删除方法
@@ -98,10 +89,10 @@ public interface IDao<T> {
 	/**
 	 * 删除方法
 	 * 
-	 * @param wrapper
+	 * @param deleteWrapper
 	 * @return
 	 */
-	public int delete(Wrapper wrapper);
+	public int delete(DeleteWrapper deleteWrapper);
 
 	/**
 	 * 批量添加
@@ -124,77 +115,44 @@ public interface IDao<T> {
 	/**
 	 * 查询List<Map<String,Object>>结果集
 	 *
-	 * @param wrapper
+	 * @param selectWrapper
 	 * @return
 	 */
-	public List<Map<String, Object>> selectMaps(Wrapper wrapper);
+	public List<Map<String, Object>> selectMaps(SelectWrapper selectWrapper);
 
 	/**
 	 * 查询列表
 	 *
-	 * @param wrapper
+	 * @param selectWrapper
 	 * @param <T>
 	 * @return
 	 */
-	public <T> List<T> selectList(Wrapper wrapper);
+	public <T> List<T> selectList(SelectWrapper selectWrapper);
 
 	/**
 	 * 查询数量
 	 *
+	 * @param selectWrapper
 	 * @return
 	 */
-	public int selectCount();
-
-	/**
-	 * 查询数量
-	 *
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public int selectCount(String property, Object... value);
-
-	/**
-	 * 查询数量
-	 *
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public int selectCount(String[] property, Object... value);
-
-	/**
-	 * 查询数量
-	 *
-	 * @param map
-	 * @return
-	 */
-	public int selectCount(Map<String, Object> map);
-
-	/**
-	 * 查询数量
-	 *
-	 * @param wrapper
-	 * @return
-	 */
-	public int selectCount(Wrapper wrapper);
+	public int selectCount(SelectWrapper selectWrapper);
 
 	/**
 	 * 查询分页
 	 * 
-	 * @param wrapper
+	 * @param selectWrapper
 	 * @param page
 	 * @return
 	 */
-	public Page<Map<String, Object>> selectMapPage(Wrapper wrapper, Page<Map<String, Object>> page);
+	public Page<Map<String, Object>> selectMapPage(SelectWrapper selectWrapper, Page<Map<String, Object>> page);
 
 	/**
 	 * 查询分页
 	 *
-	 * @param wrapper
+	 * @param selectWrapper
 	 * @param page
 	 * @return
 	 */
-	public Page selectPage(Wrapper wrapper, Page page);
+	public Page selectPage(SelectWrapper selectWrapper, Page page);
 
 }

@@ -20,7 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.baomidou.hibernateplus.query;
+package com.baomidou.hibernateplus.condition;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -80,7 +80,7 @@ public class SqlUtilsExam {
 	public void sqlEntityList() {
 		Page page = new Page(1, 10);
 		page.setOrderByField("fileld");
-		String sql = SqlUtils.sqlEntityList(AppTestModel.class, Condition.instance().eq("s_id", 1), page);
+		String sql = SqlUtils.sqlEntityList(AppTestModel.class, SelectWrapper.instance().eq("s_id", 1), page);
 		System.out.println(sql);
 		Assert.assertEquals("SELECT * FROM app_table WHERE (s_id = 1)\n" + "ORDER BY fileld ASC", sql);
 
@@ -93,7 +93,7 @@ public class SqlUtilsExam {
 	public void sqlList() {
 		Page page = new Page(1, 10);
 		page.setOrderByField("fileld");
-		String sql = SqlUtils.sqlList(AppTestModel.class, false, Condition.instance().eq("s_id", 1), page);
+		String sql = SqlUtils.sqlList(AppTestModel.class, false, SelectWrapper.instance().eq("s_id", 1), page);
 		System.out.println(sql);
 		Assert.assertEquals("SELECT s_id AS id,s_str AS str FROM app_table WHERE (s_id = 1)\n" + "ORDER BY fileld ASC", sql);
 	}
@@ -106,14 +106,14 @@ public class SqlUtilsExam {
 	public void sqlList2() {
 		Page page = new Page(1, 10);
 		page.setOrderByField("fileld");
-		String sql = SqlUtils.sqlList(AppTestModel.class, true, Condition.instance().eq("s_id", 1), page);
+		String sql = SqlUtils.sqlList(AppTestModel.class, true, SelectWrapper.instance().eq("s_id", 1), page);
 		System.out.println(sql);
 		Assert.assertEquals("SELECT * FROM app_table WHERE (s_id = 1)\n" + "ORDER BY fileld ASC", sql);
 	}
 
 	@Test
 	public void sqlCount() {
-		String sql = SqlUtils.sqlCount(AppTestModel.class, Condition.instance().eq("s_id", 1));
+		String sql = SqlUtils.sqlCount(AppTestModel.class, SelectWrapper.instance().eq("s_id", 1));
 		System.out.println(sql);
 		Assert.assertEquals("SELECT COUNT(0) FROM app_table WHERE (s_id = 1)", sql);
 	}
@@ -133,7 +133,7 @@ public class SqlUtilsExam {
 	 */
 	@Test
 	public void sqlDelete() {
-		String sql = SqlUtils.sqlDelete(AppTestModel.class, Condition.instance().eq("s_id", 1));
+		String sql = SqlUtils.sqlDelete(AppTestModel.class, SelectWrapper.instance().eq("s_id", 1));
 		System.out.println(sql);
 		Assert.assertEquals("DELETE FROM app_table WHERE (s_id = 1)", sql);
 	}
@@ -145,7 +145,7 @@ public class SqlUtilsExam {
 	public void sqlUpdate() {
 		Map<String, Object> map = new HashMap();
 		map.put("s_str", 222);
-		String sql = SqlUtils.sqlUpdate(AppTestModel.class, map, Condition.instance().eq("s_id", 1));
+		String sql = SqlUtils.sqlUpdate(AppTestModel.class, map, SelectWrapper.instance().eq("s_id", 1));
 		System.out.println(sql);
 		Assert.assertEquals("UPDATE app_table SET s_str = 222 WHERE (s_id = 1)", sql);
 	}

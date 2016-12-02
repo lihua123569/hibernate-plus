@@ -20,7 +20,7 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package com.baomidou.hibernateplus.query;
+package com.baomidou.hibernateplus.condition;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +46,7 @@ public class ConditionExam {
 	/*
 	 * User 查询包装器
 	 */
-	private Condition ew = new Condition();
+	private SelectWrapper ew = new SelectWrapper();
 
 
 	@Test
@@ -278,7 +278,7 @@ public class ConditionExam {
 	public void testInstance() {
 		String val1 = "'''";
 		String val2 = "\\";
-		String sqlPart = Condition.instance().between("test_type", val1, val2).toString();
+		String sqlPart = SelectWrapper.instance().between("test_type", val1, val2).toString();
 		System.out.println("sql ==> " + sqlPart);
 		Assert.assertEquals("WHERE (test_type BETWEEN '\\'' AND '\\\\')", sqlPart);
 	}
@@ -293,7 +293,7 @@ public class ConditionExam {
 		map.put("allEq1","22");
 		map.put("allEq2",3333);
 		map.put("allEq3",66.99);
-		String sqlPart = Condition.instance().gt("gt", 1).le("le",2).lt("le",3).ge("ge",4).eq("eq",5).allEq(map).toString();
+		String sqlPart = SelectWrapper.instance().gt("gt", 1).le("le",2).lt("le",3).ge("ge",4).eq("eq",5).allEq(map).toString();
 		System.out.println("sql ==> " + sqlPart);
 		Assert.assertEquals("WHERE (gt > 1 AND le <= 2 AND le < 3 AND ge >= 4 AND eq = 5 AND allEq3 = 66.99 AND allEq1 = '22' AND allEq2 = 3333)", sqlPart);
 	}

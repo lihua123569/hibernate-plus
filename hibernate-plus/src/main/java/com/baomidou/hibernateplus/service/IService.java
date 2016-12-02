@@ -26,9 +26,13 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.hibernateplus.condition.DeleteWrapper;
+import com.baomidou.hibernateplus.condition.SelectWrapper;
+import com.baomidou.hibernateplus.condition.UpdateWrapper;
 import com.baomidou.hibernateplus.entity.Convert;
 import com.baomidou.hibernateplus.entity.page.Page;
-import com.baomidou.hibernateplus.query.Wrapper;
+import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
+import net.sf.jsqlparser.statement.select.Select;
 
 /**
  * <p>
@@ -47,17 +51,6 @@ public interface IService<V extends Convert> {
 	 * @return
 	 */
 	public V get(Serializable id);
-
-	/**
-	 *
-	 * 获取单个对象
-	 *
-	 * @param property
-	 * @param value
-	 * @return
-	 *
-	 */
-	public V get(String property, Object value);
 
 	/**
 	 * 保存
@@ -82,12 +75,12 @@ public interface IService<V extends Convert> {
 	public void update(V vo);
 
 	/**
-	 * 根据Wrapper修改
+	 * 根据UpdateWrapper修改
 	 *
-	 * @param wrapper
+	 * @param updateWrapper
 	 * @return
 	 */
-	boolean update(Map<String, Object> setMap, Wrapper wrapper);
+	boolean update(UpdateWrapper updateWrapper);
 
 	/**
 	 * 删除
@@ -99,10 +92,10 @@ public interface IService<V extends Convert> {
 	/**
 	 * 根据Wrapper删除
 	 *
-	 * @param wrapper
+	 * @param deleteWrapper
 	 * @return
 	 */
-	boolean delete(Wrapper wrapper);
+	boolean delete(DeleteWrapper deleteWrapper);
 
 	/**
 	 * 批量插入
@@ -141,102 +134,51 @@ public interface IService<V extends Convert> {
 	/**
 	 * 获取单个对象
 	 *
-	 * @param wrapper
+	 * @param selectWrapper
 	 * @return
 	 */
-	public V selectOne(Wrapper wrapper);
+	public V selectOne(SelectWrapper selectWrapper);
 
 	/**
 	 * 查询列表
 	 *
-	 * @param wrapper
+	 * @param selectWrapper
 	 * @return
 	 */
-	public List<V> selectList(Wrapper wrapper);
+	public List<V> selectList(SelectWrapper selectWrapper);
 
 	/**
 	 * 查询列表
 	 *
-	 * @param wrapper
+	 * @param selectWrapper
 	 * @return
 	 */
-	public List<Map<String,Object>> selectMaps(Wrapper wrapper);
-
-	/**
-	 * 查询全表数量
-	 *
-	 * @return
-	 */
-	public int selectCount();
+	public List<Map<String, Object>> selectMaps(SelectWrapper selectWrapper);
 
 	/**
 	 * 查询数量
 	 *
-	 * @param property
-	 * @param value
+	 * @param selectWrapper
 	 * @return
 	 */
-	public int selectCount(String property, Object... value);
-
-	/**
-	 * 查询数量
-	 *
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public int selectCount(String[] property, Object... value);
-
-	/**
-	 * 查询数量
-	 *
-	 * @param map
-	 * @return
-	 */
-	public int selectCount(Map<String, Object> map);
-
-	/**
-	 * 查询数量
-	 *
-	 * @param wrapper
-	 * @return
-	 */
-	public int selectCount(Wrapper wrapper);
-
-	/**
-	 * 查询分页
-	 *
-	 * @param page
-	 * @return
-	 */
-	public Page<V> selectPage(Page<V> page);
-
-	/**
-	 * 查询分页
-	 *
-	 * @param page
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public Page<V> selectPage(Page<V> page, String property, Object value);
+	public int selectCount(SelectWrapper selectWrapper);
 
 	/**
 	 * 查询分页
 	 * 
-	 * @param wrapper
+	 * @param selectWrapper
 	 * @param page
 	 * @return
 	 */
-	public Page<V> selectPage(Wrapper wrapper, Page<V> page);
+	public Page<V> selectPage(SelectWrapper selectWrapper, Page<V> page);
 
 	/**
 	 * 查询分页
 	 * 
-	 * @param wrapper
+	 * @param selectWrapper
 	 * @param page
 	 * @return
 	 */
-	public Page<Map<String,Object>> selectMapPage(Wrapper wrapper, Page<Map<String, Object>> page);
+	public Page<Map<String, Object>> selectMapPage(SelectWrapper selectWrapper, Page<Map<String, Object>> page);
 
 }
