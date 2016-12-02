@@ -27,9 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.baomidou.hibernateplus.condition.DeleteWrapper;
-import com.baomidou.hibernateplus.condition.SelectWrapper;
-import com.baomidou.hibernateplus.condition.UpdateWrapper;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.expression.LongValue;
@@ -44,12 +41,12 @@ import net.sf.jsqlparser.statement.select.SelectItem;
 
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
+import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
 import com.baomidou.hibernateplus.entity.Convert;
 import com.baomidou.hibernateplus.entity.EntityInfo;
 import com.baomidou.hibernateplus.entity.page.Page;
 import com.baomidou.hibernateplus.entity.page.Pagination;
 import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
-import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
 
 /**
  * <p>
@@ -162,12 +159,12 @@ public class SqlUtils {
 	 * 获取hibernate实体映射List sql
 	 *
 	 * @param clazz
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @param page
 	 * @return
 	 */
-	public static String sqlEntityList(Class clazz, SelectWrapper selectWrapper, Page page) {
-		return sqlList(clazz, true, selectWrapper, page);
+	public static String sqlEntityList(Class clazz, Wrapper wrapper, Page page) {
+		return sqlList(clazz, true, wrapper, page);
 	}
 
 	/**
@@ -176,11 +173,11 @@ public class SqlUtils {
 	 * @param clazz
 	 * @param isMapping
 	 *            是否映射
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @param page
 	 * @return
 	 */
-	public static String sqlList(Class clazz, boolean isMapping, SelectWrapper selectWrapper, Page page) {
+	public static String sqlList(Class clazz, boolean isMapping, Wrapper wrapper, Page page) {
 		String select;
 		if (isMapping) {
 			select = "*";
@@ -188,15 +185,15 @@ public class SqlUtils {
 			select = select(clazz);
 		}
 		String tableName = getTableName(clazz);
-		if (selectWrapper != null) {
-			String sqlSelect = selectWrapper.getSqlSelect();
+		if (wrapper != null) {
+			String sqlSelect = wrapper.getSqlSelect();
 			if (page != null) {
 				if (StringUtils.isNotBlank(page.getOrderByField())) {
-					selectWrapper.orderBy(page.getOrderByField(), page.isAsc());
+					wrapper.orderBy(page.getOrderByField(), page.isAsc());
 				}
 			}
 			return String.format(SqlUtils.SQL_LIST, StringUtils.isBlank(sqlSelect) ? select : sqlSelect, tableName,
-					StringUtils.isNotBlank(selectWrapper.getSqlSegment()) ? selectWrapper.getSqlSegment() : StringUtils.EMPTY);
+					StringUtils.isNotBlank(wrapper.toString()) ? wrapper.toString() : StringUtils.EMPTY);
 		}
 		if (page != null) {
 			return concatOrderBy(String.format(SqlUtils.SQL_LIST, select, tableName, StringUtils.EMPTY), page);
@@ -209,25 +206,25 @@ public class SqlUtils {
 	 * 获取普通List sql
 	 *
 	 * @param clazz
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @param page
 	 * @return
 	 */
-	public static String sqlList(Class clazz, SelectWrapper selectWrapper, Page page) {
-		return sqlList(clazz, false, selectWrapper, page);
+	public static String sqlList(Class clazz, Wrapper wrapper, Page page) {
+		return sqlList(clazz, false, wrapper, page);
 	}
 
 	/**
 	 * 获取Count语句
 	 * 
 	 * @param clazz
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @return
 	 */
-	public static String sqlCount(Class clazz, SelectWrapper selectWrapper) {
+	public static String sqlCount(Class clazz, Wrapper wrapper) {
 		String tableName = getTableName(clazz);
-		if (selectWrapper != null) {
-			return String.format(SqlUtils.SQL_COUNT, tableName, selectWrapper.getSqlSegment());
+		if (wrapper != null) {
+			return String.format(SqlUtils.SQL_COUNT, tableName, wrapper.toString());
 		}
 		return String.format(SqlUtils.SQL_COUNT, tableName, StringUtils.EMPTY);
 	}
@@ -251,14 +248,14 @@ public class SqlUtils {
 	 * 获取删除sql
 	 *
 	 * @param clazz
-	 * @param deleteWrapper
+	 * @param wrapper
 	 * @param <T>
 	 * @return
 	 */
-	public static <T extends Convert> String sqlDelete(Class<T> clazz, DeleteWrapper deleteWrapper) {
+	public static <T extends Convert> String sqlDelete(Class<T> clazz, Wrapper wrapper) {
 		String tableName = getTableName(clazz);
-		if (deleteWrapper != null) {
-			return String.format(SqlUtils.SQL_DELETE, tableName, deleteWrapper.getSqlSegment());
+		if (wrapper != null) {
+			return String.format(SqlUtils.SQL_DELETE, tableName, wrapper.toString());
 		}
 		return String.format(SqlUtils.SQL_DELETE, tableName, StringUtils.EMPTY);
 	}
@@ -267,13 +264,13 @@ public class SqlUtils {
 	 * 获取Update SQL
 	 *
 	 * @param clazz
-	 * @param updateWrapper
+	 * @param wrapper
 	 * @return
 	 */
-	public static String sqlUpdate(Class clazz, UpdateWrapper updateWrapper) {
+	public static String sqlUpdate(Class clazz, Wrapper wrapper) {
 		String tableName = getTableName(clazz);
-		Map<String, String> setMap = updateWrapper.getSetMap();
-		Iterator iterator = updateWrapper.getSetMap().entrySet().iterator();
+		Map<String, String> setMap = wrapper.getSetMap();
+		Iterator iterator = wrapper.getSetMap().entrySet().iterator();
 		int _size = setMap.size();
 		int i = 0;
 		StringBuilder builder = new StringBuilder();
@@ -287,8 +284,8 @@ public class SqlUtils {
 			}
 			i++;
 		}
-		if (updateWrapper != null) {
-			return String.format(SqlUtils.SQL_UPDATE, tableName, builder.toString(), updateWrapper.getSqlSegment());
+		if (wrapper != null) {
+			return String.format(SqlUtils.SQL_UPDATE, tableName, builder.toString(), wrapper.toString());
 		}
 		return String.format(SqlUtils.SQL_UPDATE, tableName, builder.toString(), StringUtils.EMPTY);
 	}

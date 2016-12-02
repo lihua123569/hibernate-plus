@@ -60,6 +60,9 @@ public class EntityInfo {
 	 */
 
 	private Set<EntityFieldInfo> fieldInfos;
+	/**
+	 * select
+	 */
 	private String select;
 
 	/**

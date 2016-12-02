@@ -26,17 +26,14 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import com.baomidou.hibernateplus.condition.DeleteWrapper;
-import com.baomidou.hibernateplus.condition.UpdateWrapper;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
 import com.baomidou.hibernateplus.converter.BeanConverter;
 import com.baomidou.hibernateplus.dao.IDao;
 import com.baomidou.hibernateplus.entity.Convert;
 import com.baomidou.hibernateplus.entity.page.Page;
-import com.baomidou.hibernateplus.condition.SelectWrapper;
-import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
 import com.baomidou.hibernateplus.service.IService;
 import com.baomidou.hibernateplus.utils.CollectionUtils;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
@@ -77,8 +74,8 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	}
 
 	@Override
-	public boolean update(UpdateWrapper updateWrapper) {
-		return retBool(baseDao.update(updateWrapper));
+	public boolean update(Wrapper wrapper) {
+		return retBool(baseDao.update(wrapper));
 	}
 
 	@Override
@@ -87,8 +84,8 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	}
 
 	@Override
-	public boolean delete(DeleteWrapper deleteWrapper) {
-		return retBool(baseDao.delete(deleteWrapper));
+	public boolean delete(Wrapper wrapper) {
+		return retBool(baseDao.delete(wrapper));
 	}
 
 	@Override
@@ -112,8 +109,8 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	}
 
 	@Override
-	public V selectOne(SelectWrapper selectWrapper) {
-		List<V> list = selectList(selectWrapper);
+	public V selectOne(Wrapper wrapper) {
+		List<V> list = selectList(wrapper);
 		if (CollectionUtils.isNotEmpty(list)) {
 			int size = list.size();
 			if (size > 1) {
@@ -125,30 +122,30 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	}
 
 	@Override
-	public List<V> selectList(SelectWrapper selectWrapper) {
-		return BeanConverter.convert(voClass(), baseDao.selectList(selectWrapper));
+	public List<V> selectList(Wrapper wrapper) {
+		return BeanConverter.convert(voClass(), baseDao.selectList(wrapper));
 	}
 
 	@Override
-	public List<Map<String, Object>> selectMaps(SelectWrapper selectWrapper) {
-		return baseDao.selectMaps(selectWrapper);
+	public List<Map<String, Object>> selectMaps(Wrapper wrapper) {
+		return baseDao.selectMaps(wrapper);
 	}
 
 	@Override
-	public int selectCount(SelectWrapper selectWrapper) {
-		return baseDao.selectCount(selectWrapper);
+	public int selectCount(Wrapper wrapper) {
+		return baseDao.selectCount(wrapper);
 	}
 
 	@Override
-	public Page<V> selectPage(SelectWrapper selectWrapper, Page<V> page) {
-		page = baseDao.selectPage(selectWrapper, page);
+	public Page<V> selectPage(Wrapper wrapper, Page<V> page) {
+		page = baseDao.selectPage(wrapper, page);
 		page.setRecords(BeanConverter.convert(voClass(), page.getRecords()));
 		return page;
 	}
 
 	@Override
-	public Page<Map<String, Object>> selectMapPage(SelectWrapper selectWrapper, Page<Map<String, Object>> page) {
-		return baseDao.selectMapPage(selectWrapper, page);
+	public Page<Map<String, Object>> selectMapPage(Wrapper wrapper, Page<Map<String, Object>> page) {
+		return baseDao.selectMapPage(wrapper, page);
 	}
 
 	/**

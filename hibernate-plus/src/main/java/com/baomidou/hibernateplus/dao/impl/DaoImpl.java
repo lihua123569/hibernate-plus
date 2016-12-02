@@ -29,19 +29,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.baomidou.hibernateplus.condition.DeleteWrapper;
-import com.baomidou.hibernateplus.condition.UpdateWrapper;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.Transformers;
 import org.jboss.logging.Logger;
 
+import com.baomidou.hibernateplus.condition.SelectWrapper;
+import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
 import com.baomidou.hibernateplus.dao.IDao;
 import com.baomidou.hibernateplus.entity.Convert;
 import com.baomidou.hibernateplus.entity.page.Page;
-import com.baomidou.hibernateplus.condition.SelectWrapper;
-import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
 import com.baomidou.hibernateplus.utils.Assert;
 import com.baomidou.hibernateplus.utils.CollectionUtils;
 import com.baomidou.hibernateplus.utils.EntityInfoUtils;
@@ -148,9 +146,9 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	}
 
 	@Override
-	public int update(UpdateWrapper updateWrapper) {
-		Assert.notEmpty(updateWrapper.getSetMap());
-		String sqlUpdate = SqlUtils.sqlUpdate(toClass(), updateWrapper);
+	public int update(Wrapper wrapper) {
+		Assert.notEmpty(wrapper.getSetMap());
+		String sqlUpdate = SqlUtils.sqlUpdate(toClass(), wrapper);
 		return executeSqlUpdate(sqlUpdate);
 	}
 
@@ -161,8 +159,8 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	}
 
 	@Override
-	public int delete(DeleteWrapper deleteWrapper) {
-		String sqlDelete = SqlUtils.sqlDelete(toClass(), deleteWrapper);
+	public int delete(Wrapper wrapper) {
+		String sqlDelete = SqlUtils.sqlDelete(toClass(), wrapper);
 		return executeSqlUpdate(sqlDelete);
 
 	}
@@ -207,10 +205,10 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	}
 
 	@Override
-	public <T> List<T> selectList(SelectWrapper selectWrapper) {
+	public <T> List<T> selectList(Wrapper wrapper) {
 		List<T> list = Collections.emptyList();
 		try {
-			String sql = SqlUtils.sqlEntityList(toClass(), selectWrapper, null);
+			String sql = SqlUtils.sqlEntityList(toClass(), wrapper, null);
 			Query query = HibernateUtils.getEntitySqlQuery(toClass(), sql, slaveSession(), isCurrent());
 			list = query.list();
 		} catch (Exception e) {
@@ -220,10 +218,10 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	}
 
 	@Override
-	public List<Map<String, Object>> selectMaps(SelectWrapper selectWrapper) {
+	public List<Map<String, Object>> selectMaps(Wrapper wrapper) {
 		List<Map<String, Object>> list = Collections.emptyList();
 		try {
-			String sql = SqlUtils.sqlList(toClass(), selectWrapper, null);
+			String sql = SqlUtils.sqlList(toClass(), wrapper, null);
 			Query query = HibernateUtils.getSqlQuery(sql, slaveSession(), isCurrent()).setResultTransformer(
 					Transformers.ALIAS_TO_ENTITY_MAP);
 			list = query.list();
@@ -234,10 +232,10 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	}
 
 	@Override
-	public int selectCount(SelectWrapper selectWrapper) {
+	public int selectCount(Wrapper wrapper) {
 		int count = 0;
 		try {
-			String sql = SqlUtils.sqlCount(toClass(), selectWrapper);
+			String sql = SqlUtils.sqlCount(toClass(), wrapper);
 			Query query = HibernateUtils.getSqlQuery(sql, slaveSession(), isCurrent());
 			BigInteger bigInteger = (BigInteger) query.uniqueResult();
 			count = bigInteger.intValue();
@@ -248,9 +246,9 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	}
 
 	@Override
-	public Page<Map<String, Object>> selectMapPage(SelectWrapper selectWrapper, Page<Map<String, Object>> page) {
+	public Page<Map<String, Object>> selectMapPage(Wrapper wrapper, Page<Map<String, Object>> page) {
 		try {
-			String sql = SqlUtils.sqlList(toClass(), selectWrapper, page);
+			String sql = SqlUtils.sqlList(toClass(), wrapper, page);
 			Query query = HibernateUtils.getSqlQuery(sql, slaveSession(), isCurrent()).setResultTransformer(
 					Transformers.ALIAS_TO_ENTITY_MAP);
 			HibernateUtils.setPage(page.getCurrent(), page.getSize(), query);
@@ -266,9 +264,9 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	}
 
 	@Override
-	public Page selectPage(SelectWrapper selectWrapper, Page page) {
+	public Page selectPage(Wrapper wrapper, Page page) {
 		try {
-			String sql = SqlUtils.sqlEntityList(toClass(), selectWrapper, page);
+			String sql = SqlUtils.sqlEntityList(toClass(), wrapper, page);
 			Query query = HibernateUtils.getEntitySqlQuery(toClass(), sql, slaveSession(), isCurrent());
 			HibernateUtils.setPage(page.getCurrent(), page.getSize(), query);
 			page.setRecords(query.list());
@@ -514,9 +512,9 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	 * @param sql
 	 * @return
 	 */
-	protected int queryCount(String sql, SelectWrapper selectWrapper) {
+	protected int queryCount(String sql, Wrapper wrapper) {
 		Assert.hasLength(sql);
-		sql += selectWrapper.getSqlSegment();
+		sql += wrapper.getSqlSegment();
 		int count = 0;
 		try {
 			Query query = HibernateUtils.getSqlQuery(sql, slaveSession(), isCurrent());
@@ -532,14 +530,14 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	 * 执行SQL返回单个对象
 	 *
 	 * @param sql
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @return
 	 */
-	protected Map<String, Object> queryMapWithSql(String sql, SelectWrapper selectWrapper) {
+	protected Map<String, Object> queryMapWithSql(String sql, Wrapper wrapper) {
 		Assert.hasLength(sql);
 		Map<String, Object> map = Collections.emptyMap();
 		try {
-			sql += selectWrapper.getSqlSegment();
+			sql += wrapper.getSqlSegment();
 			Query query = HibernateUtils.getSqlQuery(sql, slaveSession(), isCurrent()).setResultTransformer(
 					Transformers.ALIAS_TO_ENTITY_MAP);
 			map = (Map<String, Object>) query.uniqueResult();

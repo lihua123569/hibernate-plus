@@ -42,15 +42,26 @@ public class SelectWrapper extends Wrapper {
 	/**
 	 * SQL 查询字段内容，例如：id,name,age
 	 */
-	protected String sqlSelect = null;
+	protected String sqlSelect;
 
+	/**
+	 * 获取select
+	 * 
+	 * @return
+	 */
 	public String getSqlSelect() {
 		if (StringUtils.isBlank(sqlSelect)) {
-			return null;
+			return StringUtils.EMPTY;
 		}
 		return stripSqlInjection(sqlSelect);
 	}
 
+	/**
+	 * 设置select
+	 * 
+	 * @param sqlSelect
+	 * @return
+	 */
 	public SelectWrapper setSqlSelect(String sqlSelect) {
 		if (StringUtils.isNotBlank(sqlSelect)) {
 			this.sqlSelect = sqlSelect;

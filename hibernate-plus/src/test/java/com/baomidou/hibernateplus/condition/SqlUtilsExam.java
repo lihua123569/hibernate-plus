@@ -143,9 +143,9 @@ public class SqlUtilsExam {
 	 */
 	@Test
 	public void sqlUpdate() {
-		Map<String, Object> map = new HashMap();
-		map.put("s_str", 222);
-		String sql = SqlUtils.sqlUpdate(AppTestModel.class, map, SelectWrapper.instance().eq("s_id", 1));
+		Map<String, String> map = new HashMap();
+		map.put("s_str", "222");
+		String sql = SqlUtils.sqlUpdate(AppTestModel.class, UpdateWrapper.instance().sets(map).eq("s_id", 1));
 		System.out.println(sql);
 		Assert.assertEquals("UPDATE app_table SET s_str = 222 WHERE (s_id = 1)", sql);
 	}

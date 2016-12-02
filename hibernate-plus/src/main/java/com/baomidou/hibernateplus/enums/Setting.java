@@ -43,6 +43,7 @@ public enum Setting {
 	/** 描述 */
 	private final String desc;
 
+	/** 构造 */
 	Setting(final String type, final String desc) {
 		this.type = type;
 		this.desc = desc;
@@ -56,6 +57,12 @@ public enum Setting {
 		return this.desc;
 	}
 
+	/**
+	 * 根据字符串获取枚举类型
+	 * 
+	 * @param type
+	 * @return
+	 */
 	public static Setting getSetting(String type) {
 		if (StringUtils.isNotBlank(type)) {
 			Setting[] dbTypes = Setting.values();

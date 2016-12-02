@@ -41,7 +41,7 @@ import org.junit.Test;
  * @author Caratacus
  * @date 2016-11-29
  */
-public class ConditionExam {
+public class SelectWrapperExam {
 
 	/*
 	 * User 查询包装器

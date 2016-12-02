@@ -26,9 +26,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import com.baomidou.hibernateplus.condition.DeleteWrapper;
-import com.baomidou.hibernateplus.condition.SelectWrapper;
-import com.baomidou.hibernateplus.condition.UpdateWrapper;
 import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
 import com.baomidou.hibernateplus.entity.page.Page;
 
@@ -74,10 +71,10 @@ public interface IDao<T> {
 	/**
 	 * 修改方法
 	 *
-	 * @param updateWrapper
+	 * @param wrapper
 	 * @return
 	 */
-	public int update(UpdateWrapper updateWrapper);
+	public int update(Wrapper wrapper);
 
 	/**
 	 * 删除方法
@@ -89,10 +86,10 @@ public interface IDao<T> {
 	/**
 	 * 删除方法
 	 * 
-	 * @param deleteWrapper
+	 * @param wrapper
 	 * @return
 	 */
-	public int delete(DeleteWrapper deleteWrapper);
+	public int delete(Wrapper wrapper);
 
 	/**
 	 * 批量添加
@@ -115,44 +112,44 @@ public interface IDao<T> {
 	/**
 	 * 查询List<Map<String,Object>>结果集
 	 *
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @return
 	 */
-	public List<Map<String, Object>> selectMaps(SelectWrapper selectWrapper);
+	public List<Map<String, Object>> selectMaps(Wrapper wrapper);
 
 	/**
 	 * 查询列表
 	 *
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @param <T>
 	 * @return
 	 */
-	public <T> List<T> selectList(SelectWrapper selectWrapper);
+	public <T> List<T> selectList(Wrapper wrapper);
 
 	/**
 	 * 查询数量
 	 *
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @return
 	 */
-	public int selectCount(SelectWrapper selectWrapper);
+	public int selectCount(Wrapper wrapper);
 
 	/**
 	 * 查询分页
 	 * 
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @param page
 	 * @return
 	 */
-	public Page<Map<String, Object>> selectMapPage(SelectWrapper selectWrapper, Page<Map<String, Object>> page);
+	public Page<Map<String, Object>> selectMapPage(Wrapper wrapper, Page<Map<String, Object>> page);
 
 	/**
 	 * 查询分页
 	 *
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @param page
 	 * @return
 	 */
-	public Page selectPage(SelectWrapper selectWrapper, Page page);
+	public Page selectPage(Wrapper wrapper, Page page);
 
 }

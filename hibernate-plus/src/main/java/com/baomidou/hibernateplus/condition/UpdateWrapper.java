@@ -22,7 +22,6 @@
  */
 package com.baomidou.hibernateplus.condition;
 
-import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,7 +56,7 @@ public class UpdateWrapper extends Wrapper {
 
 	/**
 	 * 一次赋值
-	 * 
+	 *
 	 * @param key
 	 * @param value
 	 * @return
@@ -69,7 +68,7 @@ public class UpdateWrapper extends Wrapper {
 
 	/**
 	 * 多次赋值
-	 * 
+	 *
 	 * @param setMap
 	 * @return
 	 */
@@ -80,9 +79,10 @@ public class UpdateWrapper extends Wrapper {
 
 	/**
 	 * 获取setMap
-	 * 
+	 *
 	 * @return
 	 */
+	@Override
 	public Map<String, String> getSetMap() {
 		return setMap;
 	}
@@ -102,12 +102,5 @@ public class UpdateWrapper extends Wrapper {
 
 		return sqlWhere;
 	}
-	public static class Builder {
 
-
-		public UpdateWrapper build() {
-			return new JacksonConfig(pretty, dateFormat, charset, exclude, include, nonNull,numberToString);
-		}
-
-	}
 }

@@ -26,13 +26,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import com.baomidou.hibernateplus.condition.DeleteWrapper;
-import com.baomidou.hibernateplus.condition.SelectWrapper;
-import com.baomidou.hibernateplus.condition.UpdateWrapper;
+import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
 import com.baomidou.hibernateplus.entity.Convert;
 import com.baomidou.hibernateplus.entity.page.Page;
-import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
-import net.sf.jsqlparser.statement.select.Select;
 
 /**
  * <p>
@@ -75,12 +71,12 @@ public interface IService<V extends Convert> {
 	public void update(V vo);
 
 	/**
-	 * 根据UpdateWrapper修改
+	 * 根据Wrapper修改
 	 *
-	 * @param updateWrapper
+	 * @param wrapper
 	 * @return
 	 */
-	boolean update(UpdateWrapper updateWrapper);
+	boolean update(Wrapper wrapper);
 
 	/**
 	 * 删除
@@ -92,10 +88,10 @@ public interface IService<V extends Convert> {
 	/**
 	 * 根据Wrapper删除
 	 *
-	 * @param deleteWrapper
+	 * @param wrapper
 	 * @return
 	 */
-	boolean delete(DeleteWrapper deleteWrapper);
+	boolean delete(Wrapper wrapper);
 
 	/**
 	 * 批量插入
@@ -134,51 +130,51 @@ public interface IService<V extends Convert> {
 	/**
 	 * 获取单个对象
 	 *
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @return
 	 */
-	public V selectOne(SelectWrapper selectWrapper);
+	public V selectOne(Wrapper wrapper);
 
 	/**
 	 * 查询列表
 	 *
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @return
 	 */
-	public List<V> selectList(SelectWrapper selectWrapper);
+	public List<V> selectList(Wrapper wrapper);
 
 	/**
 	 * 查询列表
 	 *
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @return
 	 */
-	public List<Map<String, Object>> selectMaps(SelectWrapper selectWrapper);
+	public List<Map<String, Object>> selectMaps(Wrapper wrapper);
 
 	/**
 	 * 查询数量
 	 *
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @return
 	 */
-	public int selectCount(SelectWrapper selectWrapper);
+	public int selectCount(Wrapper wrapper);
 
 	/**
 	 * 查询分页
 	 * 
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @param page
 	 * @return
 	 */
-	public Page<V> selectPage(SelectWrapper selectWrapper, Page<V> page);
+	public Page<V> selectPage(Wrapper wrapper, Page<V> page);
 
 	/**
 	 * 查询分页
 	 * 
-	 * @param selectWrapper
+	 * @param wrapper
 	 * @param page
 	 * @return
 	 */
-	public Page<Map<String, Object>> selectMapPage(SelectWrapper selectWrapper, Page<Map<String, Object>> page);
+	public Page<Map<String, Object>> selectMapPage(Wrapper wrapper, Page<Map<String, Object>> page);
 
 }
