@@ -38,11 +38,15 @@
         <java.version>1.6</java.version>
         <!-- dependency -->
         <springframework.version>4.3.3.RELEASE</springframework.version>
+        <commons.dbcp2.version>2.1.1</commons.dbcp2.version>
+        <commons.pool2.version>2.4.2</commons.pool2.version>
         <jsqlparser.version>0.9.6</jsqlparser.version>
         <hibernate.version>5.1.0.Final</hibernate.version>
         <freemarker.version>2.3.23</freemarker.version>
         <mysql.connector.version>5.1.39</mysql.connector.version>
         <junit.version>4.12</junit.version>
+        <jboss.transaction.version>1.0.1.Final</jboss.transaction.version>
+        <jboss.logging.version>3.3.0.Final</jboss.logging.version>
         <!--maven plugin-->
         <maven.compiler.version>2.3.2</maven.compiler.version>
         <maven.source.version>2.2.1</maven.source.version>
@@ -50,6 +54,33 @@
     </properties>
 
     <dependencies>
+        <!--hibernate-->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+        <!--jboss-->
+        <dependency>
+            <groupId>org.jboss.spec.javax.transaction</groupId>
+            <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+            <version>${jboss.transaction.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>${jboss.logging.version}</version>
+        </dependency>
         <!--spring-->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -80,29 +111,7 @@
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>${freemarker.version}</version>
-        </dependency>
-        <!--mysql-connector-->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>${mysql.connector.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!--hibernate-->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>${hibernate.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${hibernate.version}</version>
+            <scope>provided</scope>
         </dependency>
         <!--jsqlparser-->
         <dependency>
@@ -110,6 +119,38 @@
             <artifactId>jsqlparser</artifactId>
             <version>${jsqlparser.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <!--test-->
+        <!--mysql-connector-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.connector.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+            <version>${commons.dbcp2.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <version>${commons.pool2.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+            <version>2.1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <version>2.4.2</version>
+            <scope>test</scope>
         </dependency>
         <!--junit-->
         <dependency>

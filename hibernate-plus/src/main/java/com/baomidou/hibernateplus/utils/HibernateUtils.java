@@ -351,8 +351,8 @@ public class HibernateUtils {
 	 * @param factory
 	 * @return
 	 */
-	public static Query getEntitySqlQuery(Class<? extends Convert> cls, String sql, SessionFactory factory) {
-		return getSqlQuery(cls, sql, factory);
+	public static Query getEntitySqlQuery(Class<? extends Convert> cls, String sql, SessionFactory factory, Boolean isCurrent) {
+		return getSqlQuery(cls, sql, factory, isCurrent);
 	}
 
 	/**
@@ -362,9 +362,9 @@ public class HibernateUtils {
 	 * @param factory
 	 * @return
 	 */
-	public static Query getSqlQuery(Class<? extends Convert> cls, String sql, SessionFactory factory) {
+	public static Query getSqlQuery(Class<? extends Convert> cls, String sql, SessionFactory factory, Boolean isCurrent) {
 		logger.debug("Execute SQL：" + SqlUtils.sqlFormat(sql, true));
-		SQLQuery sqlQuery = getCurrentSession(factory).createSQLQuery(sql);
+		SQLQuery sqlQuery = getSession(factory, isCurrent).createSQLQuery(sql);
 		if (cls != null) {
 			sqlQuery.addEntity(cls);
 		}
@@ -378,8 +378,8 @@ public class HibernateUtils {
 	 * @param factory
 	 * @return
 	 */
-	public static Query getSqlQuery(String sql, SessionFactory factory) {
-		return getSqlQuery(null, sql, factory);
+	public static Query getSqlQuery(String sql, SessionFactory factory, Boolean isCurrent) {
+		return getSqlQuery(null, sql, factory, isCurrent);
 	}
 
 	/**
@@ -387,11 +387,13 @@ public class HibernateUtils {
 	 *
 	 * @param hql
 	 * @param factory
+	 * @param isCurrent
+	 *            是否为当前事务的session
 	 * @return
 	 */
-	public static Query getHqlQuery(String hql, SessionFactory factory) {
+	public static Query getHqlQuery(String hql, SessionFactory factory, Boolean isCurrent) {
 		logger.debug("Execute HQL：" + SqlUtils.sqlFormat(hql, true));
-		return getCurrentSession(factory).createQuery(hql);
+		return getSession(factory, isCurrent).createQuery(hql);
 	}
 
 	/**
@@ -400,8 +402,16 @@ public class HibernateUtils {
 	 * @param factory
 	 * @return
 	 */
-	public static Session getCurrentSession(SessionFactory factory) {
-		return factory.getCurrentSession();
+	/**
+	 * 获取Session
+	 * 
+	 * @param factory
+	 * @param isCurrent
+	 *            是否为当前事务的session
+	 * @return
+	 */
+	public static Session getSession(SessionFactory factory, Boolean isCurrent) {
+		return isCurrent ? factory.getCurrentSession() : factory.openSession();
 	}
 
 }
