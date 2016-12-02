@@ -22,17 +22,6 @@
  */
 package com.baomidou.hibernateplus.utils;
 
-import com.baomidou.hibernateplus.entity.EntityFieldInfo;
-import com.baomidou.hibernateplus.entity.EntityInfo;
-import com.baomidou.hibernateplus.enums.Setting;
-import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
-import org.hibernate.SessionFactory;
-import org.jboss.logging.Logger;
-
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -42,6 +31,19 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.hibernate.SessionFactory;
+import org.jboss.logging.Logger;
+
+import com.baomidou.hibernateplus.entity.EntityFieldInfo;
+import com.baomidou.hibernateplus.entity.EntityInfo;
+import com.baomidou.hibernateplus.enums.Setting;
+import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 
 /**
  * <p>

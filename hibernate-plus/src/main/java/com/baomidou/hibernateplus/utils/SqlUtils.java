@@ -193,12 +193,12 @@ public class SqlUtils {
 				}
 			}
 			return String.format(SqlUtils.SQL_LIST, StringUtils.isBlank(sqlSelect) ? select : sqlSelect, tableName,
-					StringUtils.isNotBlank(wrapper.getSqlSegment()) ? wrapper.getSqlSegment() : StringUtils.EMPTY_STRING);
+					StringUtils.isNotBlank(wrapper.getSqlSegment()) ? wrapper.getSqlSegment() : StringUtils.EMPTY);
 		}
 		if (page != null) {
-			return concatOrderBy(String.format(SqlUtils.SQL_LIST, select, tableName, StringUtils.EMPTY_STRING), page);
+			return concatOrderBy(String.format(SqlUtils.SQL_LIST, select, tableName, StringUtils.EMPTY), page);
 		}
-		return String.format(SqlUtils.SQL_LIST, select, tableName, StringUtils.EMPTY_STRING);
+		return String.format(SqlUtils.SQL_LIST, select, tableName, StringUtils.EMPTY);
 
 	}
 
@@ -219,7 +219,7 @@ public class SqlUtils {
 		if (wrapper != null) {
 			return String.format(SqlUtils.SQL_COUNT, tableName, wrapper.getSqlSegment());
 		}
-		return String.format(SqlUtils.SQL_COUNT, tableName, StringUtils.EMPTY_STRING);
+		return String.format(SqlUtils.SQL_COUNT, tableName, StringUtils.EMPTY);
 	}
 
 	/**
@@ -250,7 +250,7 @@ public class SqlUtils {
 		if (wrapper != null) {
 			return String.format(SqlUtils.SQL_DELETE, tableName, wrapper.getSqlSegment());
 		}
-		return String.format(SqlUtils.SQL_DELETE, tableName, StringUtils.EMPTY_STRING);
+		return String.format(SqlUtils.SQL_DELETE, tableName, StringUtils.EMPTY);
 	}
 
 	/**
@@ -280,7 +280,7 @@ public class SqlUtils {
 		if (wrapper != null) {
 			return String.format(SqlUtils.SQL_UPDATE, tableName, builder.toString(), wrapper.getSqlSegment());
 		}
-		return String.format(SqlUtils.SQL_UPDATE, tableName, builder.toString(), StringUtils.EMPTY_STRING);
+		return String.format(SqlUtils.SQL_UPDATE, tableName, builder.toString(), StringUtils.EMPTY);
 	}
 
 	/**

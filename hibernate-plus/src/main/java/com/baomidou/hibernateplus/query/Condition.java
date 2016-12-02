@@ -54,7 +54,7 @@ public class Condition extends Wrapper {
 		 */
 		String sqlWhere = sql.toString();
 		if (StringUtils.isBlank(sqlWhere)) {
-			return null;
+			return StringUtils.EMPTY;
 		}
 
 		return sqlWhere;

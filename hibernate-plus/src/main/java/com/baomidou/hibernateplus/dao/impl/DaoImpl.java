@@ -22,6 +22,19 @@
  */
 package com.baomidou.hibernateplus.dao.impl;
 
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.transform.Transformers;
+import org.jboss.logging.Logger;
+
 import com.baomidou.hibernateplus.dao.IDao;
 import com.baomidou.hibernateplus.entity.Convert;
 import com.baomidou.hibernateplus.entity.page.Page;
@@ -36,18 +49,6 @@ import com.baomidou.hibernateplus.utils.RandomUtils;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
 import com.baomidou.hibernateplus.utils.SqlUtils;
 import com.baomidou.hibernateplus.utils.StringUtils;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.transform.Transformers;
-import org.jboss.logging.Logger;
-
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * <p>
@@ -372,7 +373,7 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	 * @return
 	 */
 	public List<T> queryList(int page, int rows, String property, Object value) {
-		return queryList(page, rows, StringUtils.EMPTY_STRING, property, value);
+		return queryList(page, rows, StringUtils.EMPTY, property, value);
 	}
 
 	/**
@@ -385,7 +386,7 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	 * @return
 	 */
 	public List<T> queryList(int page, int rows, String[] property, Object... value) {
-		return queryList(0, 0, StringUtils.EMPTY_STRING, property, value);
+		return queryList(0, 0, StringUtils.EMPTY, property, value);
 	}
 
 	/**
@@ -503,7 +504,7 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	 * @return
 	 */
 	public List<T> queryList(Map<String, Object> params) {
-		return queryList(params, StringUtils.EMPTY_STRING);
+		return queryList(params, StringUtils.EMPTY);
 
 	}
 
@@ -551,7 +552,7 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	 * @return
 	 */
 	public List<T> queryList(int page, int rows, Map<String, Object> map) {
-		return queryList(page, rows, map, StringUtils.EMPTY_STRING);
+		return queryList(page, rows, map, StringUtils.EMPTY);
 	}
 
 	/**

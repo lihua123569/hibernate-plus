@@ -130,7 +130,7 @@ public class TypeConvert {
 	 * @return
 	 */
 	public static BigDecimal toBigDecimal(Object obj, BigDecimal defaults) {
-		return StringUtils.EMPTY_STRING.equals(StringUtils.toString(obj)) ? defaults : new BigDecimal(obj.toString());
+		return StringUtils.EMPTY.equals(StringUtils.toString(obj)) ? defaults : new BigDecimal(obj.toString());
 	}
 
 	/**
@@ -207,7 +207,7 @@ public class TypeConvert {
 	 * @return String
 	 */
 	public static String toString(Object obj) {
-		return toString(obj, StringUtils.EMPTY_STRING);
+		return toString(obj, StringUtils.EMPTY);
 	}
 
 	/**

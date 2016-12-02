@@ -45,7 +45,7 @@ public class StringUtils {
 	/**
 	 * 空字符串
 	 */
-	public static final String EMPTY_STRING = "";
+	public static final String EMPTY = "";
 	/**
 	 * 占位符
 	 */
@@ -119,7 +119,7 @@ public class StringUtils {
 	 */
 	public static String camelToUnderline(String param) {
 		if (isBlank(param)) {
-			return EMPTY_STRING;
+			return EMPTY;
 		}
 		int len = param.length();
 		StringBuilder sb = new StringBuilder(len);
@@ -144,7 +144,7 @@ public class StringUtils {
 	 */
 	public static String underlineToCamel(String param) {
 		if (isBlank(param)) {
-			return EMPTY_STRING;
+			return EMPTY;
 		}
 		int len = param.length();
 		StringBuilder sb = new StringBuilder(len);
@@ -290,7 +290,7 @@ public class StringUtils {
 	 */
 	public static String concatCapitalize(String concatStr, final String str) {
 		if (isBlank(concatStr)) {
-			concatStr = EMPTY_STRING;
+			concatStr = EMPTY;
 		}
 		int strLen;
 		if (str == null || (strLen = str.length()) == 0) {
@@ -353,7 +353,7 @@ public class StringUtils {
 	 * @return String
 	 */
 	public static String toString(Object obj) {
-		return StringUtils.toString(obj, StringUtils.EMPTY_STRING);
+		return StringUtils.toString(obj, StringUtils.EMPTY);
 	}
 
 	/**
@@ -363,7 +363,7 @@ public class StringUtils {
 	 * @return String
 	 */
 	public static String toString(Object obj, String defaults) {
-		return obj == null ? defaults : ((StringUtils.EMPTY_STRING.equals(obj.toString().trim())) ? defaults : obj.toString()
+		return obj == null ? defaults : ((StringUtils.EMPTY.equals(obj.toString().trim())) ? defaults : obj.toString()
 				.trim());
 	}
 

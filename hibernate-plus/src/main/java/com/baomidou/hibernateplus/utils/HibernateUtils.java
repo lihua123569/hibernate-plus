@@ -101,7 +101,7 @@ public class HibernateUtils {
 	 * @return
 	 */
 	public static String getListHql(Class clazz, String... property) {
-		return getListHql(StringUtils.EMPTY_STRING, clazz, property);
+		return getListHql(StringUtils.EMPTY, clazz, property);
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class HibernateUtils {
 	 * @return
 	 */
 	public static String getListHql(Class clazz, Map<String, Object> params) {
-		return getListHql(StringUtils.EMPTY_STRING, clazz, params);
+		return getListHql(StringUtils.EMPTY, clazz, params);
 	}
 
 	/**

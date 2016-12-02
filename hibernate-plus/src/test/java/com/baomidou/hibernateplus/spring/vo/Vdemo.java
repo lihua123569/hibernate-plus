@@ -1,11 +1,12 @@
 package com.baomidou.hibernateplus.spring.vo;
 
-import com.baomidou.hibernateplus.entity.Convert;
+import java.io.Serializable;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.io.Serializable;
+
+import com.baomidou.hibernateplus.entity.Convert;
 
 /**
  * <p>
