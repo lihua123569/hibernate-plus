@@ -57,7 +57,7 @@ import java.util.Set;
  * @author Caratacus
  * @date 2016-11-23
  */
-public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V> {
+public class DaoImpl<T extends Convert> implements IDao<T> {
 
 	private static final Logger logger = Logger.getLogger(DaoImpl.class);
 
@@ -347,8 +347,8 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @param value
 	 * @return
 	 */
-	public List<T> query(String property, Object value) {
-		return query(0, 0, property, value);
+	public List<T> queryList(String property, Object value) {
+		return queryList(0, 0, property, value);
 	}
 
 	/**
@@ -358,21 +358,8 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @param value
 	 * @return
 	 */
-	public List<T> query(String[] property, Object... value) {
-		return query(0, 0, property, value);
-	}
-
-	/**
-	 * 查询列表
-	 *
-	 * @param page
-	 * @param rows
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public List<T> query(int page, int rows, String property, Object value) {
-		return query(page, rows, StringUtils.EMPTY_STRING, property, value);
+	public List<T> queryList(String[] property, Object... value) {
+		return queryList(0, 0, property, value);
 	}
 
 	/**
@@ -384,32 +371,8 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @param value
 	 * @return
 	 */
-	public List<T> query(int page, int rows, String[] property, Object... value) {
-		return query(0, 0, StringUtils.EMPTY_STRING, property, value);
-	}
-
-	/**
-	 * 查询列表
-	 *
-	 * @param order
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public List<T> query(String order, String property, Object value) {
-		return query(0, 0, order, property, value);
-	}
-
-	/**
-	 * 查询列表
-	 *
-	 * @param order
-	 * @param property
-	 * @param value
-	 * @return
-	 */
-	public List<T> query(String order, String[] property, Object... value) {
-		return query(0, 0, order, property, value);
+	public List<T> queryList(int page, int rows, String property, Object value) {
+		return queryList(page, rows, StringUtils.EMPTY_STRING, property, value);
 	}
 
 	/**
@@ -417,13 +380,36 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 *
 	 * @param page
 	 * @param rows
+	 * @param property
+	 * @param value
+	 * @return
+	 */
+	public List<T> queryList(int page, int rows, String[] property, Object... value) {
+		return queryList(0, 0, StringUtils.EMPTY_STRING, property, value);
+	}
+
+	/**
+	 * 查询列表
+	 *
 	 * @param order
 	 * @param property
 	 * @param value
 	 * @return
 	 */
-	public List<T> query(int page, int rows, String order, String property, Object value) {
-		return query(page, rows, order, new String[] { property }, value);
+	public List<T> queryList(String order, String property, Object value) {
+		return queryList(0, 0, order, property, value);
+	}
+
+	/**
+	 * 查询列表
+	 *
+	 * @param order
+	 * @param property
+	 * @param value
+	 * @return
+	 */
+	public List<T> queryList(String order, String[] property, Object... value) {
+		return queryList(0, 0, order, property, value);
 	}
 
 	/**
@@ -436,7 +422,21 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @param value
 	 * @return
 	 */
-	public List<T> query(int page, int rows, String order, String[] property, Object... value) {
+	public List<T> queryList(int page, int rows, String order, String property, Object value) {
+		return queryList(page, rows, order, new String[] { property }, value);
+	}
+
+	/**
+	 * 查询列表
+	 *
+	 * @param page
+	 * @param rows
+	 * @param order
+	 * @param property
+	 * @param value
+	 * @return
+	 */
+	public List<T> queryList(int page, int rows, String order, String[] property, Object... value) {
 		List<T> list = Collections.emptyList();
 		try {
 			String hql = HibernateUtils.getListHql(order, toClass(), property);
@@ -460,8 +460,8 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @param order
 	 * @return
 	 */
-	public List<T> query(String order) {
-		return query(Collections.EMPTY_MAP, order);
+	public List<T> queryList(String order) {
+		return queryList(Collections.EMPTY_MAP, order);
 	}
 
 	/**
@@ -472,8 +472,8 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @param rows
 	 * @return
 	 */
-	public List<T> query(String order, int page, int rows) {
-		return query(page, rows, Collections.EMPTY_MAP, order);
+	public List<T> queryList(String order, int page, int rows) {
+		return queryList(page, rows, Collections.EMPTY_MAP, order);
 	}
 
 	/**
@@ -481,8 +481,8 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 *
 	 * @return
 	 */
-	public List<T> query() {
-		return query(Collections.EMPTY_MAP);
+	public List<T> queryList() {
+		return queryList(Collections.EMPTY_MAP);
 	}
 
 	/**
@@ -492,8 +492,8 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @param rows
 	 * @return
 	 */
-	public List<T> query(int page, int rows) {
-		return query(page, rows, Collections.EMPTY_MAP, null);
+	public List<T> queryList(int page, int rows) {
+		return queryList(page, rows, Collections.EMPTY_MAP, null);
 	}
 
 	/**
@@ -502,8 +502,8 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @param params
 	 * @return
 	 */
-	public List<T> query(Map<String, Object> params) {
-		return query(params, StringUtils.EMPTY_STRING);
+	public List<T> queryList(Map<String, Object> params) {
+		return queryList(params, StringUtils.EMPTY_STRING);
 
 	}
 
@@ -514,8 +514,8 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @param order
 	 * @return
 	 */
-	public List<T> query(Map<String, Object> params, String order) {
-		return query(0, 0, params, order);
+	public List<T> queryList(Map<String, Object> params, String order) {
+		return queryList(0, 0, params, order);
 	}
 
 	/**
@@ -527,7 +527,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @param order
 	 * @return
 	 */
-	public List<T> query(int page, int rows, Map<String, Object> params, String order) {
+	public List<T> queryList(int page, int rows, Map<String, Object> params, String order) {
 		List<T> list = Collections.emptyList();
 		try {
 			String hql = HibernateUtils.getListHql(order, toClass(), params);
@@ -550,8 +550,8 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @param map
 	 * @return
 	 */
-	public List<T> query(int page, int rows, Map<String, Object> map) {
-		return query(page, rows, map, StringUtils.EMPTY_STRING);
+	public List<T> queryList(int page, int rows, Map<String, Object> map) {
+		return queryList(page, rows, map, StringUtils.EMPTY_STRING);
 	}
 
 	/**
@@ -1034,8 +1034,8 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @param value
 	 * @return
 	 */
-	public List<Map<String, Object>> queryMapsWithClass(String property, Object value) {
-		return queryMapsWithClass(new String[] { property }, value);
+	public List<Map<String, Object>> queryMaps(String property, Object value) {
+		return queryMaps(new String[] { property }, value);
 	}
 
 	/**
@@ -1045,7 +1045,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @param value
 	 * @return
 	 */
-	public List<Map<String, Object>> queryMapsWithClass(String[] property, Object... value) {
+	public List<Map<String, Object>> queryMaps(String[] property, Object... value) {
 		List<Map<String, Object>> list = Collections.emptyList();
 		try {
 			String hql = HibernateUtils.getListHql(toClass(), property);
@@ -1072,7 +1072,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 
-	public List<Map<String, Object>> queryMapWithClass(Map<String, Object> map) {
+	public List<Map<String, Object>> queryMaps(Map<String, Object> map) {
 		List<Map<String, Object>> list = Collections.emptyList();
 		try {
 			String hql = HibernateUtils.getListHql(toClass(), map);
@@ -1117,15 +1117,6 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 */
 	protected Class<T> toClass() {
 		return ReflectionKit.getSuperClassGenricType(getClass(), 0);
-	}
-
-	/**
-	 * 获取voClass
-	 *
-	 * @return
-	 */
-	protected Class<V> voClass() {
-		return ReflectionKit.getSuperClassGenricType(getClass(), 1);
 	}
 
 	/**

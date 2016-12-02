@@ -22,12 +22,12 @@
  */
 package com.baomidou.hibernateplus.dao;
 
+import com.baomidou.hibernateplus.entity.page.Page;
+import com.baomidou.hibernateplus.query.Wrapper;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-
-import com.baomidou.hibernateplus.entity.page.Page;
-import com.baomidou.hibernateplus.query.Wrapper;
 
 /**
  * <p>
@@ -37,7 +37,7 @@ import com.baomidou.hibernateplus.query.Wrapper;
  * @author Caratacus
  * @date 2016-11-23
  */
-public interface IDao<T, V> {
+public interface IDao<T> {
 	/**
 	 * 根据id获取对象
 	 *
