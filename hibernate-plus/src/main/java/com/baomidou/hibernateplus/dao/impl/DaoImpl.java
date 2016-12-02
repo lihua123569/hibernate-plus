@@ -60,16 +60,6 @@ import java.util.Set;
 public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V> {
 
 	private static final Logger logger = Logger.getLogger(DaoImpl.class);
-	/* 反射TO泛型 */
-	protected Class<T> toCls = null;
-
-	/* 反射VO泛型 */
-	protected Class<V> voCls = null;
-
-	/* SessionFactory */
-	protected SessionFactory sessionFactory = null;
-	/* 是否获取当前事务session */
-	protected Boolean current = true;
 
 	/**
 	 * 获取masterSession
@@ -77,9 +67,6 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected SessionFactory masterSession() {
-		if (sessionFactory != null) {
-			return sessionFactory;
-		}
 		return EntityInfoUtils.getEntityInfo(toClass()).getMaster();
 	}
 
@@ -1129,9 +1116,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected Class<T> toClass() {
-		if (toCls == null)
-			toCls = ReflectionKit.getSuperClassGenricType(getClass(), 0);
-		return toCls;
+		return ReflectionKit.getSuperClassGenricType(getClass(), 0);
 	}
 
 	/**
@@ -1140,10 +1125,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected Class<V> voClass() {
-		if (voCls == null) {
-			voCls = ReflectionKit.getSuperClassGenricType(getClass(), 1);
-		}
-		return voCls;
+		return ReflectionKit.getSuperClassGenricType(getClass(), 1);
 	}
 
 	/**
@@ -1152,7 +1134,7 @@ public class DaoImpl<T extends Convert, V extends Convert> implements IDao<T, V>
 	 * @return
 	 */
 	protected Boolean isCurrent() {
-		return current;
+		return true;
 	}
 
 }

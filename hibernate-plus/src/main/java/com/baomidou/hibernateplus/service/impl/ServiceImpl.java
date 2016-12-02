@@ -22,13 +22,6 @@
  */
 package com.baomidou.hibernateplus.service.impl;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
-
-import org.jboss.logging.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.baomidou.hibernateplus.converter.BeanConverter;
 import com.baomidou.hibernateplus.dao.IDao;
 import com.baomidou.hibernateplus.entity.Convert;
@@ -38,6 +31,12 @@ import com.baomidou.hibernateplus.query.Wrapper;
 import com.baomidou.hibernateplus.service.IService;
 import com.baomidou.hibernateplus.utils.CollectionUtils;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
+import org.jboss.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -50,12 +49,6 @@ import com.baomidou.hibernateplus.utils.ReflectionKit;
 public class ServiceImpl<T extends Convert, V extends Convert> implements IService<V> {
 
 	private static final Logger logger = Logger.getLogger(ServiceImpl.class);
-
-	/* 反射TO泛型 */
-	protected Class<T> toCls = null;
-
-	/* 反射VO泛型 */
-	protected Class<V> voCls = null;
 
 	@Autowired
 	protected IDao<T, V> baseDao;
@@ -207,9 +200,7 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	 * @return
 	 */
 	protected Class<T> toClass() {
-		if (toCls == null)
-			toCls = ReflectionKit.getSuperClassGenricType(getClass(), 0);
-		return toCls;
+		return ReflectionKit.getSuperClassGenricType(getClass(), 0);
 	}
 
 	/**
@@ -218,10 +209,7 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	 * @return
 	 */
 	protected Class<V> voClass() {
-		if (voCls == null) {
-			voCls = ReflectionKit.getSuperClassGenricType(getClass(), 1);
-		}
-		return voCls;
+		return ReflectionKit.getSuperClassGenricType(getClass(), 1);
 	}
 
 }
