@@ -22,6 +22,13 @@
  */
 package com.baomidou.hibernateplus.service.impl;
 
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+
+import org.jboss.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.baomidou.hibernateplus.converter.BeanConverter;
 import com.baomidou.hibernateplus.dao.IDao;
 import com.baomidou.hibernateplus.entity.Convert;
@@ -31,12 +38,6 @@ import com.baomidou.hibernateplus.query.Wrapper;
 import com.baomidou.hibernateplus.service.IService;
 import com.baomidou.hibernateplus.utils.CollectionUtils;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
-import org.jboss.logging.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -51,7 +52,7 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	private static final Logger logger = Logger.getLogger(ServiceImpl.class);
 
 	@Autowired
-	protected IDao<T, V> baseDao;
+	protected IDao<T> baseDao;
 
 	@Override
 	public V get(Serializable id) {
