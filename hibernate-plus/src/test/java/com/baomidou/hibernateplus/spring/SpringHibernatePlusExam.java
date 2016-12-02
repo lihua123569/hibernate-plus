@@ -38,7 +38,7 @@ public class SpringHibernatePlusExam {
 		hibernateProperties.put("hibernate.format_sql", false);
 		hibernateProperties.put("hibernate.use_sql_comments", true);
 		sessionFactoryBean.setHibernateProperties(hibernateProperties);
-		sessionFactoryBean.setPackagesToScan("com.baomidou.spring.spring.po");
+		sessionFactoryBean.setPackagesToScan("com.baomidou.hibernateplus.spring.po");
 		try {
 			sessionFactoryBean.afterPropertiesSet();
 		} catch (Exception e) {

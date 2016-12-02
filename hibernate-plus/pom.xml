@@ -47,6 +47,8 @@
         <junit.version>4.12</junit.version>
         <jboss.transaction.version>1.0.1.Final</jboss.transaction.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
+        <slf4j.version>1.7.21</slf4j.version>
+        <log4j2.version>2.6.2</log4j2.version>
         <!--maven plugin-->
         <maven.compiler.version>2.3.2</maven.compiler.version>
         <maven.source.version>2.2.1</maven.source.version>
@@ -158,6 +160,31 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+        <!--slf4j-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j2.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>

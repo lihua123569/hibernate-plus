@@ -1071,7 +1071,6 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	 * @param map
 	 * @return
 	 */
-
 	public List<Map<String, Object>> queryMaps(Map<String, Object> map) {
 		List<Map<String, Object>> list = Collections.emptyList();
 		try {
