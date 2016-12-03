@@ -156,7 +156,7 @@ public class RandomUtils {
 	 * @return
 	 */
 	public static String getRandNumber(int n) {
-		String random = null;
+		String random = StringUtils.EMPTY;
 		if (n > 0 && n < 10) {
 			StringBuilder builder = new StringBuilder();
 			for (int i = 0; i < n; i++) {

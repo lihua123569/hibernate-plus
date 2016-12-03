@@ -142,8 +142,21 @@ public class EntityInfoUtils {
 		entityInfo.setFieldInfos(fieldInfos);
 		// 设置默认主键
 		if (StringUtils.isBlank(entityInfo.getKeyProperty())) {
-			entityInfo.setKeyProperty(DEFAULT_ID_NAME);
-			entityInfo.setKeyColumn(DEFAULT_ID_NAME);
+			Iterator<EntityFieldInfo> iterator = fieldInfos.iterator();
+			while (iterator.hasNext()) {
+				EntityFieldInfo fieldInfo = iterator.next();
+				String column = fieldInfo.getColumn();
+				// 如果没有主键,数据库字段为ID则设置为默认主键
+				if (DEFAULT_ID_NAME.equals(column)) {
+					entityInfo.setKeyColumn(DEFAULT_ID_NAME);
+					entityInfo.setKeyProperty(fieldInfo.getProperty());
+                    iterator.remove();
+                    break;
+				}
+			}
+			if (StringUtils.isBlank(entityInfo.getKeyProperty())) {
+				logger.warn(String.format("Warn: Don't have a primary key %s", clazz.getSimpleName()));
+			}
 		}
 
 		/*

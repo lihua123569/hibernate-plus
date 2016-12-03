@@ -69,14 +69,14 @@ public class EntityInfo {
 	 * Master SessionFactory
 	 */
 	private SessionFactory master;
+	public String getTableName() {
+		return tableName;
+	}
+
 	/**
 	 * Slave SessionFactory
 	 */
 	private Set<SessionFactory> slaves;
-
-	public String getTableName() {
-		return tableName;
-	}
 
 	public void setTableName(String tableName) {
 		this.tableName = tableName;
