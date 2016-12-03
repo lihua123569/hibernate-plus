@@ -253,10 +253,7 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 					Transformers.ALIAS_TO_ENTITY_MAP);
 			HibernateUtils.setPage(page.getCurrent(), page.getSize(), query);
 			page.setRecords(query.list());
-			String sqlCount = SqlUtils.sqlCountOptimize(sql);
-			Query countQuery = HibernateUtils.getSqlQuery(sqlCount, slaveSession(), isCurrent());
-			BigInteger bigInteger = (BigInteger) countQuery.uniqueResult();
-			page.setTotal(bigInteger.intValue());
+			setPageTotal(sql, page);
 		} catch (Exception e) {
 			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
@@ -270,10 +267,7 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 			Query query = HibernateUtils.getEntitySqlQuery(toClass(), sql, slaveSession(), isCurrent());
 			HibernateUtils.setPage(page.getCurrent(), page.getSize(), query);
 			page.setRecords(query.list());
-			String sqlcount = SqlUtils.sqlCountOptimize(sql);
-			Query countQuery = HibernateUtils.getSqlQuery(sqlcount, slaveSession(), isCurrent());
-			BigInteger bigInteger = (BigInteger) countQuery.uniqueResult();
-			page.setTotal(bigInteger.intValue());
+			setPageTotal(sql, page);
 		} catch (Exception e) {
 			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
@@ -702,6 +696,21 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 		}
 		return list;
 
+	}
+
+	/**
+	 * 设置Page total值
+	 *
+	 * @param sql
+	 * @param page
+	 */
+	private void setPageTotal(String sql, Page<Map<String, Object>> page) {
+		if (page.isSearchCount()) {
+			String sqlCount = SqlUtils.sqlCountOptimize(sql);
+			Query countQuery = HibernateUtils.getSqlQuery(sqlCount, slaveSession(), isCurrent());
+			BigInteger bigInteger = (BigInteger) countQuery.uniqueResult();
+			page.setTotal(bigInteger.intValue());
+		}
 	}
 
 	/**
