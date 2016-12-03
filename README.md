@@ -141,22 +141,24 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
 
 ###DAO层
 
-	public interface DemoDao extends IDao<Tdemo, Vdemo> {
-	
+	/*Dao接口类*/
+	public interface DemoDao extends IDao<Tdemo> {
+
 	}
 
-	@Repository
-	public class DemoDaoImpl extends DaoImpl<Tdemo, Vdemo> implements DemoDao {
-	
+	/*Dao接口实现类*/
+	public class DemoDaoImpl extends DaoImpl<Tdemo> implements DemoDao {
+
 	}
 
 ###Service层
-
+	
+	/*Service接口类*/
 	public interface DemoService extends IService<Vdemo> {
 
 	}
 
-	@Service
+	/*Service接口实现类*/
 	public class DemoServiceImpl extends ServiceImpl<Tdemo, Vdemo> implements DemoService {
 	
 	}
@@ -228,55 +230,49 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
 		// 批量插入
 		boolean insertBatch = demoService.insertBatch(lists);
 		System.out.println(insertBatch);
-		// 查询数量
-		int selectCount = demoService.selectCount();
-		System.out.println(selectCount);
 		// Condition 链式查询列表
-		List<Vdemo> vdemoList = demoService.selectList(Condition.instance().le("id", 10));
+		List<Vdemo> vdemoList = demoService.selectList(SelectWrapper.instance().le("id", 10));
 		System.out.println(vdemoList);
 		Map map = new HashMap<>();
 		map.put("id", 99L);
-		// 根据Map查询数量
-		int count = demoService.selectCount(map);
-		System.out.println(count);
-		// 根据普通属性查询数量
-		int selectCount1 = demoService.selectCount("demo1", "20");
-		System.out.println(selectCount1);
 		// 根据Condition 查询单条记录
-		Vdemo vdemo = demoService.selectOne(Condition.instance().eq("id", 10));
+		Vdemo vdemo = demoService.selectOne(SelectWrapper.instance().eq("id", 10));
 		System.out.println(vdemo);
-		List<Map<String, Object>> mapList = demoService.selectMaps(Condition.instance().ge("id", 80));
+		List<Map<String, Object>> mapList = demoService.selectMaps(SelectWrapper.instance().ge("id", 80));
 		System.out.println(mapList);
 		// 根据属性查询单条记录
-		Vdemo vdemo1 = demoService.get("id", "1");
-		vdemo1.setDemo1("999");
-		vdemo1.setDemo2("999");
-		vdemo1.setDemo3("999");
-		// 修改或保存
-		demoService.saveOrUpdate(vdemo1);
-		Vdemo vdemo2 = demoService.get("id", "1");
-		vdemo2.setId(null);
-		demoService.saveOrUpdate(vdemo2);
-		int selectCount2 = demoService.selectCount(Condition.instance().ge("id", 80));
+		Vdemo vdemo1 = demoService.get("1");
+		if (vdemo1 != null) {
+			vdemo1.setDemo1("999");
+			vdemo1.setDemo2("999");
+			vdemo1.setDemo3("999");
+			// 修改或保存
+			demoService.saveOrUpdate(vdemo1);
+		}
+
+		Vdemo vdemo2 = demoService.get("1");
+		if (vdemo2 != null) {
+			vdemo2.setId(null);
+			demoService.saveOrUpdate(vdemo2);
+		}
+
+		int selectCount2 = demoService.selectCount(SelectWrapper.instance().ge("id", 80));
 		System.out.println(selectCount2);
 		Page page = new Page(1, 20);
 		page.setOrderByField("id");
 		page.setAsc(false);
 		// 查询分页
-		Page selectPage = demoService.selectPage(page);
+		Page selectPage = demoService.selectPage(SelectWrapper.DEFAULT, page);
 		System.out.println(selectPage);
 		// Condition链式查询分页返回Map
-		Page selectMapPage = demoService.selectMapPage(Condition.instance().ge("id", 50), page);
+		Page selectMapPage = demoService.selectMapPage(SelectWrapper.instance().ge("id", 50), page);
 		System.out.println(selectMapPage);
-		// 单属性查询分页
-		Page selectPage1 = demoService.selectPage(page, "id", 50);
-		System.out.println(selectPage1);
 		// Condition链式查询分页返回VO
-		Page selectPage2 = demoService.selectPage(Condition.instance().ge("id", 50), page);
+		Page selectPage2 = demoService.selectPage(SelectWrapper.instance().ge("id", 50), page);
 		System.out.println(selectPage2);
 		// Condition链式 删除单条记录
-		demoService.delete(Condition.instance().eq("id", 1));
-		List<Vdemo> vdemos = demoService.selectList(Condition.instance());
+		demoService.delete(DeleteWrapper.instance().eq("id", 1));
+		List<Vdemo> vdemos = demoService.selectList(SelectWrapper.instance());
 		Iterator<Vdemo> iterator = vdemos.iterator();
 		while (iterator.hasNext()) {
 			Vdemo vdemo3 = iterator.next();
@@ -287,7 +283,7 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
 		// 批量修改
 		demoService.updateBatch(vdemos);
 		// Condition链式 删除所有记录
-		demoService.delete(Condition.DEFAULT);
+		demoService.delete(DeleteWrapper.DEFAULT);
 
 		...
 
