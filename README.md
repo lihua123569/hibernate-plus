@@ -25,7 +25,7 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
 
 # 通用方法 | API
 
-![API说明](http://git.oschina.net/uploads/images/2016/1126/164243_7fc54d36_620321.png "API说明")
+![API说明](http://git.oschina.net/uploads/images/2016/1203/225540_e00cd750_620321.png "API说明")
 
 #优点?
 
