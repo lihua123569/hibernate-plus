@@ -22,11 +22,15 @@
  */
 package com.baomidou.hibernateplus.utils;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import com.baomidou.hibernateplus.condition.DeleteWrapper;
+import com.baomidou.hibernateplus.condition.SelectWrapper;
+import com.baomidou.hibernateplus.condition.UpdateWrapper;
+import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
+import com.baomidou.hibernateplus.entity.Convert;
+import com.baomidou.hibernateplus.entity.EntityInfo;
+import com.baomidou.hibernateplus.entity.page.Page;
+import com.baomidou.hibernateplus.entity.page.Pagination;
+import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.Function;
 import net.sf.jsqlparser.expression.LongValue;
@@ -38,18 +42,13 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectExpressionItem;
 import net.sf.jsqlparser.statement.select.SelectItem;
-
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
-import com.baomidou.hibernateplus.condition.DeleteWrapper;
-import com.baomidou.hibernateplus.condition.SelectWrapper;
-import com.baomidou.hibernateplus.condition.UpdateWrapper;
-import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
-import com.baomidou.hibernateplus.entity.Convert;
-import com.baomidou.hibernateplus.entity.EntityInfo;
-import com.baomidou.hibernateplus.entity.page.Page;
-import com.baomidou.hibernateplus.entity.page.Pagination;
-import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -282,6 +281,36 @@ public class SqlUtils {
 			return String.format(SqlUtils.SQL_DELETE, tableName, wrapper.toString());
 		}
 		return String.format(SqlUtils.SQL_DELETE, tableName, StringUtils.EMPTY);
+	}
+
+	/**
+	 * 获取删除sql
+	 *
+	 * @param clazz
+	 * @param id
+	 * @param <T>
+	 * @return
+	 */
+	public static <T extends Convert> String sqlDelete(Class<T> clazz, Serializable id) {
+		String tableName = getTableName(clazz);
+		String keyColumn = getPrimaryKey(clazz);
+		return String.format(SqlUtils.SQL_DELETE, tableName, DeleteWrapper.instance().eq(keyColumn, id).toString());
+	}
+
+	/**
+	 * 获取对象数据库主键
+	 * 
+	 * @param clazz
+	 * @param <T>
+	 * @return
+	 */
+	public static <T extends Convert> String getPrimaryKey(Class<T> clazz) {
+		EntityInfo entityInfo = EntityInfoUtils.getEntityInfo(clazz);
+		String keyColumn = entityInfo.getKeyColumn();
+		if (StringUtils.isBlank(keyColumn))
+			// 该表没有主键时抛出异常
+			throw new HibernatePlusException("The table does not have a primary key and can not perform operations!");
+		return keyColumn;
 	}
 
 	/**

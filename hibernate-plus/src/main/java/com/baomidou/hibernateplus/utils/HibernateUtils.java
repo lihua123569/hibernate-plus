@@ -257,7 +257,7 @@ public class HibernateUtils {
 	 * @return
 	 */
 	public static Query getSqlQuery(Class<? extends Convert> cls, String sql, SessionFactory factory, Boolean isCurrent) {
-		logger.debug("Execute SQL：" + SqlUtils.sqlFormat(sql, true));
+		System.err.println("Execute SQL：" + SqlUtils.sqlFormat(sql, true));
 		SQLQuery sqlQuery = getSession(factory, isCurrent).createSQLQuery(sql);
 		if (cls != null) {
 			sqlQuery.addEntity(cls);
@@ -286,7 +286,7 @@ public class HibernateUtils {
 	 * @return
 	 */
 	public static Query getHqlQuery(String hql, SessionFactory factory, Boolean isCurrent) {
-		logger.debug("Execute HQL：" + SqlUtils.sqlFormat(hql, true));
+		System.err.println("Execute HQL：" + SqlUtils.sqlFormat(hql, true));
 		return getSession(factory, isCurrent).createQuery(hql);
 	}
 

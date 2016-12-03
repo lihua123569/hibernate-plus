@@ -81,7 +81,7 @@ public interface IDao<T> {
 	 *
 	 * @param o
 	 */
-	public void delete(T o);
+	public boolean delete(T o);
 
 	/**
 	 * 删除方法
@@ -90,6 +90,14 @@ public interface IDao<T> {
 	 * @return
 	 */
 	public int delete(Wrapper wrapper);
+
+	/**
+	 * 根据主键删除
+	 *
+	 * @param id
+	 * @return
+	 */
+	public int delete(Serializable id);
 
 	/**
 	 * 批量添加
@@ -125,6 +133,14 @@ public interface IDao<T> {
 	 * @return
 	 */
 	public List<Map<String, Object>> selectMaps(Wrapper wrapper);
+
+	/**
+	 * 根据Wrapper查询单个对象
+	 * 
+	 * @param wrapper
+	 * @return
+	 */
+	public T selectOne(Wrapper wrapper);
 
 	/**
 	 * 查询列表

@@ -41,7 +41,7 @@ import com.baomidou.hibernateplus.entity.page.Page;
 public interface IService<V extends Convert> {
 
 	/**
-	 * 获取单个对象
+	 * 根据主键获取对象
 	 *
 	 * @param id
 	 * @return
@@ -83,7 +83,14 @@ public interface IService<V extends Convert> {
 	 *
 	 * @param vo
 	 */
-	public void delete(V vo);
+	public boolean delete(V vo);
+
+	/**
+	 * 根据主键删除
+	 *
+	 * @param id
+	 */
+	public boolean delete(Serializable id);
 
 	/**
 	 * 根据Wrapper删除

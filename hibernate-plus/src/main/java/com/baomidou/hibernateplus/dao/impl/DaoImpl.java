@@ -83,10 +83,23 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 		return RandomUtils.getRandomElement(slaves);
 	}
 
+	/**
+	 * 原生hibernate根据主键获取对象
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public T selectById(Serializable id) {
+		Assert.notNull(id);
+		return (T) HibernateUtils.getSession(slaveSession(), isCurrent()).get(toClass(), id);
+	}
+
 	@Override
 	public T get(Serializable id) {
 		Assert.notNull(id);
-		return (T) HibernateUtils.getSession(slaveSession(), isCurrent()).get(toClass(), id);
+		String primaryKey = SqlUtils.getPrimaryKey(toClass());
+		Wrapper wrapper = SelectWrapper.instance().eq(primaryKey, id);
+		return selectOne(wrapper);
 	}
 
 	/**
@@ -149,16 +162,28 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	}
 
 	@Override
-	public void delete(T t) {
+	public boolean delete(T t) {
 		Assert.notNull(t);
-		HibernateUtils.getSession(masterSession(), isCurrent()).delete(t);
+		try {
+			HibernateUtils.getSession(masterSession(), isCurrent()).delete(t);
+		} catch (Exception e) {
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public int delete(Wrapper wrapper) {
 		String sqlDelete = SqlUtils.sqlDelete(toClass(), wrapper);
 		return executeSqlUpdate(sqlDelete);
+	}
 
+	@Override
+	public int delete(Serializable id) {
+		Assert.notNull(id);
+		String sqlDelete = SqlUtils.sqlDelete(toClass(), id);
+		return executeSqlUpdate(sqlDelete);
 	}
 
 	@Override
@@ -218,6 +243,19 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 		}
 		return true;
 
+	}
+
+	@Override
+	public T selectOne(Wrapper wrapper) {
+		List<T> list = selectList(wrapper);
+		if (CollectionUtils.isNotEmpty(list)) {
+			int size = list.size();
+			if (size > 1) {
+				logger.warn(String.format("Warn: selectOne Method There are  %s results.", size));
+			}
+			return list.get(0);
+		}
+		return null;
 	}
 
 	@Override

@@ -35,7 +35,6 @@ import com.baomidou.hibernateplus.dao.IDao;
 import com.baomidou.hibernateplus.entity.Convert;
 import com.baomidou.hibernateplus.entity.page.Page;
 import com.baomidou.hibernateplus.service.IService;
-import com.baomidou.hibernateplus.utils.CollectionUtils;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
 
 /**
@@ -55,7 +54,8 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 
 	@Override
 	public V get(Serializable id) {
-		return baseDao.get(id) == null ? null : baseDao.get(id).convert(voClass());
+		T t = baseDao.get(id);
+		return t == null ? null : t.convert(voClass());
 	}
 
 	@Override
@@ -79,8 +79,13 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	}
 
 	@Override
-	public void delete(V vo) {
-		baseDao.delete(vo.convert(toClass()));
+	public boolean delete(V vo) {
+		return baseDao.delete(vo.convert(toClass()));
+	}
+
+	@Override
+	public boolean delete(Serializable id) {
+		return retBool(baseDao.delete(id));
 	}
 
 	@Override
@@ -120,15 +125,8 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 
 	@Override
 	public V selectOne(Wrapper wrapper) {
-		List<V> list = selectList(wrapper);
-		if (CollectionUtils.isNotEmpty(list)) {
-			int size = list.size();
-			if (size > 1) {
-				logger.warn(String.format("Warn: selectOne Method There are  %s results.", size));
-			}
-			return list.get(0);
-		}
-		return null;
+		T t = baseDao.selectOne(wrapper);
+		return t == null ? null : t.convert(voClass());
 	}
 
 	@Override
