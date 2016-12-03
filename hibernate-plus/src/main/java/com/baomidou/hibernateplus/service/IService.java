@@ -128,6 +128,23 @@ public interface IService<V extends Convert> {
 	public boolean updateBatch(List<V> list, int size);
 
 	/**
+	 * 批量新增或修改
+	 *
+	 * @param list
+	 * @return
+	 */
+	public boolean saveOrUpdateBatch(List<V> list);
+
+	/**
+	 * 批量新增或修改
+	 *
+	 * @param list
+	 * @param size
+	 * @return
+	 */
+	public boolean saveOrUpdateBatch(List<V> list, int size);
+
+	/**
 	 * 获取单个对象
 	 *
 	 * @param wrapper

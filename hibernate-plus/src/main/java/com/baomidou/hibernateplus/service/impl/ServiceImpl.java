@@ -109,6 +109,16 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	}
 
 	@Override
+	public boolean saveOrUpdateBatch(List<V> list) {
+		return baseDao.saveOrUpdateBatch(BeanConverter.convert(toClass(), list), 30);
+	}
+
+	@Override
+	public boolean saveOrUpdateBatch(List<V> list, int size) {
+		return baseDao.saveOrUpdateBatch(BeanConverter.convert(toClass(), list), size);
+	}
+
+	@Override
 	public V selectOne(Wrapper wrapper) {
 		List<V> list = selectList(wrapper);
 		if (CollectionUtils.isNotEmpty(list)) {

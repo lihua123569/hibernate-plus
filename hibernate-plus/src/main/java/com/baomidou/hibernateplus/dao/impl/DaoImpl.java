@@ -190,7 +190,26 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 		try {
 			Session session = HibernateUtils.getSession(masterSession(), isCurrent());
 			for (int i = 0; i < list.size(); i++) {
-				session.update(list.get(i));
+				session.merge(list.get(i));
+				if (i % size == 0) {
+					session.flush();
+					session.clear();
+				}
+			}
+		} catch (Exception e) {
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
+			return false;
+		}
+		return true;
+
+	}
+	@Override
+	public boolean saveOrUpdateBatch(List<T> list, int size) {
+		Assert.notEmpty(list);
+		try {
+			Session session = HibernateUtils.getSession(masterSession(), isCurrent());
+			for (int i = 0; i < list.size(); i++) {
+				session.saveOrUpdate(list.get(i));
 				if (i % size == 0) {
 					session.flush();
 					session.clear();

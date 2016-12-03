@@ -110,6 +110,15 @@ public interface IDao<T> {
 	public boolean updateBatch(List<T> list, int size);
 
 	/**
+	 * 批量修改
+	 *
+	 * @param list
+	 * @param size
+	 * @return
+	 */
+	public boolean saveOrUpdateBatch(List<T> list, int size);
+
+	/**
 	 * 查询List<Map<String,Object>>结果集
 	 *
 	 * @param wrapper
