@@ -41,6 +41,9 @@ import net.sf.jsqlparser.statement.select.SelectItem;
 
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 
+import com.baomidou.hibernateplus.condition.DeleteWrapper;
+import com.baomidou.hibernateplus.condition.SelectWrapper;
+import com.baomidou.hibernateplus.condition.UpdateWrapper;
 import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
 import com.baomidou.hibernateplus.entity.Convert;
 import com.baomidou.hibernateplus.entity.EntityInfo;
@@ -185,7 +188,7 @@ public class SqlUtils {
 			select = select(clazz);
 		}
 		String tableName = getTableName(clazz);
-		if (wrapper != null) {
+		if (!isDefault(wrapper)) {
 			String sqlSelect = wrapper.getSqlSelect();
 			if (page != null) {
 				if (StringUtils.isNotBlank(page.getOrderByField())) {
@@ -199,6 +202,27 @@ public class SqlUtils {
 			return concatOrderBy(String.format(SqlUtils.SQL_LIST, select, tableName, StringUtils.EMPTY), page);
 		}
 		return String.format(SqlUtils.SQL_LIST, select, tableName, StringUtils.EMPTY);
+
+	}
+
+	/**
+	 * 获取普通List sql
+	 *
+	 * @param wrapper
+	 * @param page
+	 * @return
+	 */
+	public static String sqlList(String sql, Wrapper wrapper, Page page) {
+
+		if (!isDefault(wrapper)) {
+			if (page != null) {
+				if (StringUtils.isNotBlank(page.getOrderByField())) {
+					wrapper.orderBy(page.getOrderByField(), page.isAsc());
+				}
+			}
+			sql += wrapper.toString();
+		}
+		return sql;
 
 	}
 
@@ -223,7 +247,7 @@ public class SqlUtils {
 	 */
 	public static String sqlCount(Class clazz, Wrapper wrapper) {
 		String tableName = getTableName(clazz);
-		if (wrapper != null) {
+		if (!isDefault(wrapper)) {
 			return String.format(SqlUtils.SQL_COUNT, tableName, wrapper.toString());
 		}
 		return String.format(SqlUtils.SQL_COUNT, tableName, StringUtils.EMPTY);
@@ -254,7 +278,7 @@ public class SqlUtils {
 	 */
 	public static <T extends Convert> String sqlDelete(Class<T> clazz, Wrapper wrapper) {
 		String tableName = getTableName(clazz);
-		if (wrapper != null) {
+		if (!isDefault(wrapper)) {
 			return String.format(SqlUtils.SQL_DELETE, tableName, wrapper.toString());
 		}
 		return String.format(SqlUtils.SQL_DELETE, tableName, StringUtils.EMPTY);
@@ -272,19 +296,19 @@ public class SqlUtils {
 		Map<String, String> setMap = wrapper.getSetMap();
 		Iterator iterator = wrapper.getSetMap().entrySet().iterator();
 		int _size = setMap.size();
-		int i = 0;
+		int i = 1;
 		StringBuilder builder = new StringBuilder();
 		while (iterator.hasNext()) {
 			Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
 			String key = entry.getKey();
 			Object value = entry.getValue();
 			builder.append(String.format("%s = %s", key, value));
-			if (i + 1 != _size) {
+			if (i != _size) {
 				builder.append(",");
 			}
 			i++;
 		}
-		if (wrapper != null) {
+		if (!isDefault(wrapper)) {
 			return String.format(SqlUtils.SQL_UPDATE, tableName, builder.toString(), wrapper.toString());
 		}
 		return String.format(SqlUtils.SQL_UPDATE, tableName, builder.toString(), StringUtils.EMPTY);
@@ -298,6 +322,19 @@ public class SqlUtils {
 	 */
 	public static String select(Class clazz) {
 		return EntityInfoUtils.getEntityInfo(clazz).getSelect();
+	}
+
+	/**
+	 * 判断Wrapper是不是Default并且不为null
+	 *
+	 * @param wrapper
+	 * @return
+	 */
+	public static Boolean isDefault(Wrapper wrapper) {
+		if (wrapper != null && wrapper != UpdateWrapper.DEFAULT && wrapper != SelectWrapper.DEFAULT
+				&& wrapper != DeleteWrapper.DEFAULT)
+			return false;
+		return true;
 	}
 
 }

@@ -22,19 +22,6 @@
  */
 package com.baomidou.hibernateplus.dao.impl;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.transform.Transformers;
-import org.jboss.logging.Logger;
-
 import com.baomidou.hibernateplus.condition.SelectWrapper;
 import com.baomidou.hibernateplus.condition.wrapper.Wrapper;
 import com.baomidou.hibernateplus.dao.IDao;
@@ -49,6 +36,18 @@ import com.baomidou.hibernateplus.utils.RandomUtils;
 import com.baomidou.hibernateplus.utils.ReflectionKit;
 import com.baomidou.hibernateplus.utils.SqlUtils;
 import com.baomidou.hibernateplus.utils.StringUtils;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.transform.Transformers;
+import org.jboss.logging.Logger;
+
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -112,12 +111,7 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 		T t = null;
 		try {
 			Query query = HibernateUtils.getHqlQuery(hql, slaveSession(), isCurrent());
-			if (MapUtils.isNotEmpty(params)) {
-				for (String key : params.keySet()) {
-					Object obj = params.get(key);
-					HibernateUtils.setParams(query, key, obj);
-				}
-			}
+			setParamMap(params, query);
 			t = (T) query.uniqueResult();
 		} catch (Exception e) {
 			logger.warn("Warn: Unexpected exception.  Cause:" + e);
@@ -316,12 +310,7 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	protected int executeHql(String hql, Map<String, Object> params) {
 		Assert.hasLength(hql);
 		Query query = HibernateUtils.getHqlQuery(hql, masterSession(), isCurrent());
-		if (MapUtils.isNotEmpty(params)) {
-			for (String key : params.keySet()) {
-				Object obj = params.get(key);
-				HibernateUtils.setParams(query, key, obj);
-			}
-		}
+		setParamMap(params, query);
 		return query.executeUpdate();
 	}
 
@@ -435,12 +424,7 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	protected int queryCountWithHql(String hql, Map<String, Object> params) {
 		Assert.hasLength(hql);
 		Query query = HibernateUtils.getHqlQuery(hql, slaveSession(), isCurrent());
-		if (MapUtils.isNotEmpty(params)) {
-			for (String key : params.keySet()) {
-				Object obj = params.get(key);
-				HibernateUtils.setParams(query, key, obj);
-			}
-		}
+		setParamMap(params, query);
 		BigInteger bigInteger = (BigInteger) query.uniqueResult();
 		return bigInteger.intValue();
 	}
@@ -498,12 +482,7 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 		if (StringUtils.isNotBlank(sql)) {
 			try {
 				Query query = HibernateUtils.getSqlQuery(sql, masterSession(), isCurrent());
-				if ((params != null) && !params.isEmpty()) {
-					for (String key : params.keySet()) {
-						Object obj = params.get(key);
-						HibernateUtils.setParams(query, key, obj);
-					}
-				}
+				setParamMap(params, query);
 				resultCount = query.executeUpdate();
 			} catch (Exception e) {
 				logger.warn("Warn: Unexpected exception.  Cause:" + e);
@@ -549,7 +528,7 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	 * @param wrapper
 	 * @return
 	 */
-	protected Map<String, Object> queryMapWithSql(String sql, Wrapper wrapper) {
+	protected Map<String, Object> queryMap(String sql, Wrapper wrapper) {
 		Assert.hasLength(sql);
 		Map<String, Object> map = Collections.emptyMap();
 		try {
@@ -569,18 +548,8 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	 * @param sql
 	 * @return
 	 */
-	protected Map<String, Object> queryMapWithSql(String sql) {
-		return queryMapWithSql(sql, SelectWrapper.DEFAULT);
-	}
-
-	/**
-	 * 执行SQL查询列表
-	 *
-	 * @param sql
-	 * @return
-	 */
-	protected List<Map<String, Object>> queryMapsWithSql(String sql) {
-		return queryMapsWithSql(sql, Collections.EMPTY_MAP);
+	protected Map<String, Object> queryMap(String sql) {
+		return queryMap(sql, SelectWrapper.DEFAULT);
 	}
 
 	/**
@@ -588,40 +557,43 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	 *
 	 * @param sql
 	 * @param page
-	 * @param rows
 	 * @return
 	 */
-	protected List<Map<String, Object>> queryMapsWithSql(String sql, int page, int rows) {
-		return queryMapsWithSql(sql, Collections.EMPTY_MAP, page, rows);
+	protected Page<Map<String, Object>> queryPageMaps(String sql, Page page) {
+		return queryPageMaps(sql, SelectWrapper.DEFAULT, page);
 	}
 
 	/**
 	 * 执行SQL查询列表
 	 *
 	 * @param sql
-	 * @param params
+	 * @param wrapper
 	 * @param page
-	 * @param rows
 	 * @return
 	 */
-	protected List<Map<String, Object>> queryMapsWithSql(String sql, Map<String, Object> params, int page, int rows) {
+	protected Page<Map<String, Object>> queryPageMaps(String sql, Wrapper wrapper, Page page) {
 		Assert.hasLength(sql);
-		List<Map<String, Object>> list = Collections.emptyList();
 		try {
+			sql = SqlUtils.sqlList(sql, wrapper, page);
 			Query query = HibernateUtils.getSqlQuery(sql, slaveSession(), isCurrent()).setResultTransformer(
 					Transformers.ALIAS_TO_ENTITY_MAP);
-			if (MapUtils.isNotEmpty(params)) {
-				for (String key : params.keySet()) {
-					Object obj = params.get(key);
-					HibernateUtils.setParams(query, key, obj);
-				}
-			}
-			HibernateUtils.setPage(page, rows, query);
-			list = query.list();
+			HibernateUtils.setPage(page.getCurrent(), page.getSize(), query);
+			page.setRecords(query.list());
+			setPageTotal(sql, page);
 		} catch (Exception e) {
 			logger.warn("Warn: Unexpected exception.  Cause:" + e);
 		}
-		return list;
+		return page;
+	}
+
+	/**
+	 * 执行SQL查询列表
+	 *
+	 * @param sql
+	 * @return
+	 */
+	protected List<Map<String, Object>> queryMaps(String sql) {
+		return this.queryMaps(sql, Collections.EMPTY_MAP);
 	}
 
 	/**
@@ -631,53 +603,13 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	 * @param params
 	 * @return
 	 */
-	protected List<Map<String, Object>> queryMapsWithSql(String sql, Map<String, Object> params) {
-		return queryMapsWithSql(sql, params, 0, 0);
-	}
-
-	/**
-	 * 执行SQL查询列表
-	 *
-	 * @param sql
-	 * @return
-	 */
-	protected List queryListWithSql(String sql) {
-		return this.queryListWithSql(sql, Collections.EMPTY_MAP);
-	}
-
-	/**
-	 * 执行SQL查询列表
-	 *
-	 * @param sql
-	 * @param page
-	 * @param rows
-	 * @return
-	 */
-	protected List queryListWithSql(String sql, int page, int rows) {
-		return this.queryListWithSql(sql, Collections.EMPTY_MAP, page, rows);
-	}
-
-	/**
-	 * 执行SQL查询列表
-	 *
-	 * @param sql
-	 * @param params
-	 * @param page
-	 * @param rows
-	 * @return
-	 */
-	protected List queryListWithSql(String sql, Map<String, Object> params, int page, int rows) {
+	protected List<Map<String, Object>> queryMaps(String sql, Map<String, Object> params) {
 		Assert.hasLength(sql);
 		List list = Collections.emptyList();
 		try {
-			Query query = HibernateUtils.getSqlQuery(sql, slaveSession(), isCurrent());
-			if (MapUtils.isNotEmpty(params)) {
-				for (String key : params.keySet()) {
-					Object obj = params.get(key);
-					HibernateUtils.setParams(query, key, obj);
-				}
-			}
-			HibernateUtils.setPage(page, rows, query);
+			Query query = HibernateUtils.getSqlQuery(sql, slaveSession(), isCurrent()).setResultTransformer(
+					Transformers.ALIAS_TO_ENTITY_MAP);
+			setParamMap(params, query);
 			list = query.list();
 		} catch (Exception e) {
 			logger.warn("Warn: Unexpected exception.  Cause:" + e);
@@ -689,29 +621,36 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	 * 执行SQL查询列表
 	 *
 	 * @param sql
-	 * @param params
+	 * @param wrapper
 	 * @return
 	 */
-	protected List queryListWithSql(String sql, Map<String, Object> params) {
-		return queryListWithSql(sql, params, 0, 0);
+	protected List<Map<String, Object>> queryMaps(String sql, Wrapper wrapper) {
+		Assert.hasLength(sql);
+		List list = Collections.emptyList();
+		try {
+			sql += wrapper.toString();
+			Query query = HibernateUtils.getSqlQuery(sql, slaveSession(), isCurrent()).setResultTransformer(
+					Transformers.ALIAS_TO_ENTITY_MAP);
+			list = query.list();
+		} catch (Exception e) {
+			logger.warn("Warn: Unexpected exception.  Cause:" + e);
+		}
+		return list;
 	}
 
 	/**
 	 * 查询列表
 	 *
-	 * @param map
+	 * @param params
 	 * @return
 	 */
-	public List<Map<String, Object>> queryMaps(Map<String, Object> map) {
+	public List<Map<String, Object>> queryMaps(Map<String, Object> params) {
 		List<Map<String, Object>> list = Collections.emptyList();
 		try {
-			String hql = HibernateUtils.getListHql(toClass(), map);
+			String hql = HibernateUtils.getListHql(toClass(), params);
 			Query query = HibernateUtils.getHqlQuery(hql, slaveSession(), isCurrent()).setResultTransformer(
 					Transformers.ALIAS_TO_ENTITY_MAP);
-			for (String key : map.keySet()) {
-				Object obj = map.get(key);
-				HibernateUtils.setParams(query, key, obj);
-			}
+			setParamMap(params, query);
 			list = query.list();
 		} catch (Exception e) {
 			logger.warn("Warn: Unexpected exception.  Cause:" + e);
@@ -726,7 +665,7 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	 * @param sql
 	 * @param page
 	 */
-	private void setPageTotal(String sql, Page<Map<String, Object>> page) {
+	private void setPageTotal(String sql, Page<?> page) {
 		if (page.isSearchCount()) {
 			String sqlCount = SqlUtils.sqlCountOptimize(sql);
 			Query countQuery = HibernateUtils.getSqlQuery(sqlCount, slaveSession(), isCurrent());

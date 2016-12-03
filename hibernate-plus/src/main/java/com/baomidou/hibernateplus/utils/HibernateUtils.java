@@ -22,18 +22,17 @@
  */
 package com.baomidou.hibernateplus.utils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
+import com.baomidou.hibernateplus.entity.Convert;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jboss.logging.Logger;
 
-import com.baomidou.hibernateplus.entity.Convert;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -85,70 +84,12 @@ public class HibernateUtils {
 	/**
 	 * 生成当前对象的HQL
 	 *
-	 * @param order
-	 * @param clazz
-	 * @return
-	 */
-	public static String getListHql(String order, Class clazz) {
-		return getListHql(order, clazz, Collections.EMPTY_MAP);
-	}
-
-	/**
-	 * 生成当前对象的HQL
-	 *
-	 * @param clazz
-	 * @param property
-	 * @return
-	 */
-	public static String getListHql(Class clazz, String... property) {
-		return getListHql(StringUtils.EMPTY, clazz, property);
-	}
-
-	/**
-	 * 生成当前对象的HQL
-	 *
 	 * @param clazz
 	 * @param params
 	 * @return
 	 */
 	public static String getListHql(Class clazz, Map<String, Object> params) {
 		return getListHql(StringUtils.EMPTY, clazz, params);
-	}
-
-	/**
-	 * 生成当前对象的HQL
-	 *
-	 * @param order
-	 * @param clazz
-	 * @param property
-	 * @return
-	 */
-	public static String getListHql(String order, Class clazz, String... property) {
-		StringBuilder builder = getBaseListHql(clazz);
-		getWhere(builder, property);
-		getOrderby(order, builder);
-		return builder.toString();
-	}
-
-	/**
-	 * 生成HQL WHERE SQL
-	 *
-	 * @param builder
-	 * @param property
-	 * @return
-	 */
-	private static void getWhere(StringBuilder builder, String... property) {
-		if (StringUtils.isNoneBlank(property)) {
-			builder.append(" WHERE ");
-			for (int i = 0; i < property.length; i++) {
-				builder.append(property[i]);
-				if (i == property.length - 1) {
-					setByArray(builder, i);
-				} else {
-					setAndByArray(builder, i);
-				}
-			}
-		}
 	}
 
 	/**
@@ -181,16 +122,6 @@ public class HibernateUtils {
 	}
 
 	/**
-	 * 生成当前对象的HQL
-	 *
-	 * @param clazz
-	 * @return
-	 */
-	public static String getCountHql(Class clazz) {
-		return getCountHql(clazz, Collections.EMPTY_MAP);
-	}
-
-	/**
 	 * 简单的count hql
 	 *
 	 * @param clazz
@@ -198,19 +129,6 @@ public class HibernateUtils {
 	 */
 	private static StringBuilder getBaseCountHql(Class clazz) {
 		return getBaseHql(clazz, BASE_COUNT);
-	}
-
-	/**
-	 * 生成当前对象的HQL
-	 *
-	 * @param clazz
-	 * @param property
-	 * @return
-	 */
-	public static String getCountHql(Class clazz, String... property) {
-		StringBuilder builder = getBaseCountHql(clazz);
-		getWhere(builder, property);
-		return builder.toString();
 	}
 
 	/**
@@ -249,30 +167,6 @@ public class HibernateUtils {
 				}
 			}
 		}
-	}
-
-	/**
-	 * sql语句连接
-	 *
-	 * @param builder
-	 * @param index
-	 * @return
-	 */
-	private static void setByArray(StringBuilder builder, int index) {
-		builder.append(" = ?");
-		builder.append(index);
-	}
-
-	/**
-	 * sql语句连接And
-	 *
-	 * @param builder
-	 * @param index
-	 * @return
-	 */
-	private static void setAndByArray(StringBuilder builder, int index) {
-		builder.append(" = ? AND ");
-		builder.append(index);
 	}
 
 	/**
