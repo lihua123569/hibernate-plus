@@ -134,15 +134,17 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 	}
 
 	@Override
-	public void saveOrUpdate(T t) {
+	public T saveOrUpdate(T t) {
 		Assert.notNull(t);
 		HibernateUtils.getSession(masterSession(), isCurrent()).saveOrUpdate(t);
+		return t;
 	}
 
 	@Override
-	public void update(T t) {
+	public T update(T t) {
 		Assert.notNull(t);
 		HibernateUtils.getSession(masterSession(), isCurrent()).merge(t);
+		return t;
 	}
 
 	@Override
@@ -203,6 +205,7 @@ public class DaoImpl<T extends Convert> implements IDao<T> {
 		return true;
 
 	}
+
 	@Override
 	public boolean saveOrUpdateBatch(List<T> list, int size) {
 		Assert.notEmpty(list);

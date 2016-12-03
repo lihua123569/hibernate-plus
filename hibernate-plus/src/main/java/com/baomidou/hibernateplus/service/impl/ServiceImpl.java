@@ -64,13 +64,13 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	}
 
 	@Override
-	public void saveOrUpdate(V vo) {
-		baseDao.saveOrUpdate(vo.convert(toClass()));
+	public V saveOrUpdate(V vo) {
+		return baseDao.saveOrUpdate(vo.convert(toClass())).convert(voClass());
 	}
 
 	@Override
-	public void update(V vo) {
-		baseDao.update(vo.convert(toClass()));
+	public V update(V vo) {
+		return baseDao.update(vo.convert(toClass())).convert(voClass());
 	}
 
 	@Override

@@ -61,14 +61,14 @@ public interface IService<V extends Convert> {
 	 *
 	 * @param vo
 	 */
-	public void saveOrUpdate(V vo);
+	public V saveOrUpdate(V vo);
 
 	/**
 	 * 修改
 	 *
 	 * @param vo
 	 */
-	public void update(V vo);
+	public V update(V vo);
 
 	/**
 	 * 根据Wrapper修改

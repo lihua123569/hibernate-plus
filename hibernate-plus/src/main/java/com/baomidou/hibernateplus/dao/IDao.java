@@ -59,14 +59,14 @@ public interface IDao<T> {
 	 *
 	 * @param o
 	 */
-	public void saveOrUpdate(T o);
+	public T saveOrUpdate(T o);
 
 	/**
 	 * 修改方法
 	 *
 	 * @param o
 	 */
-	public void update(T o);
+	public T update(T o);
 
 	/**
 	 * 修改方法
