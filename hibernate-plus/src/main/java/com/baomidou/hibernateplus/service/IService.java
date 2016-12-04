@@ -199,6 +199,6 @@ public interface IService<V extends Convert> {
 	 * @param page
 	 * @return
 	 */
-	public Page<Map<String, Object>> selectMapPage(Wrapper wrapper, Page<Map<String, Object>> page);
+	public Page<Map<String, Object>> selectMapsPage(Wrapper wrapper, Page<Map<String, Object>> page);
 
 }

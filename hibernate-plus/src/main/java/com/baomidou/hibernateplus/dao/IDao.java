@@ -37,36 +37,36 @@ import com.baomidou.hibernateplus.entity.page.Page;
  * @author Caratacus
  * @date 2016-11-23
  */
-public interface IDao<T> {
+public interface IDao<P> {
 	/**
 	 * 根据id获取对象
 	 *
 	 * @param id
 	 * @return
 	 */
-	public T get(Serializable id);
+	public P get(Serializable id);
 
 	/**
 	 * 保存方法
 	 *
-	 * @param o
+	 * @param p
 	 * @return
 	 */
-	public T save(T o);
+	public P save(P p);
 
 	/**
 	 * 保存/修改方法
 	 *
-	 * @param o
+	 * @param p
 	 */
-	public T saveOrUpdate(T o);
+	public P saveOrUpdate(P p);
 
 	/**
 	 * 修改方法
 	 *
-	 * @param o
+	 * @param p
 	 */
-	public T update(T o);
+	public P update(P p);
 
 	/**
 	 * 修改方法
@@ -79,9 +79,9 @@ public interface IDao<T> {
 	/**
 	 * 删除方法
 	 *
-	 * @param o
+	 * @param p
 	 */
-	public boolean delete(T o);
+	public boolean delete(P p);
 
 	/**
 	 * 删除方法
@@ -106,7 +106,7 @@ public interface IDao<T> {
 	 * @param size
 	 * @return
 	 */
-	public boolean insertBatch(List<T> list, int size);
+	public boolean insertBatch(List<P> list, int size);
 
 	/**
 	 * 批量修改
@@ -115,7 +115,7 @@ public interface IDao<T> {
 	 * @param size
 	 * @return
 	 */
-	public boolean updateBatch(List<T> list, int size);
+	public boolean updateBatch(List<P> list, int size);
 
 	/**
 	 * 批量修改
@@ -124,7 +124,7 @@ public interface IDao<T> {
 	 * @param size
 	 * @return
 	 */
-	public boolean saveOrUpdateBatch(List<T> list, int size);
+	public boolean saveOrUpdateBatch(List<P> list, int size);
 
 	/**
 	 * 查询List<Map<String,Object>>结果集
@@ -140,16 +140,16 @@ public interface IDao<T> {
 	 * @param wrapper
 	 * @return
 	 */
-	public T selectOne(Wrapper wrapper);
+	public P selectOne(Wrapper wrapper);
 
 	/**
 	 * 查询列表
 	 *
 	 * @param wrapper
-	 * @param <T>
+	 * @param <P>
 	 * @return
 	 */
-	public <T> List<T> selectList(Wrapper wrapper);
+	public <P> List<P> selectList(Wrapper wrapper);
 
 	/**
 	 * 查询数量
@@ -166,7 +166,7 @@ public interface IDao<T> {
 	 * @param page
 	 * @return
 	 */
-	public Page<Map<String, Object>> selectMapPage(Wrapper wrapper, Page<Map<String, Object>> page);
+	public Page<Map<String, Object>> selectMapsPage(Wrapper wrapper, Page<Map<String, Object>> page);
 
 	/**
 	 * 查询分页

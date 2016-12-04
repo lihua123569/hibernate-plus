@@ -87,7 +87,8 @@ public class SqlUtils {
 			List<Expression> groupBy = plainSelect.getGroupByColumnReferences();
 			// 优化Order by
 			List<OrderByElement> orderBy = plainSelect.getOrderByElements();
-			if (CollectionUtils.isNotEmpty(orderBy)) {
+			// 添加包含groupby 不去除orderby
+			if (CollectionUtils.isEmpty(groupBy) && CollectionUtils.isNotEmpty(orderBy)) {
 				plainSelect.setOrderByElements(null);
 			}
 			if (distinct != null || CollectionUtils.isNotEmpty(groupBy)) {
@@ -114,7 +115,7 @@ public class SqlUtils {
 		Function function = new Function();
 		function.setName("COUNT");
 		List<Expression> expressions = new ArrayList<Expression>();
-		LongValue longValue = new LongValue(1);
+		LongValue longValue = new LongValue(0);
 		ExpressionList expressionList = new ExpressionList();
 		expressions.add(longValue);
 		expressionList.setExpressions(expressions);
@@ -325,6 +326,7 @@ public class SqlUtils {
 	public static String sqlUpdate(Class clazz, Wrapper wrapper) {
 		String tableName = getTableName(clazz);
 		Map<String, String> setMap = wrapper.getSetMap();
+		Assert.notEmpty(setMap);
 		Iterator iterator = wrapper.getSetMap().entrySet().iterator();
 		int _size = setMap.size();
 		int i = 1;

@@ -25,7 +25,7 @@ import com.baomidou.hibernateplus.spring.po.Tdemo;
  * @author Caratacus
  * @date 2016-12-2
  */
-public class SpringHibernatePlusExam {
+public class SpringHibernatePlusTest {
 
 	private DemoDao demoDao = new DemoDaoImpl();
 
@@ -84,7 +84,7 @@ public class SpringHibernatePlusExam {
 		page.setOrderByField("id");
 		page.setAsc(false);
 		// Condition链式查询分页返回Map
-		Page selectMapPage = demoDao.selectMapPage(SelectWrapper.instance().ge("id", 50), page);
+		Page selectMapPage = demoDao.selectMapsPage(SelectWrapper.instance().ge("id", 50), page);
 		System.out.println(selectMapPage);
 		// Condition链式查询分页返回VO
 		Page selectPage2 = demoDao.selectPage(SelectWrapper.instance().ge("id", 50), page);

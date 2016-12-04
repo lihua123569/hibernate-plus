@@ -44,9 +44,6 @@ public class MysqlGenerator {
 		GlobalConfig gc = new GlobalConfig();
 		gc.setOutputDir("D:\\AUTO\\");
 		gc.setFileOverride(true);
-		gc.setEnableCache(false);// XML 二级缓存
-		gc.setBaseResultMap(true);// XML ResultMap
-		gc.setBaseColumnList(false);// XML columList
 		gc.setAuthor("Yanghu");
 
 		// 自定义文件命名，注意 %s 会自动填充表实体属性！

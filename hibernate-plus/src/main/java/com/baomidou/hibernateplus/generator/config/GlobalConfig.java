@@ -40,27 +40,14 @@ public class GlobalConfig {
 	private boolean open = true;
 
 	/**
-	 * 是否在xml中添加二级缓存配置
-	 */
-	private boolean enableCache = true;
-
-	/**
 	 * 开发人员
 	 */
 	private String author;
 
 	/**
-	 * 开启 BaseResultMap
-	 */
-	private boolean baseResultMap = false;
-
-	/**
-	 * 开启 baseColumnList
-	 */
-	private boolean baseColumnList = false;
-	/**
 	 * 各层文件名称方式，例如： %Action 生成 UserAction
 	 */
+	private String poName;
 	private String voName;
 	private String daoName;
 	private String daoImplName;
@@ -92,36 +79,12 @@ public class GlobalConfig {
 		this.open = open;
 	}
 
-	public boolean isEnableCache() {
-		return enableCache;
-	}
-
-	public void setEnableCache(boolean enableCache) {
-		this.enableCache = enableCache;
-	}
-
 	public String getAuthor() {
 		return author;
 	}
 
 	public void setAuthor(String author) {
 		this.author = author;
-	}
-
-	public boolean isBaseResultMap() {
-		return baseResultMap;
-	}
-
-	public void setBaseResultMap(boolean baseResultMap) {
-		this.baseResultMap = baseResultMap;
-	}
-
-	public boolean isBaseColumnList() {
-		return baseColumnList;
-	}
-
-	public void setBaseColumnList(boolean baseColumnList) {
-		this.baseColumnList = baseColumnList;
 	}
 
 	public String getDaoName() {
@@ -170,5 +133,13 @@ public class GlobalConfig {
 
 	public void setVoName(String voName) {
 		this.voName = voName;
+	}
+
+	public String getPoName() {
+		return poName;
+	}
+
+	public void setPoName(String poName) {
+		this.poName = poName;
 	}
 }

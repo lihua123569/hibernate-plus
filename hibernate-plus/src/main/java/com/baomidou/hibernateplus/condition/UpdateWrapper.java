@@ -43,7 +43,7 @@ public class UpdateWrapper extends Wrapper {
 	 */
 	public static final UpdateWrapper DEFAULT = UpdateWrapper.instance();
 	/**
-	 * SQL 查询字段内容，例如：id,name,age
+	 * SQL SET内容，例如：set id = 1
 	 */
 	protected Map<String, String> setMap = new HashMap<String, String>();
 
@@ -55,7 +55,7 @@ public class UpdateWrapper extends Wrapper {
 	}
 
 	/**
-	 * 一次赋值
+	 * 执行一次set操作
 	 *
 	 * @param key
 	 * @param value
@@ -67,13 +67,13 @@ public class UpdateWrapper extends Wrapper {
 	}
 
 	/**
-	 * 多次赋值
+	 * 执行多次set操作
 	 *
 	 * @param setMap
 	 * @return
 	 */
 	public UpdateWrapper sets(Map<String, String> setMap) {
-		setMap.putAll(setMap);
+		this.setMap.putAll(setMap);
 		return this;
 	}
 

@@ -322,6 +322,11 @@ public class ConfigBuilder {
 			} else {
 				tableInfo.setControllerName(tableInfo.getPoName() + ConstVal.CONTROLLER);
 			}
+			if (StringUtils.isNotBlank(globalConfig.getPoName())) {
+				tableInfo.setPoName(String.format(globalConfig.getPoName(), tableInfo.getPoName()));
+			} else {
+				tableInfo.setPoName(tableInfo.getPoName() + ConstVal.PO);
+			}
 			if (StringUtils.isNotBlank(globalConfig.getVoName())) {
 				tableInfo.setVoName(String.format(globalConfig.getVoName(), tableInfo.getPoName()));
 			} else {

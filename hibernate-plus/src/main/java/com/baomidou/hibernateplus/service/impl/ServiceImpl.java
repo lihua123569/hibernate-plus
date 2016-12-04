@@ -39,38 +39,38 @@ import com.baomidou.hibernateplus.utils.ReflectionKit;
 
 /**
  * <p>
- * IService 实现类（ 泛型：T 是数据库实体TO，V 对应数据库实体的VO ）
+ * IService 实现类（ 泛型：P 是数据库实体PO，V 对应数据库实体的VO ）
  * </p>
  *
  * @author Caratacus
  * @date 2016-11-23
  */
-public class ServiceImpl<T extends Convert, V extends Convert> implements IService<V> {
+public class ServiceImpl<P extends Convert, V extends Convert> implements IService<V> {
 
 	private static final Logger logger = Logger.getLogger(ServiceImpl.class);
 
 	@Autowired
-	protected IDao<T> baseDao;
+	protected IDao<P> baseDao;
 
 	@Override
 	public V get(Serializable id) {
-		T t = baseDao.get(id);
-		return t == null ? null : t.convert(voClass());
+		P p = baseDao.get(id);
+		return p == null ? null : p.convert(voClass());
 	}
 
 	@Override
 	public V save(V vo) {
-		return baseDao.save(vo.convert(toClass())).convert(voClass());
+		return baseDao.save(vo.convert(poClass())).convert(voClass());
 	}
 
 	@Override
 	public V saveOrUpdate(V vo) {
-		return baseDao.saveOrUpdate(vo.convert(toClass())).convert(voClass());
+		return baseDao.saveOrUpdate(vo.convert(poClass())).convert(voClass());
 	}
 
 	@Override
 	public V update(V vo) {
-		return baseDao.update(vo.convert(toClass())).convert(voClass());
+		return baseDao.update(vo.convert(poClass())).convert(voClass());
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 
 	@Override
 	public boolean delete(V vo) {
-		return baseDao.delete(vo.convert(toClass()));
+		return baseDao.delete(vo.convert(poClass()));
 	}
 
 	@Override
@@ -95,38 +95,38 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 
 	@Override
 	public boolean insertBatch(List<V> list) {
-		return baseDao.insertBatch(BeanConverter.convert(toClass(), list), 30);
+		return baseDao.insertBatch(BeanConverter.convert(poClass(), list), 30);
 	}
 
 	@Override
 	public boolean insertBatch(List<V> list, int size) {
-		return baseDao.insertBatch(BeanConverter.convert(toClass(), list), size);
+		return baseDao.insertBatch(BeanConverter.convert(poClass(), list), size);
 	}
 
 	@Override
 	public boolean updateBatch(List<V> list) {
-		return baseDao.updateBatch(BeanConverter.convert(toClass(), list), 30);
+		return baseDao.updateBatch(BeanConverter.convert(poClass(), list), 30);
 	}
 
 	@Override
 	public boolean updateBatch(List<V> list, int size) {
-		return baseDao.updateBatch(BeanConverter.convert(toClass(), list), size);
+		return baseDao.updateBatch(BeanConverter.convert(poClass(), list), size);
 	}
 
 	@Override
 	public boolean saveOrUpdateBatch(List<V> list) {
-		return baseDao.saveOrUpdateBatch(BeanConverter.convert(toClass(), list), 30);
+		return baseDao.saveOrUpdateBatch(BeanConverter.convert(poClass(), list), 30);
 	}
 
 	@Override
 	public boolean saveOrUpdateBatch(List<V> list, int size) {
-		return baseDao.saveOrUpdateBatch(BeanConverter.convert(toClass(), list), size);
+		return baseDao.saveOrUpdateBatch(BeanConverter.convert(poClass(), list), size);
 	}
 
 	@Override
 	public V selectOne(Wrapper wrapper) {
-		T t = baseDao.selectOne(wrapper);
-		return t == null ? null : t.convert(voClass());
+		P p = baseDao.selectOne(wrapper);
+		return p == null ? null : p.convert(voClass());
 	}
 
 	@Override
@@ -152,8 +152,8 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	}
 
 	@Override
-	public Page<Map<String, Object>> selectMapPage(Wrapper wrapper, Page<Map<String, Object>> page) {
-		return baseDao.selectMapPage(wrapper, page);
+	public Page<Map<String, Object>> selectMapsPage(Wrapper wrapper, Page<Map<String, Object>> page) {
+		return baseDao.selectMapsPage(wrapper, page);
 	}
 
 	/**
@@ -172,7 +172,7 @@ public class ServiceImpl<T extends Convert, V extends Convert> implements IServi
 	 *
 	 * @return
 	 */
-	protected Class<T> toClass() {
+	protected Class<P> poClass() {
 		return ReflectionKit.getSuperClassGenricType(getClass(), 0);
 	}
 

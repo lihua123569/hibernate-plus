@@ -41,7 +41,7 @@ import org.junit.Test;
  * @author Caratacus
  * @date 2016-11-29
  */
-public class SelectWrapperExam {
+public class SelectWrapperTest {
 
 	/*
 	 * User 查询包装器
@@ -54,7 +54,7 @@ public class SelectWrapperExam {
 		/*
 		 * 无条件测试
 		 */
-		Assert.assertNull(ew.toString());
+		Assert.assertEquals("",ew.toString());
 	}
 
 	@Test
@@ -157,7 +157,7 @@ public class SelectWrapperExam {
 	public void testNull() {
 		ew.orderBy(null);
 		String sqlPart = ew.toString();
-		Assert.assertNull(sqlPart);
+		Assert.assertEquals("",sqlPart);
 	}
 
 	@Test
