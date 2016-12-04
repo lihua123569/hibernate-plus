@@ -1,7 +1,7 @@
 package ${package.ServiceImpl};
 
-import ${package.Model}.${modelpo};
-import ${package.Mapper}.${table.mapperName};
+import ${package.PO}.${po};
+import ${package.VO}.${vo};
 import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
 import org.springframework.stereotype.Service;
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service;
  * @since ${date}
  */
 @Service
-public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${modelpo}> implements ${table.serviceName} {
+public class ${table.serviceImplName} extends ${superServiceImplClass}<${po}, ${vo}> implements ${table.serviceName} {
 	
 }

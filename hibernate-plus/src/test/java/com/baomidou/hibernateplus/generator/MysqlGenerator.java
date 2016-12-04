@@ -42,7 +42,7 @@ public class MysqlGenerator {
 
 		// 全局配置
 		GlobalConfig gc = new GlobalConfig();
-		gc.setOutputDir("D://");
+		gc.setOutputDir("D:\\AUTO\\");
 		gc.setFileOverride(true);
 		gc.setEnableCache(false);// XML 二级缓存
 		gc.setBaseResultMap(true);// XML ResultMap
@@ -96,7 +96,7 @@ public class MysqlGenerator {
 
 		// 包配置
 		PackageConfig pc = new PackageConfig();
-		pc.setModuleName("test");
+		pc.setModuleName("hibernate");
 		mpg.setPackageInfo(pc);
 
 		// 执行生成

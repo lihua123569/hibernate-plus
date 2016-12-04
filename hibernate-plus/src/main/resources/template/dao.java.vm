@@ -1,6 +1,6 @@
 package ${package.Dao};
 
-import ${package.Model}.po.${modelpo};
+import ${package.PO}.${po};
 import ${superDaoClassPackage};
 
 /**
@@ -11,6 +11,6 @@ import ${superDaoClassPackage};
  * @author ${author}
  * @since ${date}
  */
-public interface ${table.daoName} extends ${superDaoClass}<${modelpo}> {
+public interface ${table.daoName} extends ${superDaoClass}<${po}> {
 
 }

@@ -15,9 +15,9 @@
  */
 package com.baomidou.hibernateplus.generator.config.po;
 
-import com.baomidou.hibernateplus.utils.StringUtils;
-
 import java.util.List;
+
+import com.baomidou.hibernateplus.utils.StringUtils;
 
 /**
  * <p>

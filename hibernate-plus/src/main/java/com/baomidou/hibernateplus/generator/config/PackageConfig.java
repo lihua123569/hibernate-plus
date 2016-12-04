@@ -67,7 +67,7 @@ public class PackageConfig {
 	/**
 	 * Controller包名
 	 */
-	private String controller = "web";
+	private String controller = "controller";
 
 	public String getParent() {
 		if (StringUtils.isNotBlank(moduleName)) {
@@ -106,7 +106,7 @@ public class PackageConfig {
 
 	public String getController() {
 		if (StringUtils.isBlank(controller)) {
-			return "web";
+			return "controller";
 		}
 		return controller;
 	}

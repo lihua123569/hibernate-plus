@@ -1,4 +1,4 @@
-package ${package.Model};
+package ${package.VO};
 
 #if(${superModelClassPackage})
 import ${superModelClassPackage};
@@ -11,7 +11,7 @@ import com.baomidou.mybatisplus.annotations.TableField;
 #if(${addTabeName})
 import com.baomidou.mybatisplus.annotations.TableName;
 #end
-import java.io.Serializable;
+import com.baomidou.hibernateplus.entity.Convert;
 #if(${table.hasDate})
 import java.util.Date;
 #end
@@ -28,13 +28,9 @@ import java.util.Date;
 @TableName("${table.name}")
 #end
 #if(${superModelClass})
-public class ${modelpo} extends ${superModelClass} {
+public class ${vo} extends ${superModelClass} {
 #else
-#if(${activeRecord})
-public class ${modelpo} extends Model<${modelpo}> {
-#else
-public class ${modelpo} implements Serializable {
-#end
+public class ${vo} extends Convert {
 #end
 
     private static final long serialVersionUID = 1L;
@@ -64,13 +60,13 @@ public class ${modelpo} implements Serializable {
 
 	public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
 		this.${field.propertyName} = ${field.propertyName};
-#if(${modelpoBuliderModel})
+#if(${modelBuliderModel})
 		return this;
 #end
 	}
 #end
 
-#if(${modelpoColumnConstant})
+#if(${modelColumnConstant})
 #foreach($field in ${table.fields})
 	public static final String ${field.name.toUpperCase()} = "${field.name}";
 

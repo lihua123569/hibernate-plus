@@ -15,6 +15,18 @@
  */
 package com.baomidou.hibernateplus.generator.config.builder;
 
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.baomidou.hibernateplus.generator.config.ConstVal;
 import com.baomidou.hibernateplus.generator.config.DataSourceConfig;
 import com.baomidou.hibernateplus.generator.config.GlobalConfig;
@@ -27,18 +39,6 @@ import com.baomidou.hibernateplus.generator.config.rules.DbType;
 import com.baomidou.hibernateplus.generator.config.rules.NamingStrategy;
 import com.baomidou.hibernateplus.generator.config.rules.QuerySQL;
 import com.baomidou.hibernateplus.utils.StringUtils;
-
-import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * 配置汇总 传递给文件生成工具
@@ -57,7 +57,8 @@ public class ConfigBuilder {
 	 */
 	private QuerySQL querySQL;
 	private String superModelClass;
-	private String superMapperClass;
+	private String superDaoClass;
+	private String superDaoImplClass;
 	/**
 	 * service超类定义
 	 */
@@ -157,8 +158,12 @@ public class ConfigBuilder {
 		return superModelClass;
 	}
 
-	public String getSuperMapperClass() {
-		return superMapperClass;
+	public String getSuperDaoClass() {
+		return superDaoClass;
+	}
+
+	public String getSuperDaoImplClass() {
+		return superDaoImplClass;
 	}
 
 	/**
@@ -265,9 +270,14 @@ public class ConfigBuilder {
 			superServiceImplClass = config.getSuperServiceImplClass();
 		}
 		if (StringUtils.isBlank(config.getSuperDaoClass())) {
-			superMapperClass = ConstVal.SUPERD_DAO_CLASS;
+			superDaoClass = ConstVal.SUPERD_DAO_CLASS;
 		} else {
-			superMapperClass = config.getSuperDaoClass();
+			superDaoClass = config.getSuperDaoClass();
+		}
+		if (StringUtils.isBlank(config.getSuperDaoImplClass())) {
+			superDaoImplClass = ConstVal.SUPERD_DAOIMPL_CLASS;
+		} else {
+			superDaoImplClass = config.getSuperDaoImplClass();
 		}
 		superModelClass = config.getSuperModelClass();
 		superControllerClass = config.getSuperControllerClass();
@@ -300,7 +310,7 @@ public class ConfigBuilder {
 			if (StringUtils.isNotBlank(globalConfig.getServiceName())) {
 				tableInfo.setServiceName(String.format(globalConfig.getServiceName(), tableInfo.getPoName()));
 			} else {
-				tableInfo.setServiceName("I" + tableInfo.getPoName() + ConstVal.SERIVCE);
+				tableInfo.setServiceName(tableInfo.getPoName() + ConstVal.SERIVCE);
 			}
 			if (StringUtils.isNotBlank(globalConfig.getServiceImplName())) {
 				tableInfo.setServiceImplName(String.format(globalConfig.getServiceImplName(), tableInfo.getPoName()));
@@ -311,6 +321,11 @@ public class ConfigBuilder {
 				tableInfo.setControllerName(String.format(globalConfig.getControllerName(), tableInfo.getPoName()));
 			} else {
 				tableInfo.setControllerName(tableInfo.getPoName() + ConstVal.CONTROLLER);
+			}
+			if (StringUtils.isNotBlank(globalConfig.getVoName())) {
+				tableInfo.setVoName(String.format(globalConfig.getVoName(), tableInfo.getPoName()));
+			} else {
+				tableInfo.setVoName(tableInfo.getPoName() + ConstVal.VO);
 			}
 		}
 		return tableList;

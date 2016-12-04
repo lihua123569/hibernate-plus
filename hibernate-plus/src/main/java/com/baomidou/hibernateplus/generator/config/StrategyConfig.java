@@ -50,9 +50,13 @@ public class StrategyConfig {
 	private String[] superModelColumns;
 
 	/**
-	 * 自定义继承的Mapper类全称，带包名
+	 * 自定义继承的Dao类全称，带包名
 	 */
 	private String superDaoClass = ConstVal.SUPERD_DAO_CLASS;
+	/**
+	 * 自定义继承的DaoImpl类全称，带包名
+	 */
+	private String superDaoImplClass = ConstVal.SUPERD_DAOIMPL_CLASS;
 
 	/**
 	 * 自定义继承的Service类全称，带包名
@@ -205,5 +209,13 @@ public class StrategyConfig {
 
 	public void setModelBuliderModel(boolean modelBuliderModel) {
 		this.modelBuliderModel = modelBuliderModel;
+	}
+
+	public String getSuperDaoImplClass() {
+		return superDaoImplClass;
+	}
+
+	public void setSuperDaoImplClass(String superDaoImplClass) {
+		this.superDaoImplClass = superDaoImplClass;
 	}
 }

@@ -61,6 +61,7 @@ public class GlobalConfig {
 	/**
 	 * 各层文件名称方式，例如： %Action 生成 UserAction
 	 */
+	private String voName;
 	private String daoName;
 	private String daoImplName;
 	private String serviceName;
@@ -163,4 +164,11 @@ public class GlobalConfig {
 		this.controllerName = controllerName;
 	}
 
+	public String getVoName() {
+		return voName;
+	}
+
+	public void setVoName(String voName) {
+		this.voName = voName;
+	}
 }

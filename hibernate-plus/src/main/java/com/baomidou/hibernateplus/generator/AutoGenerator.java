@@ -15,17 +15,6 @@
  */
 package com.baomidou.hibernateplus.generator;
 
-import com.baomidou.hibernateplus.generator.config.ConstVal;
-import com.baomidou.hibernateplus.generator.config.TemplateConfig;
-import com.baomidou.hibernateplus.generator.config.builder.ConfigBuilder;
-import com.baomidou.hibernateplus.generator.config.po.TableInfo;
-import com.baomidou.hibernateplus.utils.StringUtils;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.app.VelocityEngine;
-import org.jboss.logging.Logger;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,6 +26,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.VelocityEngine;
+import org.jboss.logging.Logger;
+
+import com.baomidou.hibernateplus.generator.config.ConstVal;
+import com.baomidou.hibernateplus.generator.config.TemplateConfig;
+import com.baomidou.hibernateplus.generator.config.builder.ConfigBuilder;
+import com.baomidou.hibernateplus.generator.config.po.TableInfo;
+import com.baomidou.hibernateplus.utils.StringUtils;
 
 
 /**
@@ -101,7 +102,8 @@ public class AutoGenerator extends AbstractGenerator {
 		Map<String, String> packageInfo = config.getPackageInfo();
 		Map<String, VelocityContext> ctxData = new HashMap<String, VelocityContext>();
 		String superModelClass = getSuperClassName(config.getSuperModelClass());
-		String superMapperClass = getSuperClassName(config.getSuperMapperClass());
+		String superDaoClass = getSuperClassName(config.getSuperDaoClass());
+		String superDaoImplClass = getSuperClassName(config.getSuperDaoImplClass());
 		String superServiceClass = getSuperClassName(config.getSuperServiceClass());
 		String superServiceImplClass = getSuperClassName(config.getSuperServiceImplClass());
 		String superControllerClass = getSuperClassName(config.getSuperControllerClass());
@@ -123,8 +125,10 @@ public class AutoGenerator extends AbstractGenerator {
 			ctx.put("tabeAnnotation", !tableInfo.getPoName().toLowerCase().equals(tableInfo.getName().toLowerCase()));
 			ctx.put("superModelClassPackage", config.getSuperModelClass());
 			ctx.put("superModelClass", superModelClass);
-			ctx.put("superMapperClassPackage", config.getSuperMapperClass());
-			ctx.put("superMapperClass", superMapperClass);
+			ctx.put("superDaoClassPackage", config.getSuperDaoClass());
+			ctx.put("superDaoClass", superDaoClass);
+			ctx.put("superDaoImplClassPackage", config.getSuperDaoImplClass());
+			ctx.put("superDaoImplClass", superDaoImplClass);
 			ctx.put("superServiceClassPackage", config.getSuperServiceClass());
 			ctx.put("superServiceClass", superServiceClass);
 			ctx.put("superServiceImplClassPackage", config.getSuperServiceImplClass());
@@ -177,10 +181,9 @@ public class AutoGenerator extends AbstractGenerator {
 			TableInfo tableInfo = (TableInfo) context.get("table");
 			Map<String, String> pathInfo = config.getPathInfo();
 			String poFile = String.format((pathInfo.get(ConstVal.PO_PATH) + ConstVal.MODEL_NAME), poName);
-			//TODO
-			//String voFile = String.format((pathInfo.get(ConstVal.VO_PATH) + ConstVal.MODEL_NAME), voName);
+			String voFile = String.format((pathInfo.get(ConstVal.VO_PATH) + ConstVal.MODEL_NAME), tableInfo.getVoName());
 			String daoFile = String.format((pathInfo.get(ConstVal.DAO_PATH) + File.separator + tableInfo.getDaoName() + ConstVal.JAVA_SUFFIX), poName);
-			String daoimplFile = String.format((pathInfo.get(ConstVal.DAOIMPL_PATH) + File.separator + tableInfo.getDaoImplName() + ConstVal.XML_SUFFIX), poName);
+			String daoimplFile = String.format((pathInfo.get(ConstVal.DAOIMPL_PATH) + File.separator + tableInfo.getDaoImplName() + ConstVal.JAVA_SUFFIX), poName);
 			String serviceFile = String.format((pathInfo.get(ConstVal.SERIVCE_PATH) + File.separator + tableInfo.getServiceName() + ConstVal.JAVA_SUFFIX), poName);
 			String serviceimplFile = String.format((pathInfo.get(ConstVal.SERVICEIMPL_PATH) + File.separator + tableInfo.getServiceImplName() + ConstVal.JAVA_SUFFIX), poName);
 			String controllerFile = String.format((pathInfo.get(ConstVal.CONTROLLER_PATH) + File.separator + tableInfo.getControllerName() + ConstVal.JAVA_SUFFIX), poName);
@@ -190,6 +193,10 @@ public class AutoGenerator extends AbstractGenerator {
 			// 根据override标识来判断是否需要创建文件
 			if (isCreate(poFile)) {
 				vmToFile(context, template.getPo(), poFile);
+			}
+			// 根据override标识来判断是否需要创建文件
+			if (isCreate(voFile)) {
+				vmToFile(context, template.getVo(), voFile);
 			}
 			if (isCreate(daoFile)) {
 				vmToFile(context, template.getDao(), daoFile);
