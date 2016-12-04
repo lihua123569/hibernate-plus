@@ -1,0 +1,76 @@
+package ${package.Model};
+
+#if(${superModelClassPackage})
+import ${superModelClassPackage};
+#end
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableField;
+#if(${addTabeName})
+import com.baomidou.mybatisplus.annotations.TableName;
+#end
+import java.io.Serializable;
+#if(${table.hasDate})
+import java.util.Date;
+#end
+
+/**
+ * <p>
+ * ${table.comment}
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${tabeAnnotation})
+@TableName("${table.name}")
+#end
+#if(${superModelClass})
+public class ${modelpo} extends ${superModelClass} {
+#else
+#if(${activeRecord})
+public class ${modelpo} extends Model<${modelpo}> {
+#else
+public class ${modelpo} implements Serializable {
+#end
+#end
+
+    private static final long serialVersionUID = 1L;
+
+#foreach($field in ${table.fields})
+	/**
+	 * ${field.comment}
+	 */
+#if(${field.keyFlag} && ${field.convert})
+	@TableId(value="${field.name}")
+#elseif(${field.convert})
+	@TableField(value="${field.name}")
+#end
+	private ${field.propertyType} ${field.propertyName};
+#end
+
+#foreach($field in ${table.fields})
+#if(${field.propertyName.equals("Boolean")})
+#set($getprefix="is")
+#else
+#set($getprefix="get")
+#end
+
+	public ${field.propertyType} ${getprefix}${field.capitalName}() {
+		return ${field.propertyName};
+	}
+
+	public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
+		this.${field.propertyName} = ${field.propertyName};
+#if(${modelpoBuliderModel})
+		return this;
+#end
+	}
+#end
+
+#if(${modelpoColumnConstant})
+#foreach($field in ${table.fields})
+	public static final String ${field.name.toUpperCase()} = "${field.name}";
+
+#end
+#end
+}

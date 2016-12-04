@@ -19,7 +19,6 @@ import com.baomidou.hibernateplus.utils.StringUtils;
 
 import java.util.List;
 
-
 /**
  * <p>
  * 表信息，关联到当前字段信息
@@ -33,9 +32,10 @@ public class TableInfo {
 	private String name;
 	private String comment;
 
-	private String entityName;
-	private String mapperName;
-	private String xmlName;
+	private String poName;
+	private String voName;
+	private String daoName;
+	private String daoImplName;
 	private String serviceName;
 	private String serviceImplName;
 	private String controllerName;
@@ -60,28 +60,36 @@ public class TableInfo {
 		this.comment = comment;
 	}
 
-	public String getEntityName() {
-		return entityName;
+	public String getPoName() {
+		return poName;
 	}
 
-	public void setEntityName(String entityName) {
-		this.entityName = entityName;
+	public void setPoName(String poName) {
+		this.poName = poName;
 	}
 
-	public String getMapperName() {
-		return mapperName;
+	public String getVoName() {
+		return voName;
 	}
 
-	public void setMapperName(String mapperName) {
-		this.mapperName = mapperName;
+	public void setVoName(String voName) {
+		this.voName = voName;
 	}
 
-	public String getXmlName() {
-		return xmlName;
+	public String getDaoName() {
+		return daoName;
 	}
 
-	public void setXmlName(String xmlName) {
-		this.xmlName = xmlName;
+	public void setDaoName(String daoName) {
+		this.daoName = daoName;
+	}
+
+	public String getDaoImplName() {
+		return daoImplName;
+	}
+
+	public void setDaoImplName(String daoImplName) {
+		this.daoImplName = daoImplName;
 	}
 
 	public String getServiceName() {

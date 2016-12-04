@@ -15,9 +15,8 @@
  */
 package com.baomidou.hibernateplus.generator.config.rules;
 
-import com.baomidou.hibernateplus.utils.StringUtils;
-
 import com.baomidou.hibernateplus.generator.config.ConstVal;
+import com.baomidou.hibernateplus.utils.StringUtils;
 
 /**
  * 从数据库表到文件的命名策略

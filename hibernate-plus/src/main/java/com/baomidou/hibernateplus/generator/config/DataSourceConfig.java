@@ -15,12 +15,12 @@
  */
 package com.baomidou.hibernateplus.generator.config;
 
-import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
-import com.baomidou.hibernateplus.generator.config.rules.DbType;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import com.baomidou.hibernateplus.exceptions.HibernatePlusException;
+import com.baomidou.hibernateplus.generator.config.rules.DbType;
 
 /**
  * <p>

@@ -37,9 +37,13 @@ public class PackageConfig {
 	private String moduleName = null;
 
 	/**
-	 * Entity包名
+	 * Model PO 包名
 	 */
-	private String entity = "entity";
+	private String po = "po";
+	/**
+	 * Model VO 包名
+	 */
+	private String vo = "vo";
 
 	/**
 	 * Service包名
@@ -53,12 +57,12 @@ public class PackageConfig {
 	/**
 	 * Mapper包名
 	 */
-	private String mapper = "mapper";
+	private String dao = "dao";
 
 	/**
 	 * Mapper XML包名
 	 */
-	private String xml = "mapper.xml";
+	private String daoImpl = "dao.impl";
 
 	/**
 	 * Controller包名
@@ -80,14 +84,6 @@ public class PackageConfig {
 		this.moduleName = moduleName;
 	}
 
-	public String getEntity() {
-		return entity;
-	}
-
-	public void setEntity(String entity) {
-		this.entity = entity;
-	}
-
 	public String getService() {
 		return service;
 	}
@@ -102,22 +98,6 @@ public class PackageConfig {
 
 	public void setServiceImpl(String serviceImpl) {
 		this.serviceImpl = serviceImpl;
-	}
-
-	public String getMapper() {
-		return mapper;
-	}
-
-	public void setMapper(String mapper) {
-		this.mapper = mapper;
-	}
-
-	public String getXml() {
-		return xml;
-	}
-
-	public void setXml(String xml) {
-		this.xml = xml;
 	}
 
 	public void setParent(String parent) {
@@ -135,4 +115,35 @@ public class PackageConfig {
 		this.controller = controller;
 	}
 
+	public String getPo() {
+		return po;
+	}
+
+	public void setPo(String po) {
+		this.po = po;
+	}
+
+	public String getVo() {
+		return vo;
+	}
+
+	public void setVo(String vo) {
+		this.vo = vo;
+	}
+
+	public String getDao() {
+		return dao;
+	}
+
+	public void setDao(String dao) {
+		this.dao = dao;
+	}
+
+	public String getDaoImpl() {
+		return daoImpl;
+	}
+
+	public void setDaoImpl(String daoImpl) {
+		this.daoImpl = daoImpl;
+	}
 }

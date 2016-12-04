@@ -15,7 +15,6 @@
  */
 package com.baomidou.hibernateplus.generator.config;
 
-
 import com.baomidou.hibernateplus.generator.config.rules.NamingStrategy;
 
 /**
@@ -41,19 +40,19 @@ public class StrategyConfig {
 	private String tablePrefix;
 
 	/**
-	 * 自定义继承的Entity类全称，带包名
+	 * 自定义继承的Model类全称，带包名
 	 */
-	private String superEntityClass;
+	private String superModelClass;
 
 	/**
-	 * 自定义基础的Entity类，公共字段
+	 * 自定义基础的Model类，公共字段
 	 */
-	private String[] superEntityColumns;
+	private String[] superModelColumns;
 
 	/**
 	 * 自定义继承的Mapper类全称，带包名
 	 */
-	private String superMapperClass = ConstVal.SUPERD_MAPPER_CLASS;
+	private String superDaoClass = ConstVal.SUPERD_DAO_CLASS;
 
 	/**
 	 * 自定义继承的Service类全称，带包名
@@ -84,14 +83,14 @@ public class StrategyConfig {
 	 * -----------------------------------<br>
 	 * public static final String ID = "test_id";
 	 */
-	private boolean entityColumnConstant = false;
+	private boolean modelColumnConstant = false;
 
 	/**
 	 * 【实体】是否为构建者模型（默认 false）<br>
 	 * -----------------------------------<br>
 	 * public User setName(String name) { this.name = name; return this; }
 	 */
-	private boolean entityBuliderModel = false;
+	private boolean modelBuliderModel = false;
 
 	public NamingStrategy getNaming() {
 		return naming;
@@ -117,17 +116,17 @@ public class StrategyConfig {
 		this.tablePrefix = tablePrefix;
 	}
 
-	public String getSuperEntityClass() {
-		return superEntityClass;
+	public String getSuperModelClass() {
+		return superModelClass;
 	}
 
-	public void setSuperEntityClass(String superEntityClass) {
-		this.superEntityClass = superEntityClass;
+	public void setSuperModelClass(String superModelClass) {
+		this.superModelClass = superModelClass;
 	}
 
-	public boolean includeSuperEntityColumns(String fieldName) {
-		if (null != superEntityColumns) {
-			for (String column : superEntityColumns) {
+	public boolean includeSuperModelColumns(String fieldName) {
+		if (null != superModelColumns) {
+			for (String column : superModelColumns) {
 				if (column.contains(fieldName)) {
 					return true;
 				}
@@ -136,20 +135,20 @@ public class StrategyConfig {
 		return false;
 	}
 
-	public String[] getSuperEntityColumns() {
-		return superEntityColumns;
+	public String[] getSuperModelColumns() {
+		return superModelColumns;
 	}
 
-	public void setSuperEntityColumns(String[] superEntityColumns) {
-		this.superEntityColumns = superEntityColumns;
+	public void setSuperModelColumns(String[] superModelColumns) {
+		this.superModelColumns = superModelColumns;
 	}
 
-	public String getSuperMapperClass() {
-		return superMapperClass;
+	public String getSuperDaoClass() {
+		return superDaoClass;
 	}
 
-	public void setSuperMapperClass(String superMapperClass) {
-		this.superMapperClass = superMapperClass;
+	public void setSuperDaoClass(String superDaoClass) {
+		this.superDaoClass = superDaoClass;
 	}
 
 	public String getSuperServiceClass() {
@@ -192,20 +191,19 @@ public class StrategyConfig {
 		this.exclude = exclude;
 	}
 
-	public boolean isEntityColumnConstant() {
-		return entityColumnConstant;
+	public boolean isModelColumnConstant() {
+		return modelColumnConstant;
 	}
 
-	public void setEntityColumnConstant(boolean entityColumnConstant) {
-		this.entityColumnConstant = entityColumnConstant;
+	public void setModelColumnConstant(boolean modelColumnConstant) {
+		this.modelColumnConstant = modelColumnConstant;
 	}
 
-	public boolean isEntityBuliderModel() {
-		return entityBuliderModel;
+	public boolean isModelBuliderModel() {
+		return modelBuliderModel;
 	}
 
-	public void setEntityBuliderModel(boolean entityBuliderModel) {
-		this.entityBuliderModel = entityBuliderModel;
+	public void setModelBuliderModel(boolean modelBuliderModel) {
+		this.modelBuliderModel = modelBuliderModel;
 	}
-
 }

@@ -41,7 +41,7 @@ import java.util.Properties;
 
 /**
  * 生成文件
- * 
+ *
  * @author YangHu, tangguo
  * @since 2016/8/30
  */
@@ -100,7 +100,7 @@ public class AutoGenerator extends AbstractGenerator {
 		List<TableInfo> tableList = config.getTableInfoList();
 		Map<String, String> packageInfo = config.getPackageInfo();
 		Map<String, VelocityContext> ctxData = new HashMap<String, VelocityContext>();
-		String superEntityClass = getSuperClassName(config.getSuperEntityClass());
+		String superModelClass = getSuperClassName(config.getSuperModelClass());
 		String superMapperClass = getSuperClassName(config.getSuperMapperClass());
 		String superServiceClass = getSuperClassName(config.getSuperServiceClass());
 		String superServiceImplClass = getSuperClassName(config.getSuperServiceImplClass());
@@ -116,12 +116,13 @@ public class AutoGenerator extends AbstractGenerator {
 			ctx.put("enableCache", config.getGlobalConfig().isEnableCache());
 			ctx.put("baseResultMap", config.getGlobalConfig().isBaseResultMap());
 			ctx.put("baseColumnList", config.getGlobalConfig().isBaseColumnList());
-			ctx.put("entity", tableInfo.getEntityName());
-			ctx.put("entityColumnConstant", config.getStrategyConfig().isEntityColumnConstant());
-			ctx.put("entityBuliderModel", config.getStrategyConfig().isEntityBuliderModel());
-			ctx.put("tabeAnnotation", !tableInfo.getEntityName().toLowerCase().equals(tableInfo.getName().toLowerCase()));
-			ctx.put("superEntityClassPackage", config.getSuperEntityClass());
-			ctx.put("superEntityClass", superEntityClass);
+			ctx.put("po", tableInfo.getPoName());
+			ctx.put("vo", tableInfo.getVoName());
+			ctx.put("modelColumnConstant", config.getStrategyConfig().isModelColumnConstant());
+			ctx.put("modelBuliderModel", config.getStrategyConfig().isModelBuliderModel());
+			ctx.put("tabeAnnotation", !tableInfo.getPoName().toLowerCase().equals(tableInfo.getName().toLowerCase()));
+			ctx.put("superModelClassPackage", config.getSuperModelClass());
+			ctx.put("superModelClass", superModelClass);
 			ctx.put("superMapperClassPackage", config.getSuperMapperClass());
 			ctx.put("superMapperClass", superMapperClass);
 			ctx.put("superServiceClassPackage", config.getSuperServiceClass());
@@ -130,14 +131,14 @@ public class AutoGenerator extends AbstractGenerator {
 			ctx.put("superServiceImplClass", superServiceImplClass);
 			ctx.put("superControllerClassPackage", config.getSuperControllerClass());
 			ctx.put("superControllerClass", superControllerClass);
-			ctxData.put(tableInfo.getEntityName(), ctx);
+			ctxData.put(tableInfo.getPoName(), ctx);
 		}
 		return ctxData;
 	}
 
 	/**
 	 * 获取类名
-	 * 
+	 *
 	 * @param classPath
 	 * @return
 	 */
@@ -171,34 +172,36 @@ public class AutoGenerator extends AbstractGenerator {
 	 * @param context
 	 *            vm上下文
 	 */
-	private void batchOutput(String entityName, VelocityContext context) {
+	private void batchOutput(String poName, VelocityContext context) {
 		try {
 			TableInfo tableInfo = (TableInfo) context.get("table");
 			Map<String, String> pathInfo = config.getPathInfo();
-			String entityFile = String.format((pathInfo.get(ConstVal.ENTITY_PATH) + ConstVal.ENTITY_NAME), entityName);
-			String mapperFile = String.format((pathInfo.get(ConstVal.MAPPER_PATH) + File.separator + tableInfo.getMapperName() + ConstVal.JAVA_SUFFIX), entityName);
-			String xmlFile = String.format((pathInfo.get(ConstVal.XML_PATH) + File.separator + tableInfo.getXmlName() + ConstVal.XML_SUFFIX), entityName);
-			String serviceFile = String.format((pathInfo.get(ConstVal.SERIVCE_PATH) + File.separator + tableInfo.getServiceName() + ConstVal.JAVA_SUFFIX), entityName);
-			String implFile = String.format((pathInfo.get(ConstVal.SERVICEIMPL_PATH) + File.separator + tableInfo.getServiceImplName() + ConstVal.JAVA_SUFFIX), entityName);
-			String controllerFile = String.format((pathInfo.get(ConstVal.CONTROLLER_PATH) + File.separator + tableInfo.getControllerName() + ConstVal.JAVA_SUFFIX), entityName);
+			String poFile = String.format((pathInfo.get(ConstVal.PO_PATH) + ConstVal.MODEL_NAME), poName);
+			//TODO
+			//String voFile = String.format((pathInfo.get(ConstVal.VO_PATH) + ConstVal.MODEL_NAME), voName);
+			String daoFile = String.format((pathInfo.get(ConstVal.DAO_PATH) + File.separator + tableInfo.getDaoName() + ConstVal.JAVA_SUFFIX), poName);
+			String daoimplFile = String.format((pathInfo.get(ConstVal.DAOIMPL_PATH) + File.separator + tableInfo.getDaoImplName() + ConstVal.XML_SUFFIX), poName);
+			String serviceFile = String.format((pathInfo.get(ConstVal.SERIVCE_PATH) + File.separator + tableInfo.getServiceName() + ConstVal.JAVA_SUFFIX), poName);
+			String serviceimplFile = String.format((pathInfo.get(ConstVal.SERVICEIMPL_PATH) + File.separator + tableInfo.getServiceImplName() + ConstVal.JAVA_SUFFIX), poName);
+			String controllerFile = String.format((pathInfo.get(ConstVal.CONTROLLER_PATH) + File.separator + tableInfo.getControllerName() + ConstVal.JAVA_SUFFIX), poName);
 
 			TemplateConfig template = config.getTemplate();
 
 			// 根据override标识来判断是否需要创建文件
-			if (isCreate(entityFile)) {
-				vmToFile(context, template.getEntity(), entityFile);
+			if (isCreate(poFile)) {
+				vmToFile(context, template.getPo(), poFile);
 			}
-			if (isCreate(mapperFile)) {
-				vmToFile(context, template.getMapper(), mapperFile);
+			if (isCreate(daoFile)) {
+				vmToFile(context, template.getDao(), daoFile);
 			}
-			if (isCreate(xmlFile)) {
-				vmToFile(context, template.getXml(), xmlFile);
+			if (isCreate(daoimplFile)) {
+				vmToFile(context, template.getDaoImpl(), daoimplFile);
 			}
 			if (isCreate(serviceFile)) {
 				vmToFile(context, template.getService(), serviceFile);
 			}
-			if (isCreate(implFile)) {
-				vmToFile(context, template.getServiceImpl(), implFile);
+			if (isCreate(serviceimplFile)) {
+				vmToFile(context, template.getServiceImpl(), serviceimplFile);
 			}
 			if (isCreate(controllerFile)) {
 				vmToFile(context, template.getController(), controllerFile);

@@ -50,11 +50,6 @@ public class GlobalConfig {
 	private String author;
 
 	/**
-	 * 开启 ActiveRecord 模式
-	 */
-	private boolean activeRecord = true;
-
-	/**
 	 * 开启 BaseResultMap
 	 */
 	private boolean baseResultMap = false;
@@ -66,8 +61,8 @@ public class GlobalConfig {
 	/**
 	 * 各层文件名称方式，例如： %Action 生成 UserAction
 	 */
-	private String mapperName;
-	private String xmlName;
+	private String daoName;
+	private String daoImplName;
 	private String serviceName;
 	private String serviceImplName;
 	private String controllerName;
@@ -112,14 +107,6 @@ public class GlobalConfig {
 		this.author = author;
 	}
 
-	public boolean isActiveRecord() {
-		return activeRecord;
-	}
-
-	public void setActiveRecord(boolean activeRecord) {
-		this.activeRecord = activeRecord;
-	}
-
 	public boolean isBaseResultMap() {
 		return baseResultMap;
 	}
@@ -136,20 +123,20 @@ public class GlobalConfig {
 		this.baseColumnList = baseColumnList;
 	}
 
-	public String getMapperName() {
-		return mapperName;
+	public String getDaoName() {
+		return daoName;
 	}
 
-	public void setMapperName(String mapperName) {
-		this.mapperName = mapperName;
+	public void setDaoName(String daoName) {
+		this.daoName = daoName;
 	}
 
-	public String getXmlName() {
-		return xmlName;
+	public String getDaoImplName() {
+		return daoImplName;
 	}
 
-	public void setXmlName(String xmlName) {
-		this.xmlName = xmlName;
+	public void setDaoImplName(String daoImplName) {
+		this.daoImplName = daoImplName;
 	}
 
 	public String getServiceName() {

@@ -21,29 +21,23 @@ package com.baomidou.hibernateplus.generator.config;
  * </p>
  * 
  * @author tzg
-  *@since 2016/11/10
+ * @since 2016/11/10
  */
 public class TemplateConfig {
 
-	private String entity = ConstVal.TEMPLATE_ENTITY;
+	private String po = ConstVal.TEMPLATE_PO;
+
+	private String vo = ConstVal.TEMPLATE_VO;
 
 	private String service = ConstVal.TEMPLATE_SERVICE;
 
 	private String serviceImpl = ConstVal.TEMPLATE_SERVICEIMPL;
 
-	private String mapper = ConstVal.TEMPLATE_MAPPER;
+	private String dao = ConstVal.TEMPLATE_DAO;
 
-	private String xml = ConstVal.TEMPLATE_XML;
+	private String daoImpl = ConstVal.TEMPLATE_DAOIMPL;
 
 	private String controller = ConstVal.TEMPLATE_CONTROLLER;
-
-	public String getEntity() {
-		return entity;
-	}
-
-	public void setEntity(String entity) {
-		this.entity = entity;
-	}
 
 	public String getService() {
 		return service;
@@ -61,20 +55,36 @@ public class TemplateConfig {
 		this.serviceImpl = serviceImpl;
 	}
 
-	public String getMapper() {
-		return mapper;
+	public String getPo() {
+		return po;
 	}
 
-	public void setMapper(String mapper) {
-		this.mapper = mapper;
+	public void setPo(String po) {
+		this.po = po;
 	}
 
-	public String getXml() {
-		return xml;
+	public String getVo() {
+		return vo;
 	}
 
-	public void setXml(String xml) {
-		this.xml = xml;
+	public void setVo(String vo) {
+		this.vo = vo;
+	}
+
+	public String getDao() {
+		return dao;
+	}
+
+	public void setDao(String dao) {
+		this.dao = dao;
+	}
+
+	public String getDaoImpl() {
+		return daoImpl;
+	}
+
+	public void setDaoImpl(String daoImpl) {
+		this.daoImpl = daoImpl;
 	}
 
 	public String getController() {

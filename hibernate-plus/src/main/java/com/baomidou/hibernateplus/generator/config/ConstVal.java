@@ -25,21 +25,23 @@ import java.nio.charset.Charset;
  * @since 2016/8/31
  */
 public class ConstVal {
-	
+
 	public static final String MODULENAME = "ModuleName";
-	
-	public static final String ENTITY = "Entity";
+
+	public static final String PO = "Model";
+	public static final String VO = "ModelVO";
 	public static final String SERIVCE = "Service";
 	public static final String SERVICEIMPL = "ServiceImpl";
-	public static final String MAPPER = "Mapper";
-	public static final String XML = "Xml";
+	public static final String DAO = "Dao";
+	public static final String DAOIMPL = "DaoImpl";
 	public static final String CONTROLLER = "Controller";
 
-	public static final String ENTITY_PATH = "entity_path";
+	public static final String PO_PATH = "modelpo_path";
+	public static final String VO_PATH = "modelvo_path";
 	public static final String SERIVCE_PATH = "serivce_path";
 	public static final String SERVICEIMPL_PATH = "serviceimpl_path";
-	public static final String MAPPER_PATH = "mapper_path";
-	public static final String XML_PATH = "xml_path";
+	public static final String DAO_PATH = "dao_path";
+	public static final String DAOIMPL_PATH = "daoimpl_path";
 	public static final String CONTROLLER_PATH = "controller_path";
 
 	public static final String JAVA_TMPDIR = "java.io.tmpdir";
@@ -49,26 +51,33 @@ public class ConstVal {
 	public static final String JAVA_SUFFIX = ".java";
 	public static final String XML_SUFFIX = ".xml";
 
-	public static final String TEMPLATE_ENTITY = "/template/entity.java.vm";
-	public static final String TEMPLATE_MAPPER = "/template/mapper.java.vm";
-	public static final String TEMPLATE_XML = "/template/mapper.xml.vm";
+	public static final String TEMPLATE_PO = "/template/po.java.vm";
+	public static final String TEMPLATE_VO = "/template/vo.java.vm";
 	public static final String TEMPLATE_SERVICE = "/template/service.java.vm";
 	public static final String TEMPLATE_SERVICEIMPL = "/template/serviceImpl.java.vm";
+	public static final String TEMPLATE_DAO = "/template/dao.java.vm";
+	public static final String TEMPLATE_DAOIMPL = "/template/daoimpl.java.vm";
 	public static final String TEMPLATE_CONTROLLER = "/template/controller.java.vm";
 
-	public static final String ENTITY_NAME = File.separator + "%s" + JAVA_SUFFIX;
-//	public static final String MAPPER_NAME = File.separator + "%s" + MAPPER + JAVA_SUFFIX;
-//	public static final String XML_NAME = File.separator + "%s" + MAPPER + XML_SUFFIX;
-//	public static final String SERVICE_NAME = File.separator + "I%s" + SERIVCE + JAVA_SUFFIX;
-//	public static final String SERVICEIMPL_NAME = File.separator + "%s" + SERVICEIMPL + JAVA_SUFFIX;
-//	public static final String CONTROLLER_NAME = File.separator + "%s" + CONTROLLER + JAVA_SUFFIX;
+	public static final String MODEL_NAME = File.separator + "%s" + JAVA_SUFFIX;
+	// public static final String MAPPER_NAME = File.separator + "%s" + MAPPER +
+	// JAVA_SUFFIX;
+	// public static final String XML_NAME = File.separator + "%s" + MAPPER +
+	// XML_SUFFIX;
+	// public static final String SERVICE_NAME = File.separator + "I%s" +
+	// SERIVCE + JAVA_SUFFIX;
+	// public static final String SERVICEIMPL_NAME = File.separator + "%s" +
+	// SERVICEIMPL + JAVA_SUFFIX;
+	// public static final String CONTROLLER_NAME = File.separator + "%s" +
+	// CONTROLLER + JAVA_SUFFIX;
 
 	// 配置使用classloader加载资源
 	public static final String VM_LOADPATH_KEY = "file.resource.loader.class";
 	public static final String VM_LOADPATH_VALUE = "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader";
 
-	public static final String SUPERD_MAPPER_CLASS = "com.baomidou.mybatisplus.mapper.BaseMapper";
-	public static final String SUPERD_SERVICE_CLASS = "com.baomidou.mybatisplus.service.IService";
-	public static final String SUPERD_SERVICEIMPL_CLASS = "com.baomidou.mybatisplus.service.impl.ServiceImpl";
-	
+	public static final String SUPERD_DAO_CLASS = "com.baomidou.hibernateplus.dao.IDao";
+	public static final String SUPERD_DAOIMPL_CLASS = "com.baomidou.hibernateplus.dao.impl.DaoImpl";
+	public static final String SUPERD_SERVICE_CLASS = "com.baomidou.hibernateplus.service.IService";
+	public static final String SUPERD_SERVICEIMPL_CLASS = "com.baomidou.hibernateplus.service.impl.ServiceImpl";
+
 }
