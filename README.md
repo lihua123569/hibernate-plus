@@ -21,7 +21,7 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
 
 # 应用实例 | Demo
 
-[Spring-MVC](http://git.oschina.net/cancerGit/springmvc-hibernate-plus)
+[Spring-MVC](http://git.oschina.net/baomidou/springmvc-hibernate-plus)
 
 # 通用方法 | API
 
@@ -211,7 +211,7 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
 >不是表中字段的属性需要添加`@Transient`注解  
 
 ####示例项目
->http://git.oschina.net/cancerGit/springmvc-hibernate-plus
+>http://git.oschina.net/baomidou/springmvc-hibernate-plus
 
 ##Hibernate-Plus - 简单用法示例
 
@@ -287,7 +287,7 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
 
 		...
 
-其他 具体请查看 `示例` 项目  [Spring-MVC](http://git.oschina.net/cancerGit/springmvc-hibernate-plus)
+其他 具体请查看 `示例` 项目  [Spring-MVC](http://git.oschina.net/baomidou/springmvc-hibernate-plus)
 	
 
 # 其他开源项目 | Other Project
