@@ -42,7 +42,7 @@
         <commons.pool2.version>2.4.2</commons.pool2.version>
         <jsqlparser.version>0.9.6</jsqlparser.version>
         <hibernate.version>5.1.0.Final</hibernate.version>
-        <freemarker.version>2.3.23</freemarker.version>
+        <velocity.version>1.7</velocity.version>
         <mysql.connector.version>5.1.39</mysql.connector.version>
         <junit.version>4.12</junit.version>
         <jboss.transaction.version>1.0.1.Final</jboss.transaction.version>
@@ -108,11 +108,11 @@
             <version>${springframework.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!-- freemarker -->
+        <!-- velocity -->
         <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-            <version>${freemarker.version}</version>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>${velocity.version}</version>
             <scope>provided</scope>
         </dependency>
         <!--jsqlparser-->
@@ -253,15 +253,6 @@
                 </executions>
             </plugin>-->
         </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.ftl</include>
-                </includes>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
     </build>
     <profiles>
         <profile>
