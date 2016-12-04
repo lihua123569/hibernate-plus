@@ -25,6 +25,7 @@ package com.baomidou.hibernateplus.condition.wrapper;
 import java.text.MessageFormat;
 import java.util.Collection;
 
+import com.baomidou.hibernateplus.enums.SQLlikeType;
 import com.baomidou.hibernateplus.utils.CollectionUtils;
 import com.baomidou.hibernateplus.utils.StringUtils;
 
@@ -41,7 +42,7 @@ public class SqlPlus extends AbstractSQL<SqlPlus> {
 
 	private final String IS_NOT_NULL = " IS NOT NULL";
 	private final String IS_NULL = " IS NULL";
-	private final String SQL_LIKE = " LIKE CONCAT(CONCAT({0},{1}),{2})";
+	private final String SQL_LIKE = " LIKE {0}";
 	private final String SQL_BETWEEN_AND = " BETWEEN {0} AND {1}";
 
 	@Override
@@ -55,11 +56,13 @@ public class SqlPlus extends AbstractSQL<SqlPlus> {
 	 * @param column
 	 *            字段名
 	 * @param value
-	 *            like值,无需前后%, MYSQL及ORACEL通用
+	 *            like值,无需前后%
+	 * @param type
+	 *            like值,无需前后%
 	 * @return
 	 */
-	public SqlPlus LIKE(String column, String value) {
-		handerLike(column, value, false);
+	public SqlPlus LIKE(String column, String value, SQLlikeType type) {
+		handerLike(column, value, type, false);
 		return this;
 	}
 
@@ -69,11 +72,12 @@ public class SqlPlus extends AbstractSQL<SqlPlus> {
 	 * @param column
 	 *            字段名
 	 * @param value
-	 *            like值,无需前后%, MYSQL及ORACEL通用
+	 *            like值,无需前后%
+	 * @param type
 	 * @return
 	 */
-	public SqlPlus NOT_LIKE(String column, String value) {
-		handerLike(column, value, true);
+	public SqlPlus NOT_LIKE(String column, String value, SQLlikeType type) {
+		handerLike(column, value, type, true);
 		return this;
 	}
 
@@ -111,14 +115,14 @@ public class SqlPlus extends AbstractSQL<SqlPlus> {
 	 * @param isNot
 	 *            是否为NOT LIKE操作
 	 */
-	private void handerLike(String column, String value, boolean isNot) {
+	private void handerLike(String column, String value, SQLlikeType type, boolean isNot) {
 		if (StringUtils.isNotBlank(column) && StringUtils.isNotBlank(value)) {
 			StringBuilder inSql = new StringBuilder();
 			inSql.append(column);
 			if (isNot) {
 				inSql.append(" NOT");
 			}
-			inSql.append(MessageFormat.format(SQL_LIKE, "'%'", StringUtils.quotaMark(value), "'%'"));
+			inSql.append(MessageFormat.format(SQL_LIKE, StringUtils.concatLike(value, type)));
 			WHERE(inSql.toString());
 		}
 	}

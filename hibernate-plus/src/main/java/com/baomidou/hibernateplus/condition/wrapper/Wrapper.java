@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.baomidou.hibernateplus.enums.SQLlikeType;
 import com.baomidou.hibernateplus.utils.MapUtils;
 import com.baomidou.hibernateplus.utils.StringUtils;
 
@@ -341,7 +342,7 @@ public abstract class Wrapper implements Serializable {
 	}
 
 	/**
-	 * LIKE条件语句，value中无需前后% 目前适配mysql及oracle
+	 * LIKE条件语句，value中无需前后%
 	 *
 	 * @param column
 	 *            字段名称
@@ -350,12 +351,12 @@ public abstract class Wrapper implements Serializable {
 	 * @return this
 	 */
 	public Wrapper like(String column, String value) {
-		sql.LIKE(column, value);
+		sql.LIKE(column, value, SQLlikeType.DEFAULT);
 		return this;
 	}
 
 	/**
-	 * NOT LIKE条件语句，value中无需前后% 目前适配mysql及oracle
+	 * NOT LIKE条件语句，value中无需前后%
 	 *
 	 * @param column
 	 *            字段名称
@@ -364,7 +365,37 @@ public abstract class Wrapper implements Serializable {
 	 * @return this
 	 */
 	public Wrapper notLike(String column, String value) {
-		sql.NOT_LIKE(column, value);
+		sql.NOT_LIKE(column, value, SQLlikeType.DEFAULT);
+		return this;
+	}
+
+	/**
+	 * LIKE条件语句，value中无需前后%
+	 *
+	 * @param column
+	 *            字段名称
+	 * @param value
+	 *            匹配值
+	 * @param type
+	 * @return this
+	 */
+	public Wrapper like(String column, String value, SQLlikeType type) {
+		sql.LIKE(column, value, type);
+		return this;
+	}
+
+	/**
+	 * NOT LIKE条件语句，value中无需前后%
+	 *
+	 * @param column
+	 *            字段名称
+	 * @param value
+	 *            匹配值
+	 * @param type
+	 * @return this
+	 */
+	public Wrapper notLike(String column, String value, SQLlikeType type) {
+		sql.NOT_LIKE(column, value, type);
 		return this;
 	}
 

@@ -27,6 +27,8 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.baomidou.hibernateplus.enums.SQLlikeType;
+
 /**
  * <p>
  * String 工具类
@@ -514,5 +516,28 @@ public class StringUtils {
 		}
 		int strOffset = str.length() - suffix.length();
 		return str.regionMatches(ignoreCase, strOffset, suffix, 0, suffix.length());
+	}
+
+	/**
+	 * <p>
+	 * 用%连接like
+	 * </p>
+	 *
+	 * @param str
+	 *            原字符串
+	 * @return
+	 */
+	public static String concatLike(String str, SQLlikeType type) {
+		switch (type) {
+			case LEFT:
+				str = "%" + str;
+				break;
+			case RIGHT:
+				str += "%";
+				break;
+			default:
+				str = "%" + str + "%";
+		}
+		return StringEscape.escapeString(str);
 	}
 }

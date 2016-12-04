@@ -22,16 +22,16 @@
  */
 package com.baomidou.hibernateplus.condition;
 
+import com.baomidou.hibernateplus.enums.SQLlikeType;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 
 /**
  * <p>
@@ -48,13 +48,12 @@ public class SelectWrapperTest {
 	 */
 	private SelectWrapper ew = new SelectWrapper();
 
-
 	@Test
 	public void test() {
 		/*
 		 * 无条件测试
 		 */
-		Assert.assertEquals("",ew.toString());
+		Assert.assertEquals("", ew.toString());
 	}
 
 	@Test
@@ -151,13 +150,18 @@ public class SelectWrapperTest {
 				.andNew("new=xx").like("hhh", "ddd").andNew("pwd=11").isNotNull("n1,n2").isNull("n3").groupBy("x1")
 				.groupBy("x2,x3").having("x1=11").having("x3=433").orderBy("dd").orderBy("d1,d2");
 		System.out.println(ew.toString());
+		Assert.assertEquals("WHERE (name=? AND id=1) \n"
+				+ "OR (status=? OR status=1 AND nlike NOT LIKE CONCAT(CONCAT('%','notvalue'),'%')) \n"
+				+ "AND (new=xx AND hhh LIKE CONCAT(CONCAT('%','ddd'),'%')) \n"
+				+ "AND (pwd=11 AND n1 IS NOT NULL AND n2 IS NOT NULL AND n3 IS NULL)\n" + "GROUP BY x1, x2,x3\n"
+				+ "HAVING (x1=11 AND x3=433)\n" + "ORDER BY dd, d1,d2", ew.toString());
 	}
 
 	@Test
 	public void testNull() {
 		ew.orderBy(null);
 		String sqlPart = ew.toString();
-		Assert.assertEquals("",sqlPart);
+		Assert.assertEquals("", sqlPart);
 	}
 
 	@Test
@@ -289,12 +293,27 @@ public class SelectWrapperTest {
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testQbc() {
-		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("allEq1","22");
-		map.put("allEq2",3333);
-		map.put("allEq3",66.99);
-		String sqlPart = SelectWrapper.instance().gt("gt", 1).le("le",2).lt("le",3).ge("ge",4).eq("eq",5).allEq(map).toString();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("allEq1", "22");
+		map.put("allEq2", 3333);
+		map.put("allEq3", 66.99);
+		String sqlPart = SelectWrapper.instance().gt("gt", 1).le("le", 2).lt("le", 3).ge("ge", 4).eq("eq", 5).allEq(map)
+				.toString();
 		System.out.println("sql ==> " + sqlPart);
-		Assert.assertEquals("WHERE (gt > 1 AND le <= 2 AND le < 3 AND ge >= 4 AND eq = 5 AND allEq3 = 66.99 AND allEq1 = '22' AND allEq2 = 3333)", sqlPart);
+		Assert.assertEquals(
+				"WHERE (gt > 1 AND le <= 2 AND le < 3 AND ge >= 4 AND eq = 5 AND allEq3 = 66.99 AND allEq1 = '22' AND allEq2 = 3333)",
+				sqlPart);
+	}
+
+	/**
+	 * 测试LIKE
+	 */
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testlike() {
+		String sqlPart = SelectWrapper.instance().like("default", "default", SQLlikeType.DEFAULT)
+				.like("left", "left", SQLlikeType.LEFT).like("right", "right", SQLlikeType.RIGHT).toString();
+		System.out.println("sql ==> " + sqlPart);
+		Assert.assertEquals("WHERE (default LIKE '%default%' AND left LIKE '%left' AND right LIKE 'right%')", sqlPart);
 	}
 }
