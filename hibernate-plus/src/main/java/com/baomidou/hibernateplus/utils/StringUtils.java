@@ -22,12 +22,12 @@
  */
 package com.baomidou.hibernateplus.utils;
 
+import com.baomidou.hibernateplus.enums.SQLlikeType;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.baomidou.hibernateplus.enums.SQLlikeType;
 
 /**
  * <p>
@@ -212,7 +212,10 @@ public class StringUtils {
 			int length = args.length;
 			if (length >= 1) {
 				for (int i = 0; i < length; i++) {
-					content = content.replace(String.format(PLACE_HOLDER, i), sqlParam(args[i]));
+					// 改造 String.replace() 用法
+					content = Pattern.compile(String.format(PLACE_HOLDER, i), Pattern.LITERAL).matcher(content)
+							.replaceAll(sqlParam(args[i]));
+
 				}
 			}
 		}
@@ -365,8 +368,7 @@ public class StringUtils {
 	 * @return String
 	 */
 	public static String toString(Object obj, String defaults) {
-		return obj == null ? defaults : ((StringUtils.EMPTY.equals(obj.toString().trim())) ? defaults : obj.toString()
-				.trim());
+		return obj == null ? defaults : ((StringUtils.EMPTY.equals(obj.toString().trim())) ? defaults : obj.toString().trim());
 	}
 
 	public static boolean hasLength(CharSequence str) {
@@ -529,14 +531,14 @@ public class StringUtils {
 	 */
 	public static String concatLike(String str, SQLlikeType type) {
 		switch (type) {
-			case LEFT:
-				str = "%" + str;
-				break;
-			case RIGHT:
-				str += "%";
-				break;
-			default:
-				str = "%" + str + "%";
+		case LEFT:
+			str = "%" + str;
+			break;
+		case RIGHT:
+			str += "%";
+			break;
+		default:
+			str = "%" + str + "%";
 		}
 		return StringEscape.escapeString(str);
 	}
