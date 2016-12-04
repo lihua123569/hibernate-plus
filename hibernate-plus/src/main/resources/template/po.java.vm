@@ -3,15 +3,19 @@ package ${package.PO};
 #if(${superModelClassPackage})
 import ${superModelClassPackage};
 #end
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableField;
-#if(${addTabeName})
-import com.baomidou.mybatisplus.annotations.TableName;
-#end
 import com.baomidou.hibernateplus.entity.Convert;
 #if(${table.hasDate})
 import java.util.Date;
 #end
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * <p>
@@ -21,9 +25,10 @@ import java.util.Date;
  * @author ${author}
  * @since ${date}
  */
-#if(${tabeAnnotation})
-@TableName("${table.name}")
-#end
+@Entity
+@Table(name = "${table.name}")
+@DynamicInsert(true)
+@DynamicUpdate(true)
 #if(${superModelClass})
 public class ${po} extends ${superModelClass} {
 #else
@@ -36,21 +41,24 @@ public class ${po} extends Convert {
 	/**
 	 * ${field.comment}
 	 */
-#if(${field.keyFlag} && ${field.convert})
-	@TableId(value="${field.name}")
-#elseif(${field.convert})
-	@TableField(value="${field.name}")
-#end
 	private ${field.propertyType} ${field.propertyName};
 #end
 
 #foreach($field in ${table.fields})
-#if(${field.propertyName.equals("Boolean")})
+#if(${field.propertyType.equals("Boolean")})
 #set($getprefix="is")
 #else
 #set($getprefix="get")
 #end
 
+	#if(${field.keyFlag})
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+	#end
+	#if(${field.propertyType.equal("Date")})
+@Temporal(TemporalType.TIMESTAMP)
+	#end
+@Column(name = "${field.propertyName}")
 	public ${field.propertyType} ${getprefix}${field.capitalName}() {
 		return ${field.propertyName};
 	}

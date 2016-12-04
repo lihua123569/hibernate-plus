@@ -3,14 +3,6 @@ package ${package.VO};
 #if(${superModelClassPackage})
 import ${superModelClassPackage};
 #end
-#if(${activeRecord})
-import com.baomidou.mybatisplus.activerecord.Model;
-#end
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableField;
-#if(${addTabeName})
-import com.baomidou.mybatisplus.annotations.TableName;
-#end
 import com.baomidou.hibernateplus.entity.Convert;
 #if(${table.hasDate})
 import java.util.Date;
@@ -24,9 +16,6 @@ import java.util.Date;
  * @author ${author}
  * @since ${date}
  */
-#if(${tabeAnnotation})
-@TableName("${table.name}")
-#end
 #if(${superModelClass})
 public class ${vo} extends ${superModelClass} {
 #else
@@ -39,11 +28,6 @@ public class ${vo} extends Convert {
 	/**
 	 * ${field.comment}
 	 */
-#if(${field.keyFlag} && ${field.convert})
-	@TableId(value="${field.name}")
-#elseif(${field.convert})
-	@TableField(value="${field.name}")
-#end
 	private ${field.propertyType} ${field.propertyName};
 #end
 
