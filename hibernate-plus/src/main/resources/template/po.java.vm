@@ -51,14 +51,15 @@ public class ${po} extends Convert {
 #set($getprefix="get")
 #end
 
-	#if(${field.keyFlag})
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-	#end
-	#if(${field.propertyType.equal("Date")})
-@Temporal(TemporalType.TIMESTAMP)
-	#end
-@Column(name = "${field.propertyName}")
+#if(${field.keyFlag})
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+#end
+
+#if(${field.propertyType.equals("Date")})
+	@Temporal(TemporalType.TIMESTAMP)
+#end
+	@Column(name = "${field.name}")
 	public ${field.propertyType} ${getprefix}${field.capitalName}() {
 		return ${field.propertyName};
 	}

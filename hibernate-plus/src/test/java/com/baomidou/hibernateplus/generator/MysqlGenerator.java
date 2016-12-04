@@ -75,9 +75,9 @@ public class MysqlGenerator {
 		// 字段名生成策略
 		strategy.setFieldNaming(NamingStrategy.underline_to_camel);
 		// 自定义实体父类
-		// strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");
+		strategy.setSuperModelClass("com.baomidou.hibernate.model.AutoPrimaryKey");
 		// 自定义实体，公共字段
-		// strategy.setSuperEntityColumns(new String[] { "test_id", "age" });
+		strategy.setSuperModelColumns(new String[] { "id" });
 		// 自定义 mapper 父类
 		// strategy.setSuperMapperClass("com.baomidou.demo.TestMapper");
 		// 自定义 service 父类
@@ -98,7 +98,6 @@ public class MysqlGenerator {
 		PackageConfig pc = new PackageConfig();
 		pc.setModuleName("hibernate");
 		mpg.setPackageInfo(pc);
-
 		// 执行生成
 		mpg.execute();
 	}
