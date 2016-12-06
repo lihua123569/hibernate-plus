@@ -6,6 +6,8 @@
 
 Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRUD`操作
 
+> 技术讨论 QQ 群 492238239 如满，加群 121472998 [（有钱的捧个钱场【点击捐赠】, 没钱的捧个人场）](http://git.oschina.net/uploads/images/2015/1222/211207_0acab44e_12260.png)
+
 # 优点 | Advantages
 
 - **纯正血统**：完全继承原生 `Hibernate` 的所有特性
@@ -22,6 +24,19 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
 # 应用实例 | Demo
 
 [Spring-MVC](http://git.oschina.net/baomidou/springmvc-hibernate-plus)
+
+
+# 下载地址 | Download
+
+[点此去下载](http://search.maven.org/#artifactdetails%7Ccom.baomidou%7Chibernate-plus%7C1.0.0.Final%7Cjar)
+
+```xml
+	<dependency>
+	    <groupId>com.baomidou</groupId>
+	    <artifactId>hibernate-plus</artifactId>
+	    <version>1.0.0.Final</version>
+	</dependency>
+```
 
 # 通用方法 | API
 
@@ -298,3 +313,13 @@ Hibernate 增强工具包 - 只做增强不做改变，更加精简持久层`CRU
 # 期望 | Futures
 
 > 欢迎提出更好的意见，帮助完善 
+
+# 捐赠 | Donate
+
+> [捐赠记录,感谢你们的支持！](http://git.oschina.net/baomidou/kisso/wikis/%E6%8D%90%E8%B5%A0%E8%AE%B0%E5%BD%95)
+
+![捐赠 mybatis-plus](http://git.oschina.net/uploads/images/2015/1222/211207_0acab44e_12260.png "支持一下mybatis-plus")
+
+# 关注我 | About Me
+
+![程序员日记](http://git.oschina.net/uploads/images/2016/0121/093728_1bc1658f_12260.png "程序员日记")
